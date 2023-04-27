@@ -12,10 +12,10 @@
         android:theme="@style/Theme.FirstMobile"
         tools:targetApi="31">
         <activity
-            android:name=".CodeBlockActivity"
+            android:name=".views.MainActivity"
             android:exported="false" />
         <activity
-            android:name=".views.MainActivity"
+            android:name=".views.CodeBlockActivity"
             android:exported="true"
             android:label="@string/app_name"
             android:theme="@style/Theme.FirstMobile">
