@@ -1,4 +1,4 @@
-package com.example.firstmobile.presentation
+package com.example.firstmobile.views
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
