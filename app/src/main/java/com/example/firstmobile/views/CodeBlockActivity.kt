@@ -1,79 +1,39 @@
 package com.example.firstmobile.views
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.layout.Arrangement.Bottom
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
-import androidx.compose.material.BottomSheetScaffold
-import androidx.compose.material.BottomSheetValue
-import androidx.compose.material.Button
-import androidx.compose.material.ExperimentalMaterialApi
-import androidx.compose.material.FloatingActionButton
+import androidx.compose.foundation.background
+import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
-import androidx.compose.material.rememberBottomSheetScaffoldState
-import androidx.compose.material.rememberBottomSheetState
-import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.input.pointer.consumeAllChanges
+import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.firstmobile.R
-import kotlinx.coroutines.launch
+import com.example.firstmobile.model.MathOperation
+import com.example.firstmobile.ui.theme.FirstMobileTheme
+import com.example.firstmobile.utils.flowlayouts.FlowRow
+import com.example.firstmobile.viewmodels.AddBlockViewModel
+import kotlin.math.roundToInt
 
-
-@ExperimentalMaterialApi
-class CodeBlockActivity : AppCompatActivity() {
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setContent {
-            val sheetState = rememberBottomSheetState(
-                initialValue = BottomSheetValue.Collapsed
-
-            )
-            val scaffoldState = rememberBottomSheetScaffoldState(
-                bottomSheetState = sheetState
-            )
-            val scope = rememberCoroutineScope()
-            BottomSheetScaffold(
-                scaffoldState = scaffoldState,
-                sheetContent = {
-                    Box(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .height(300.dp),
-                        contentAlignment = Alignment.Center
-                    ) {
-                        Text(text = "Алексей хороший человек", fontSize = 60.sp)
-                    }
-                },
-                sheetBackgroundColor = Color(R.color.purple_200),
-                sheetPeekHeight = 0.dp
-            ) {
-                Box(
-                    modifier = Modifier.fillMaxSize().padding(16.dp),
-                    contentAlignment = Alignment.BottomStart
+class CodeBlockActivity : ComponentActivity() {
+    private val blockViewModel = AddBlockViewModel()
+            FirstMobileTheme {
+                DraggableScreen(
+                    modifier = Modifier
+                        .fillMaxSize()
                 ) {
-                    FloatingActionButton(onClick = {
-                        scope.launch {
-                            if (sheetState.isCollapsed){
-                                sheetState.expand()
-                            } else{
-                                sheetState.collapse()
-                            }
-
-                        }
-                    }) {
-                        Text(text = "+")  // Процент видимости: ${sheetState.progress.fraction}
-                    }
+                    MainScreen(blockViewModel = blockViewModel)
                 }
             }
         }
