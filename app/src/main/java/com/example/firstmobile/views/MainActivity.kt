@@ -63,16 +63,20 @@ private fun MainLayout(blockViewModel: AddBlockViewModel) {
             scaffoldState.bottomSheetState.expand()
         }
     }
-
-    BottomSheetScaffold(sheetPeekHeight = 0.dp, scaffoldState = scaffoldState,
-        sheetShape = BottomSheetShape,
-        sheetContent = {
-            currentBottomSheet?.let { currentSheet ->
-                SheetLayout(blockViewModel, currentSheet, closeSheet)
+    DraggableScreen(
+        modifier = Modifier
+            .fillMaxSize()
+    ) {
+        BottomSheetScaffold(sheetPeekHeight = 0.dp, scaffoldState = scaffoldState,
+            sheetShape = BottomSheetShape,
+            sheetContent = {
+                currentBottomSheet?.let { currentSheet ->
+                    SheetLayout(blockViewModel, currentSheet, closeSheet)
+                }
+            }) { paddingValues ->
+            Box(Modifier.padding(paddingValues)) {
+                MainScreen(blockViewModel, openSheet)
             }
-        }) { paddingValues ->
-        Box(Modifier.padding(paddingValues)) {
-            MainScreen(blockViewModel, openSheet)
         }
     }
 }
