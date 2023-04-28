@@ -37,28 +37,22 @@ class MainActivity : ComponentActivity() {
 private fun MainLayout() {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
+
     var currentBottomSheet: BottomSheetScreen? by remember {
-        mutableStateOf(null)
+        mutableStateOf(BottomSheetScreen.Screen1)
     }
-
-    if (scaffoldState.bottomSheetState.isCollapsed)
-        currentBottomSheet = null
-
 
     val closeSheet: () -> Unit = {
         scope.launch {
             scaffoldState.bottomSheetState.collapse()
-
         }
     }
-
 
     val openSheet: (BottomSheetScreen) -> Unit = {
         scope.launch {
             currentBottomSheet = it
             scaffoldState.bottomSheetState.expand()
         }
-
     }
 
     BottomSheetScaffold(sheetPeekHeight = 0.dp, scaffoldState = scaffoldState,
@@ -77,7 +71,9 @@ private fun MainLayout() {
 @Composable
 fun MainContent(openSheet: (BottomSheetScreen) -> Unit) {
     Row(
-        Modifier.fillMaxSize().padding(16.dp),
+        Modifier
+            .fillMaxSize()
+            .padding(16.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
@@ -92,7 +88,7 @@ fun MainContent(openSheet: (BottomSheetScreen) -> Unit) {
         }
 
         FloatingActionButton(onClick = {
-            openSheet(BottomSheetScreen.Screen2())
+            openSheet(BottomSheetScreen.Screen2)
         }) {
             Text(
                 text = ">",
@@ -147,5 +143,5 @@ fun Screen2() {
 
 sealed class BottomSheetScreen() {
     object Screen1 : BottomSheetScreen()
-    class Screen2 : BottomSheetScreen()
+    object Screen2 : BottomSheetScreen()
 }
