@@ -7,6 +7,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -18,25 +20,30 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.ui.theme.BottomSheetShape
+import com.example.firstmobile.utils.flowlayouts.FlowRow
+import com.example.firstmobile.viewmodels.AddBlockViewModel
 import kotlinx.coroutines.launch
 
 
 @ExperimentalMaterialApi
 class MainActivity : ComponentActivity() {
+
+    private val blockViewModel = AddBlockViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            MainLayout()
+            MainLayout(blockViewModel)
         }
     }
 }
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun MainLayout() {
+private fun MainLayout(blockViewModel: AddBlockViewModel) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
 
@@ -61,17 +68,17 @@ private fun MainLayout() {
         sheetShape = BottomSheetShape,
         sheetContent = {
             currentBottomSheet?.let { currentSheet ->
-                SheetLayout(currentSheet, closeSheet)
+                SheetLayout(blockViewModel, currentSheet, closeSheet)
             }
         }) { paddingValues ->
         Box(Modifier.padding(paddingValues)) {
-            MainContent(openSheet)
+            MainScreen(blockViewModel, openSheet)
         }
     }
 }
 
 @Composable
-fun MainContent(openSheet: (BottomSheetScreen) -> Unit) {
+fun MainContent(blockViewModel: AddBlockViewModel, openSheet: (BottomSheetScreen) -> Unit) {
     Row(
         Modifier
             .fillMaxSize()
@@ -101,29 +108,50 @@ fun MainContent(openSheet: (BottomSheetScreen) -> Unit) {
 }
 
 @Composable
-fun SheetLayout(currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit) {
+fun SheetLayout(blockViewModel: AddBlockViewModel, currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit) {
     when (currentScreen) {
-        BottomSheetScreen.Screen1 -> Screen1()
+        BottomSheetScreen.Screen1 -> Screen1(blockViewModel)
         is BottomSheetScreen.Screen2 -> Screen2()
     }
 }
 
 @Composable
-fun Screen1() {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(300.dp)
-            .background(Color.Green, shape = RectangleShape)
-    ) {
-        Text(
-            text = "Блоки",
-            Modifier
-                .align(Alignment.Center)
-                .padding(16.dp), color = Color.Black,
-            fontSize = 15.sp
-        )
+fun Screen1(blockViewModel: AddBlockViewModel) {
+    LazyColumn(
+    modifier = Modifier
+        .fillMaxWidth()
+        .height(300.dp),
+    verticalArrangement = Arrangement.Center,
+    horizontalAlignment = Alignment.CenterHorizontally
+) {
+    items(count = 10) {
+        FlowRow(
+            modifier = Modifier.padding(16.dp)
+        ) {
+            blockViewModel.blocks.forEach { operation ->
+                DragTarget(
+                    operationToDrop = operation, viewModel = blockViewModel
+                ) {
+                    Box(
+                        modifier = Modifier
+                            .width(80.dp)
+                            .border(
+                                1.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                            )
+                            .background(Color.Gray.copy(0.5f), RoundedCornerShape(15.dp)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = operation.symbol.toString(),
+                            fontSize = 32.sp,
+                            fontWeight = FontWeight.SemiBold
+                        )
+                    }
+                }
+            }
+        }
     }
+}
 }
 
 @Composable

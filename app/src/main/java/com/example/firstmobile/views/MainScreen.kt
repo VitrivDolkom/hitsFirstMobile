@@ -4,6 +4,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -19,18 +20,19 @@ import com.example.firstmobile.utils.flowlayouts.FlowRow
 
 @Composable
 fun MainScreen(
-    blockViewModel: AddBlockViewModel
+    blockViewModel: AddBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
-    
+    MainContent(blockViewModel = blockViewModel, openSheet = openSheet)
     Column(
         modifier = Modifier.fillMaxSize(),
-        verticalArrangement = Arrangement.SpaceAround,
+        verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
+
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .weight(0.6f)
+                .height(600.dp)
                 .verticalScroll(rememberScrollState())
         ) {
             blockViewModel.addedBlocks.forEachIndexed { i, mathOperations ->
@@ -56,9 +58,14 @@ fun MainScreen(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .border(
-                                            1.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                                            1.dp,
+                                            color = Color.Red,
+                                            shape = RoundedCornerShape(15.dp)
                                         )
-                                        .background(Color.Gray.copy(0.5f), RoundedCornerShape(15.dp)),
+                                        .background(
+                                            Color.Gray.copy(0.5f),
+                                            RoundedCornerShape(15.dp)
+                                        ),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(text = operation.symbol.toString(), fontSize = 32.sp)
@@ -68,9 +75,14 @@ fun MainScreen(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .border(
-                                            1.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                                            1.dp,
+                                            color = Color.Red,
+                                            shape = RoundedCornerShape(15.dp)
                                         )
-                                        .background(Color.Gray.copy(0.5f), RoundedCornerShape(15.dp)),
+                                        .background(
+                                            Color.Gray.copy(0.5f),
+                                            RoundedCornerShape(15.dp)
+                                        ),
                                     contentAlignment = Alignment.Center
                                 ) {
                                     Text(
@@ -79,42 +91,6 @@ fun MainScreen(
                                         color = Color.Black
                                     )
                                 }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(0.4f),
-            verticalArrangement = Arrangement.Center,
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            items(count = 10) {
-                FlowRow(
-                    modifier = Modifier.padding(16.dp)
-                ) {
-                    blockViewModel.blocks.forEach { operation ->
-                        DragTarget(
-                            operationToDrop = operation, viewModel = blockViewModel
-                        ) {
-                            Box(
-                                modifier = Modifier
-                                    .width(80.dp)
-                                    .border(
-                                        1.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
-                                    )
-                                    .background(Color.Gray.copy(0.5f), RoundedCornerShape(15.dp)),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Text(
-                                    text = operation.symbol.toString(),
-                                    fontSize = 32.sp,
-                                    fontWeight = FontWeight.SemiBold
-                                )
                             }
                         }
                     }

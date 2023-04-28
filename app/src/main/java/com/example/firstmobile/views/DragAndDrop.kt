@@ -106,7 +106,7 @@ internal class DragTargetInfo {
 
 @Composable
 fun DraggableScreen(
-    modifier: Modifier = Modifier, content: @Composable BoxScope.() -> Unit
+    modifier: Modifier = Modifier, content: @Composable () -> Unit
 ) {
     val state = remember {
         DragTargetInfo()
