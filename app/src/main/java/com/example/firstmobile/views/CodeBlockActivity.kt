@@ -7,6 +7,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.material.MaterialTheme
+import androidx.compose.material.Surface
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateOf
@@ -19,77 +21,27 @@ import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.example.firstmobile.model.MathOperation
+import com.example.firstmobile.ui.theme.FirstMobileTheme
 import com.example.firstmobile.utils.flowlayouts.FlowRow
+import com.example.firstmobile.viewmodels.AddBlockViewModel
 import kotlin.math.roundToInt
 
 class CodeBlockActivity : ComponentActivity() {
+    
+    private val blockViewModel = AddBlockViewModel()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         
         setContent {
-            Column(
-                modifier = Modifier.fillMaxSize()
-            
-            ) {
-                Box(
+            FirstMobileTheme {
+                DraggableScreen(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.6f)
-                        .background(Color.Cyan)
+                        .fillMaxSize()
                 ) {
-                    Text(text = "I am text")
-                }                
-                LazyColumn(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .weight(0.4f),
-                    verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
-                ) {
-                    items(count = 10) {
-                        FlowRow(
-                            modifier = Modifier.padding(top = 30.dp)
-                        ) {
-                            val mathOperation = enumValues<MathOperation>()
-                
-                            mathOperation.forEach {
-                                CodeBlock(it)
-                            }
-                        }
-                    }
+                    MainScreen(blockViewModel = blockViewModel)
                 }
             }
         }
-    }
-}
-
-@Composable
-fun CodeBlock(operation: MathOperation) {
-    val isMovable = remember { mutableStateOf(true) }
-    val offsetX = remember { mutableStateOf(0f) }
-    val offsetY = remember { mutableStateOf(0f) }
-    
-    Box(modifier = Modifier
-        .offset {
-            IntOffset(x = offsetX.value.roundToInt(), y = offsetY.value.roundToInt())
-        }
-        .pointerInput(Unit) {
-            detectDragGestures { change, dragAmount ->
-                change.consumeAllChanges()
-            
-                if (isMovable.value) {
-                    if ((offsetX.value + dragAmount.x) < 50) {
-                        offsetX.value += dragAmount.x
-                    } else {
-                        isMovable.value = false
-                    }
-                    offsetY.value += dragAmount.y
-                }
-            }
-        }
-        .width(64.dp)
-        .height(32.dp)
-        .background(Color.Blue), contentAlignment = Alignment.Center) {
-        Text(text = operation.symbol.toString())
     }
 }
