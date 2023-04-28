@@ -27,13 +27,7 @@ import com.example.firstmobile.viewmodels.AddBlockViewModel
 import kotlin.math.roundToInt
 
 class CodeBlockActivity : ComponentActivity() {
-    
     private val blockViewModel = AddBlockViewModel()
-    
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        
-        setContent {
             FirstMobileTheme {
                 DraggableScreen(
                     modifier = Modifier
