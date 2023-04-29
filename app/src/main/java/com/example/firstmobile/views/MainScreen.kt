@@ -2,9 +2,7 @@ package com.example.firstmobile.views
 
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -16,7 +14,6 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.MathOperation
-import com.example.firstmobile.utils.flowlayouts.FlowRow
 
 @Composable
 fun MainScreen(
@@ -41,34 +38,36 @@ fun MainScreen(
                         .horizontalScroll(rememberScrollState())
                         .padding(16.dp)
                 ) {
-                    mathOperations.forEachIndexed { j, operation ->
+                    mathOperations.forEachIndexed { j, _ ->
                         DropItem(
-                            i,
-                            j,
+                            i = i,
+                            j = j,
+                            id = i * blockViewModel.addedBlocks.size + j,
                             modifier = Modifier
                                 .width(80.dp)
                                 .height(40.dp)
                                 .background(Color.White),
                             blockViewModel = blockViewModel
-                        ) { isHovered, isFullField, operation ->
+                        ) { isHovered, _, operation ->
                             if (operation != MathOperation.DEFAULT) {
                                 blockViewModel.addBlock(operation, i, j)
-                                
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .border(
-                                            1.dp,
-                                            color = Color.Red,
-                                            shape = RoundedCornerShape(15.dp)
-                                        )
-                                        .background(
-                                            Color.Gray.copy(0.5f),
-                                            RoundedCornerShape(15.dp)
-                                        ),
-                                    contentAlignment = Alignment.Center
+    
+                                DragTarget(
+                                    id = i * blockViewModel.addedBlocks.size + j, operationToDrop = operation, viewModel = blockViewModel
                                 ) {
-                                    Text(text = operation.symbol.toString(), fontSize = 32.sp)
+                                    Box(
+                                        modifier = Modifier
+                                            .width(80.dp)
+                                            .border(
+                                                1.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                                            )
+                                            .background(Color.Gray.copy(0.5f), RoundedCornerShape(15.dp)),
+                                        contentAlignment = Alignment.Center
+                                    ) {
+                                        Text(
+                                            text = operation.symbol.toString(), fontSize = 32.sp, fontWeight = FontWeight.SemiBold
+                                        )
+                                    }
                                 }
                             } else {
                                 Box(

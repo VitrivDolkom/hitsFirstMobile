@@ -22,6 +22,7 @@ internal val LocalDragTargetInfo = compositionLocalOf { DragTargetInfo() }
 @Composable
 fun DragTarget(
     modifier: Modifier = Modifier,
+    id: Int = -1,
     operationToDrop: MathOperation,
     viewModel: AddBlockViewModel,
     content: @Composable (() -> Unit)
@@ -43,15 +44,18 @@ fun DragTarget(
                 state.operationToDrop = operationToDrop
                 state.dragPosition = currentPosition + it
                 state.draggableComposable = content
+                state.draggableId = id
             }, onDrag = { change, dragAmount ->
                 change.consume()
                 state.dragOffset += dragAmount
             }, onDragEnd = {
                 viewModel.stopDragging()
+                state.dragPosition = Offset.Zero
                 state.dragOffset = Offset.Zero
                 state.isDragging = false
             }, onDragCancel = {
                 viewModel.stopDragging()
+                state.dragPosition = Offset.Zero
                 state.dragOffset = Offset.Zero
                 state.isDragging = false
             })
@@ -65,6 +69,7 @@ fun DragTarget(
 fun DropItem(
     i: Int,
     j: Int,
+    id: Int,
     modifier: Modifier = Modifier,
     blockViewModel: AddBlockViewModel,
     content: @Composable (BoxScope.(isHovered: Boolean, isFullField: Boolean, operation: MathOperation) -> Unit)
@@ -74,17 +79,29 @@ fun DropItem(
     val dragPosition = dragInfo.dragPosition
     val dragOffset = dragInfo.dragOffset
     val operation = dragInfo.operationToDrop
+    val draggableId = dragInfo.draggableId
+    
     var isDropTarget by remember { mutableStateOf(false) }
+    var isDragLeaving by remember { mutableStateOf(false) }
+    var isBecomingEmpty by remember { mutableStateOf(false) }
     var isFullField by remember { mutableStateOf(false) }
     
     Box(modifier = modifier.onGloballyPositioned {
         it.boundsInWindow().let { rect ->
             isDropTarget = rect.contains(dragPosition + dragOffset + Offset(50f, 50f))
+            isDragLeaving = !isDropTarget && draggableId == id
         }
-    }) { 
+    }) {
         if (isDropTarget && !isDragging && !isFullField) {
             isFullField = true
             blockViewModel.addBlock(operation, i, j)
+        }
+        
+        isBecomingEmpty = isDragLeaving && !isDragging
+        
+        if (isBecomingEmpty) {
+            isFullField = false
+            blockViewModel.addBlock(MathOperation.DEFAULT, i, j)
         }
         
         val data = blockViewModel.getOperation(i, j)
@@ -100,6 +117,7 @@ internal class DragTargetInfo {
     var dragOffset by mutableStateOf(Offset.Zero)
     var draggableComposable by mutableStateOf<(@Composable () -> Unit)?>(null)
     var operationToDrop by mutableStateOf(MathOperation.DEFAULT)
+    var draggableId by mutableStateOf(-1)
 }
 
 // экран, на котором можно перетаскивать draggable элементы
