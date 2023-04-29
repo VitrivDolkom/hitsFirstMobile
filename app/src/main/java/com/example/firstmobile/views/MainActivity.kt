@@ -90,6 +90,14 @@ fun MainContent(blockViewModel: AddBlockViewModel, openSheet: (BottomSheetScreen
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
+        FloatingActionButton(onClick = {
+            openSheet(BottomSheetScreen.Screen3)
+        }) {
+            Text(
+                text = "?",
+                fontSize = 30.sp
+            )  // Процент видимости: ${sheetState.progress.fraction}
+        }
 
         FloatingActionButton(onClick = {
             openSheet(BottomSheetScreen.Screen1)
@@ -115,7 +123,8 @@ fun MainContent(blockViewModel: AddBlockViewModel, openSheet: (BottomSheetScreen
 fun SheetLayout(blockViewModel: AddBlockViewModel, currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit) {
     when (currentScreen) {
         BottomSheetScreen.Screen1 -> Screen1(blockViewModel)
-        is BottomSheetScreen.Screen2 -> Screen2()
+        BottomSheetScreen.Screen2 -> Screen2()
+        is BottomSheetScreen.Screen3 -> Screen3()
     }
 }
 
@@ -175,7 +184,26 @@ fun Screen2() {
     }
 }
 
+@Composable
+fun Screen3(){
+    val instructions = listOf("Инструкция","В","С","Ы")
+    LazyColumn(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(300.dp),
+        verticalArrangement = Arrangement.Center,
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        items(count = 1) {
+            instructions.forEach { instruction ->
+                Text(text = instruction, fontSize = 64.sp)
+            }
+        }
+    }
+}
+
 sealed class BottomSheetScreen() {
     object Screen1 : BottomSheetScreen()
     object Screen2 : BottomSheetScreen()
+    object Screen3 : BottomSheetScreen()
 }
