@@ -1,5 +1,6 @@
 package com.example.firstmobile.views
 
+import android.util.Log
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
@@ -92,20 +93,26 @@ fun DropItem(
             isDragLeaving = !isDropTarget && draggableId == id
         }
     }) {
+        // блок заполнен, но пользователь перетаскивает на его место другой блок
+        if (isFullField && isDropTarget && !isDragging && draggableId != id) {
+//            blockViewModel.shift(i, j)
+            Log.d("MyTag", "they wanted to kill me $i $j")
+        }
+        
+        // блок пуст и в него перетащили новый блок
         if (isDropTarget && !isDragging && !isFullField) {
             isFullField = true
             blockViewModel.addBlock(operation, i, j)
         }
         
+        // пользователь перетащил содержание блока в другое место
         isBecomingEmpty = isDragLeaving && !isDragging
-        
         if (isBecomingEmpty) {
             isFullField = false
             blockViewModel.addBlock(MathOperation.DEFAULT, i, j)
         }
         
         val data = blockViewModel.getOperation(i, j)
-        
         content(isDropTarget, isFullField, data)
     }
 }
