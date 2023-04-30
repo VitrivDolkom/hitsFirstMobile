@@ -7,7 +7,7 @@ import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
-import com.example.firstmobile.viewmodels.AddBlockViewModel
+import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -17,7 +17,7 @@ import com.example.firstmobile.model.MathOperation
 
 @Composable
 fun MainScreen(
-    blockViewModel: AddBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
+    blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
     MainContent(blockViewModel = blockViewModel, openSheet = openSheet)
     Column(
@@ -25,7 +25,7 @@ fun MainScreen(
         verticalArrangement = Arrangement.Top,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-
+        
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -42,7 +42,6 @@ fun MainScreen(
                         DropItem(
                             i = i,
                             j = j,
-                            id = i * blockViewModel.addedBlocks.size + j,
                             modifier = Modifier
                                 .width(80.dp)
                                 .height(40.dp)
@@ -51,9 +50,9 @@ fun MainScreen(
                         ) { isHovered, _, operation ->
                             if (operation != MathOperation.DEFAULT) {
                                 blockViewModel.addBlock(operation, i, j)
-    
+                                
                                 DragTarget(
-                                    id = i * blockViewModel.addedBlocks.size + j, operationToDrop = operation, viewModel = blockViewModel
+                                    i = i, j = j, operationToDrop = operation, viewModel = blockViewModel
                                 ) {
                                     Box(
                                         modifier = Modifier
@@ -65,7 +64,9 @@ fun MainScreen(
                                         contentAlignment = Alignment.Center
                                     ) {
                                         Text(
-                                            text = operation.symbol.toString(), fontSize = 32.sp, fontWeight = FontWeight.SemiBold
+                                            text = operation.symbol.toString(),
+                                            fontSize = 32.sp,
+                                            fontWeight = FontWeight.SemiBold
                                         )
                                     }
                                 }
@@ -74,15 +75,11 @@ fun MainScreen(
                                     modifier = Modifier
                                         .fillMaxSize()
                                         .border(
-                                            1.dp,
-                                            color = Color.Red,
-                                            shape = RoundedCornerShape(15.dp)
+                                            1.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
                                         )
                                         .background(
-                                            Color.Gray.copy(0.5f),
-                                            RoundedCornerShape(15.dp)
-                                        ),
-                                    contentAlignment = Alignment.Center
+                                            Color.Gray.copy(0.5f), RoundedCornerShape(15.dp)
+                                        ), contentAlignment = Alignment.Center
                                 ) {
                                     Text(
                                         text = if (isHovered) "Add here" else operation.symbol.toString(),

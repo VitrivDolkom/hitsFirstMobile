@@ -3,7 +3,6 @@ package com.example.firstmobile.views
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.appcompat.app.AppCompatActivity
 import androidx.compose.foundation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
@@ -25,13 +24,13 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.ui.theme.BottomSheetShape
 import com.example.firstmobile.utils.flowlayouts.FlowRow
-import com.example.firstmobile.viewmodels.AddBlockViewModel
+import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import kotlinx.coroutines.launch
 
 @ExperimentalMaterialApi
 class MainActivity : ComponentActivity() {
     
-    private val blockViewModel = AddBlockViewModel()
+    private val blockViewModel = CodeBlockViewModel()
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
@@ -42,7 +41,7 @@ class MainActivity : ComponentActivity() {
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
-private fun MainLayout(blockViewModel: AddBlockViewModel) {
+private fun MainLayout(blockViewModel: CodeBlockViewModel) {
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     
@@ -62,6 +61,7 @@ private fun MainLayout(blockViewModel: AddBlockViewModel) {
             scaffoldState.bottomSheetState.expand()
         }
     }
+    
     DraggableScreen(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -82,7 +82,7 @@ private fun MainLayout(blockViewModel: AddBlockViewModel) {
 }
 
 @Composable
-fun MainContent(blockViewModel: AddBlockViewModel, openSheet: (BottomSheetScreen) -> Unit) {
+fun MainContent(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit) {
     Row(
         Modifier
             .fillMaxSize()
@@ -110,7 +110,7 @@ fun MainContent(blockViewModel: AddBlockViewModel, openSheet: (BottomSheetScreen
 }
 
 @Composable
-fun SheetLayout(blockViewModel: AddBlockViewModel, currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit) {
+fun SheetLayout(blockViewModel: CodeBlockViewModel, currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit) {
     when (currentScreen) {
         BottomSheetScreen.Screen1 -> Screen1(blockViewModel)
         is BottomSheetScreen.Screen2 -> Screen2()
@@ -118,7 +118,7 @@ fun SheetLayout(blockViewModel: AddBlockViewModel, currentScreen: BottomSheetScr
 }
 
 @Composable
-fun Screen1(blockViewModel: AddBlockViewModel) {
+fun Screen1(blockViewModel: CodeBlockViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
