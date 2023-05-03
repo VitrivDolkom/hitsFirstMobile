@@ -1,20 +1,22 @@
 package com.example.firstmobile.viewmodels
 
-import android.util.Log
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
-import com.example.firstmobile.model.MathOperation
+import com.example.firstmobile.model.CodeBlockOperation
 
 class CodeBlockViewModel : ViewModel() {
     var isDragging by mutableStateOf(false)
         private set
     
-    var blocks by mutableStateOf(enumValues<MathOperation>().toList())
+    var maxRow by mutableStateOf(1)
         private set
-
-    var addedBlocks = Array(11) { MutableList(blocks.count() * 2) { MathOperation.DEFAULT } }
+    
+    var maxColumn by mutableStateOf(1)
+        private set
+    
+    var addedBlocks = MutableList(20) { MutableList(20) { CodeBlockOperation.DEFAULT } }
         private set
     
     fun startDragging() {
@@ -25,34 +27,41 @@ class CodeBlockViewModel : ViewModel() {
         isDragging = false
     }
     
-    fun addBlock(operation: MathOperation, i: Int, j: Int) {
-        addedBlocks[i][j] = operation
-    }
     
-    fun getOperation(i: Int, j: Int): MathOperation {
-        return addedBlocks[i][j]
-    }
-    
-    fun shift(operation: MathOperation, i: Int, j: Int) {
+    fun addBlock(operation: CodeBlockOperation, i: Int, j: Int) {
+        if (j == maxColumn) {
+            maxColumn++
+        }
         
-        addedBlocks[i].forEachIndexed { column, _ ->
-            if ((addedBlocks[i].size - column - 1) > j) {
-                addedBlocks[i][addedBlocks[i].size - column - 1] = addedBlocks[i][addedBlocks[i].size - column - 2]
-            }
+        if (i == maxRow) {
+            maxRow++
         }
     
         addedBlocks[i][j] = operation
     
-        Log.d("MyTag", "сдвиг вперед- ${addedBlocks[i]}")
+    }
+    
+    fun getOperation(i: Int, j: Int): CodeBlockOperation {
+        return addedBlocks[i][j]
+    }
+    
+    fun shift(operation: CodeBlockOperation, i: Int, j: Int) {
+        if (j == maxColumn) {
+            maxColumn += 2
+        }
+    
+        if (i == maxRow) {
+            maxRow++
+        }
+    
+        addedBlocks[i].add(j, operation)
     }
     
     fun reverseShift(i: Int, j: Int) {
         addedBlocks[i].forEachIndexed { column, _ ->
-            if (column > j && column < (addedBlocks[i].size - 1)) {
+            if (column >= j && column < (addedBlocks[i].size - 1)) {
                 addedBlocks[i][column] = addedBlocks[i][column + 1]
             }
         }
-    
-        Log.d("MyTag", "сдвиг назад - ${addedBlocks[i]}")
     }
 }

@@ -7,6 +7,7 @@ import androidx.compose.foundation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
 import androidx.compose.runtime.Composable
@@ -22,6 +23,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.BottomSheetShape
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
@@ -65,8 +67,7 @@ private fun MainLayout(blockViewModel: CodeBlockViewModel) {
     DraggableScreen(
         modifier = Modifier.fillMaxSize()
     ) {
-        BottomSheetScaffold(
-            sheetPeekHeight = 0.dp,
+        BottomSheetScaffold(sheetPeekHeight = 0.dp,
             scaffoldState = scaffoldState,
             sheetShape = BottomSheetShape,
             sheetContent = {
@@ -126,11 +127,11 @@ fun Screen1(blockViewModel: CodeBlockViewModel) {
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        items(count = 10) {
+        itemsIndexed(CodeBlockOperation.DEFAULT.blocksList()) { i, operationList ->
             FlowRow(
                 modifier = Modifier.padding(16.dp)
             ) {
-                blockViewModel.blocks.forEach { operation ->
+                operationList.forEach { operation ->
                     DragTarget(
                         operationToDrop = operation, viewModel = blockViewModel
                     ) {
