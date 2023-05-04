@@ -1,32 +1,32 @@
 package com.example.firstmobile.viewmodels
 
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
+import android.util.Log
 import androidx.lifecycle.ViewModel
-import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.views.CodeBlock
+import com.example.firstmobile.views.draganddrop.CodeBlock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
 
 class CodeBlockViewModel : ViewModel() {
     
-    private val _blocks = MutableStateFlow(mutableListOf(CodeBlock()))
+    private var _blocks = MutableStateFlow(mutableListOf(CodeBlock()))
     val blocks = _blocks.asStateFlow()
     
+    private var _test = MutableStateFlow(0)
+    val test = _test.asStateFlow()
     
     fun addBlock(operation: CodeBlock?, i: Int) {
-//        if (i < _blocks.value.size) {
-//
-//        }
-        
+        _test.value += 1
         
         if (operation != null) {
             _blocks.value[i] = operation
-            _blocks.value.add(CodeBlock())
+            if (i == (_blocks.value.size - 1)) {
+                _blocks.value.add(CodeBlock())
+            }
         } else {
             _blocks.value[i] = CodeBlock()
         }
+        
+        Log.d("MyTag", "${_blocks.value}")
     }
 }
