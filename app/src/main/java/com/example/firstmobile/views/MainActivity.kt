@@ -129,35 +129,34 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, currentScreen: BottomSheetSc
 
 @Composable
 fun Screen1(blockViewModel: CodeBlockViewModel) {
-    LazyColumn(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
             .height(300.dp),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
+        contentAlignment = Alignment.Center
     ) {
-        itemsIndexed(CodeBlockOperation.DEFAULT.blocksList()) { i, operationList ->
-            FlowRow(
-                modifier = Modifier.padding(16.dp)
+        var block = CodeBlock(null, "-", null)
+        DragTarget(
+            i = -1, operationToDrop = block, viewModel = blockViewModel
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(64.dp)
+                    .border(
+                        3.dp,
+                        color = Color.Red,
+                        shape = RoundedCornerShape(15.dp)
+                    ), contentAlignment = Alignment.Center
             ) {
-                operationList.forEach { operation ->
-                    DragTarget(
-                        operationToDrop = operation, viewModel = blockViewModel
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .width(80.dp)
-                                .border(
-                                    1.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
-                                )
-                                .background(Color.Gray.copy(0.5f), RoundedCornerShape(15.dp)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = operation.symbol.toString(), fontSize = 32.sp, fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    DropItemLayout(0, blockViewModel, block.leftBlock)
+                    Text(text = block.operation)
+                    DropItemLayout(0, blockViewModel, block.rightBlock)
                 }
             }
         }
