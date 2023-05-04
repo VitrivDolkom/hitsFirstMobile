@@ -5,63 +5,28 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.lifecycle.ViewModel
 import com.example.firstmobile.model.CodeBlockOperation
+import com.example.firstmobile.views.CodeBlock
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.asStateFlow
+
 
 class CodeBlockViewModel : ViewModel() {
-    var isDragging by mutableStateOf(false)
-        private set
     
-    var maxRow by mutableStateOf(1)
-        private set
-    
-    var maxColumn by mutableStateOf(1)
-        private set
-    
-    var addedBlocks = MutableList(20) { MutableList(20) { CodeBlockOperation.DEFAULT } }
-        private set
-    
-    fun startDragging() {
-        isDragging = true
-    }
-    
-    fun stopDragging() {
-        isDragging = false
-    }
+    private val _blocks = MutableStateFlow(mutableListOf(CodeBlock()))
+    val blocks = _blocks.asStateFlow()
     
     
-    fun addBlock(operation: CodeBlockOperation, i: Int, j: Int) {
-        if (j == maxColumn) {
-            maxColumn++
-        }
+    fun addBlock(operation: CodeBlock?, i: Int) {
+//        if (i < _blocks.value.size) {
+//
+//        }
         
-        if (i == maxRow) {
-            maxRow++
-        }
-    
-        addedBlocks[i][j] = operation
-    
-    }
-    
-    fun getOperation(i: Int, j: Int): CodeBlockOperation {
-        return addedBlocks[i][j]
-    }
-    
-    fun shift(operation: CodeBlockOperation, i: Int, j: Int) {
-        if (j == maxColumn) {
-            maxColumn += 2
-        }
-    
-        if (i == maxRow) {
-            maxRow++
-        }
-    
-        addedBlocks[i].add(j, operation)
-    }
-    
-    fun reverseShift(i: Int, j: Int) {
-        addedBlocks[i].forEachIndexed { column, _ ->
-            if (column >= j && column < (addedBlocks[i].size - 1)) {
-                addedBlocks[i][column] = addedBlocks[i][column + 1]
-            }
+        
+        if (operation != null) {
+            _blocks.value[i] = operation
+            _blocks.value.add(CodeBlock())
+        } else {
+            _blocks.value[i] = CodeBlock()
         }
     }
 }

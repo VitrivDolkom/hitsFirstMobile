@@ -22,6 +22,9 @@ fun MainScreen(
     blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
     MainContent(blockViewModel = blockViewModel, openSheet = openSheet)
+    
+    val blocks by blockViewModel.blocks.collectAsState()
+    
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -30,60 +33,93 @@ fun MainScreen(
                 .fillMaxWidth()
                 .height(600.dp)
         ) {
-            itemsIndexed(blockViewModel.addedBlocks) { i, row ->
-                LazyRow(
-                    modifier = Modifier.padding(8.dp)
-                ) {
-                    itemsIndexed(row) { j, _ ->
-                        DropItem(
-                            i = i,
-                            j = j,
-                            modifier = Modifier
-                                .width(80.dp)
-                                .height(64.dp)
-                                .background(Color.White)
-                                .padding(end = 8.dp),
-                            blockViewModel = blockViewModel
-                        ) { isHovered, _, isAvailable, operation ->
-                            if (!isAvailable) { // пока недоступная клетка
-                            } else if (operation != CodeBlockOperation.DEFAULT) {
-                                DragTarget(
-                                    i = i, j = j, operationToDrop = operation, viewModel = blockViewModel
+            itemsIndexed(blocks) { i, block ->
+                if (block.operation == "") {
+                    DropItem(
+                        i = i,
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(64.dp)
+                            .background(Color.Blue)
+                            .padding(16.dp),
+                        blockViewModel = blockViewModel
+                    ) { _, _ ->
+                        Text(text = "empty")
+                    }
+                } else {
+//                    LazyRow(
+//                        modifier = Modifier.padding(8.dp)
+//                    ) {
+                        DragTarget(
+                            i = i, operationToDrop = block, viewModel = blockViewModel
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .width(80.dp)
+                                    .height(64.dp)
+                                    .border(
+                                        3.dp,
+                                        color = Color.Red,
+                                        shape = RoundedCornerShape(15.dp)
+                                    ), contentAlignment = Alignment.Center
+                            ) {
+                                Row(
+                                    modifier = Modifier.fillMaxSize(),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Box(
-                                        modifier = Modifier
-                                            .width(80.dp)
-                                            .height(64.dp)
-                                            .border(
-                                                3.dp,
-                                                color = if (isHovered) Color.Blue else Color.Red,
-                                                shape = RoundedCornerShape(15.dp)
-                                            ), contentAlignment = Alignment.Center
-                                    ) {
-                                        Text(
-                                            text = operation.symbol.toString(),
-                                            fontSize = 32.sp,
-                                            fontWeight = FontWeight.SemiBold
-                                        )
-                                    }
-                                }
-                            } else {
-                                Box(
-                                    modifier = Modifier
-                                        .fillMaxSize()
-                                        .border(
-                                            3.dp,
-                                            color = if (isHovered) Color.Blue else Color.Red,
-                                            shape = RoundedCornerShape(15.dp)
-                                        ), contentAlignment = Alignment.Center
-                                ) {
-                                
+                                    DropItemLayout(i, blockViewModel, block.leftBlock)
+                                    Text(text = block.operation)
+                                    DropItemLayout(i, blockViewModel, block.rightBlock)
                                 }
                             }
                         }
-                    }
+//                    }
                 }
             }
+        }
+    }
+}
+
+
+@Composable
+fun DropItemLayout(i: Int, blockViewModel: CodeBlockViewModel, block: CodeBlock?) {
+    if (block != null) {
+        DragTarget(
+            i = i, operationToDrop = block, viewModel = blockViewModel
+        ) {
+            Box(
+                modifier = Modifier
+                    .width(80.dp)
+                    .height(64.dp)
+                    .border(
+                        3.dp,
+                        color = Color.Red,
+                        shape = RoundedCornerShape(15.dp)
+                    ), contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxSize(),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    DropItemLayout(i, blockViewModel, block.leftBlock)
+                    Text(text = block.operation)
+                    DropItemLayout(i, blockViewModel, block.rightBlock)
+                }
+            }
+        }
+    } else {
+        DropItem(
+            i = i,
+            modifier = Modifier
+                .width(80.dp)
+                .height(64.dp)
+                .background(Color.White)
+                .padding(end = 8.dp),
+            blockViewModel = blockViewModel
+        ) { _, _ ->
+            Text(text = "empty")
         }
     }
 }

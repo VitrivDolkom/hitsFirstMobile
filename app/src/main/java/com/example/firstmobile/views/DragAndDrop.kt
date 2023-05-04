@@ -24,8 +24,7 @@ internal val LocalDragTargetInfo = compositionLocalOf { DragTargetInfo() }
 fun DragTarget(
     modifier: Modifier = Modifier,
     i: Int = -1,
-    j: Int = -1,
-    operationToDrop: CodeBlockOperation,
+    operationToDrop: CodeBlock,
     viewModel: CodeBlockViewModel,
     content: @Composable (() -> Unit)
 ) {
@@ -41,35 +40,27 @@ fun DragTarget(
         .pointerInput(Unit) { // логика при перемещении блока
             detectDragGesturesAfterLongPress(
             onDragStart = {
-                viewModel.startDragging()
-                
-                Log.d("MyTag", "перетаскивается $operationToDrop")
                 
                 state.operationToDrop = operationToDrop
                 state.dragPosition = currentPosition + it
                 state.draggableComposable = content
                 state.draggableRow = i
-                state.draggableColumn = j
                 state.isDragging = true
             }, onDrag = { change, dragAmount ->
                 change.consume()
                 state.dragOffset += dragAmount
             }, onDragEnd = {
-                viewModel.stopDragging()
                 state.dragPosition = Offset.Zero
                 state.dragOffset = Offset.Zero
                 state.isDragging = false
             
                 state.draggableRow = -1
-                state.draggableColumn = -1
             }, onDragCancel = {
-                viewModel.stopDragging()
                 state.dragPosition = Offset.Zero
                 state.dragOffset = Offset.Zero
                 state.isDragging = false
             
                 state.draggableRow = -1
-                state.draggableColumn = -1
             })
         }) { // отображаем блок, который перетаскиваем
         content()
@@ -80,10 +71,9 @@ fun DragTarget(
 @Composable
 fun DropItem(
     i: Int,
-    j: Int,
     modifier: Modifier = Modifier,
     blockViewModel: CodeBlockViewModel,
-    content: @Composable (BoxScope.(isHovered: Boolean, isFullField: Boolean, isAvailable: Boolean, operation: CodeBlockOperation) -> Unit)
+    content: @Composable (BoxScope.(isHovered: Boolean, isFullField: Boolean) -> Unit)
 ) {
     val dragInfo = LocalDragTargetInfo.current
     
@@ -92,49 +82,31 @@ fun DropItem(
     val dragOffset = dragInfo.dragOffset
     val operationToDrop = dragInfo.operationToDrop
     val draggableRow = dragInfo.draggableRow
-    val draggableColumn = dragInfo.draggableColumn
     
     var isDropTarget by remember { mutableStateOf(false) }
     var isDragLeaving by remember { mutableStateOf(false) }
     var isFullField by remember { mutableStateOf(false) }
     
-    
-    
-//    var myValue by remember { mutableStateOf(blockViewModel.addedBlocks[i][j]) }
-////    var myValue2 = blockViewModel.addedBlocks[i][j]
-//    LaunchedEffect(myValue) {
-//        blockViewModel.addBlock(myValue, i, j)
-//    }
-    
-    
     Box(modifier = modifier.onGloballyPositioned {
         it.boundsInWindow().let { rect ->
             isDropTarget = rect.contains(dragPosition + dragOffset)
-            isDragLeaving = !isDropTarget && draggableRow == i && draggableColumn == j
+            isDragLeaving = !isDropTarget && draggableRow == i
         }
     }) {
-        
-        // блок заполнен, но пользователь перетаскивает на его место другой блок
-//        if (isFullField && isDropTarget && !isDragging && (draggableColumn != j || draggableRow != i)) {
-//            blockViewModel.shift(operationToDrop, i, j)
-//        }
     
         // блок пуст и в него перетащили новый блок
         if (isDropTarget && !isDragging) {
             isFullField = true
-            blockViewModel.addBlock(operationToDrop, i, j)
+            blockViewModel.addBlock(operationToDrop, i)
         }
     
 //        // пользователь перетащил содержание блока в другое место
         if (isDragLeaving && !isDragging) {
             isFullField = false
-            blockViewModel.addBlock(CodeBlockOperation.DEFAULT, i, j)
+            blockViewModel.addBlock(null, i)
         }
         
-        var currentOperation = blockViewModel.getOperation(i, j)
-        val isAvailable = i <= blockViewModel.maxRow && j <= blockViewModel.maxColumn
-    
-        content(isDropTarget, isFullField, isAvailable, currentOperation)
+        content(isDropTarget, isFullField)
     }
 }
 
@@ -145,10 +117,9 @@ internal class DragTargetInfo {
     var dragPosition by mutableStateOf(Offset.Zero)
     var dragOffset by mutableStateOf(Offset.Zero)
     var draggableComposable by mutableStateOf<(@Composable () -> Unit)?>(null)
-    var operationToDrop by mutableStateOf(CodeBlockOperation.DEFAULT)
+    var operationToDrop by mutableStateOf<CodeBlock?>(null)
     
     var draggableRow by mutableStateOf(-1)
-    var draggableColumn by mutableStateOf(-1)
 }
 
 // экран, на котором можно перетаскивать draggable элементы
