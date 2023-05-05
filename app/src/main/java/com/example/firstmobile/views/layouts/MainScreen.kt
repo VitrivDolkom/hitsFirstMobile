@@ -3,6 +3,7 @@ package com.example.firstmobile.views.layouts
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
@@ -15,6 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.firstmobile.views.draganddrop.CodeBlock
 import com.example.firstmobile.views.draganddrop.DragTarget
 import com.example.firstmobile.views.draganddrop.DropItem
+import java.util.*
 
 @Composable
 fun MainScreen(
@@ -38,13 +40,21 @@ fun MainScreen(
                 if (block.operation == "") {
                     DropItem(
                         i = i,
+                        id = block.id,
+                        isLeftChild = false,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp)
-                            .background(Color.Blue),
-                        blockViewModel = blockViewModel
-                    ) { _, _ ->
-                        Text(text = "empty")
+                            .height(64.dp), blockViewModel = blockViewModel
+                    ) { isHovered, _ ->
+                        Box(
+                            modifier = Modifier
+                                .fillMaxSize()
+                                .border(
+                                    1.dp,
+                                    color = if (isHovered) Color.Red else Color.Blue,
+                                    shape = RoundedCornerShape(15.dp)
+                                )
+                        ) {}
                     }
                 } else {
                     DragTarget(
@@ -54,17 +64,21 @@ fun MainScreen(
                             modifier = Modifier
                                 .height(64.dp)
                                 .border(
-                                    3.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                                    2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
                                 ), contentAlignment = Alignment.Center
                         ) {
-                            Row(
-                                modifier = Modifier.fillMaxSize(),
+                            LazyRow(
+                                modifier = Modifier
+                                    .fillMaxHeight()
+                                    .padding(horizontal = 8.dp),
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                DropItemLayout(i, blockViewModel, block.leftBlock)
-                                Text(text = block.operation)
-                                DropItemLayout(i, blockViewModel, block.rightBlock)
+                                items(1) {
+                                    DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
+                                    Text(text = block.operation, modifier = Modifier.padding(horizontal = 8.dp))
+                                    DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
+                                }
                             }
                         }
                     }
@@ -75,7 +89,7 @@ fun MainScreen(
 }
 
 @Composable
-fun DropItemLayout(i: Int, blockViewModel: CodeBlockViewModel, block: CodeBlock?) {
+fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: CodeBlock?, isLeftChild: Boolean) {
     if (block != null) {
         DragTarget(
             i = i, operationToDrop = block, viewModel = blockViewModel
@@ -83,28 +97,43 @@ fun DropItemLayout(i: Int, blockViewModel: CodeBlockViewModel, block: CodeBlock?
             Box(
                 modifier = Modifier
                     .height(64.dp)
+                    .padding(horizontal = 8.dp)
                     .border(
-                        3.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                        2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
                     ), contentAlignment = Alignment.Center
             ) {
                 Row(
-                    modifier = Modifier.fillMaxSize(),
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(8.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    DropItemLayout(i, blockViewModel, block.leftBlock)
+                    DropItemLayout(i, id, blockViewModel, block.leftBlock, true)
                     Text(text = block.operation)
-                    DropItemLayout(i, blockViewModel, block.rightBlock)
+                    DropItemLayout(i, id, blockViewModel, block.rightBlock, false)
                 }
             }
         }
     } else {
         DropItem(
-            i = i, modifier = Modifier
+            i = i,
+            id = id,
+            isLeftChild = isLeftChild,
+            modifier = Modifier
                 .height(64.dp)
-                .background(Color.White), blockViewModel = blockViewModel
-        ) { _, _ ->
-            Text(text = "empty")
+                .padding(horizontal = 8.dp)
+                .background(Color.White),
+            blockViewModel = blockViewModel
+        ) { isHovered, _ ->
+            Box(
+                modifier = Modifier
+                    .height(50.dp)
+                    .defaultMinSize(minWidth = 80.dp)
+                    .border(
+                        1.dp, color = if (isHovered) Color.Red else Color.Blue, shape = RoundedCornerShape(15.dp)
+                    )
+            ) {}
         }
     }
 }
