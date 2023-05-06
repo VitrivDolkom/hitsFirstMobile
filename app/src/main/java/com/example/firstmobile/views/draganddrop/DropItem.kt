@@ -7,11 +7,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
+import java.util.UUID
 
 // место куда можно перетаскивать блоки
 @Composable
 fun DropItem(
     i: Int,
+    id: UUID,
+    isLeftChild: Boolean,
     modifier: Modifier = Modifier,
     blockViewModel: CodeBlockViewModel,
     content: @Composable (BoxScope.(isHovered: Boolean, isFullField: Boolean) -> Unit)
@@ -23,6 +26,7 @@ fun DropItem(
     val dragOffset = dragInfo.dragOffset
     val operationToDrop = dragInfo.operationToDrop
     val draggableRow = dragInfo.draggableRow
+    val draggableId = dragInfo.draggableId
     
     var isDropTarget by remember { mutableStateOf(false) }
     var isDragLeaving by remember { mutableStateOf(false) }
@@ -31,20 +35,20 @@ fun DropItem(
     Box(modifier = modifier.onGloballyPositioned {
         it.boundsInWindow().let { rect ->
             isDropTarget = rect.contains(dragPosition + dragOffset)
-            isDragLeaving = !isDropTarget && draggableRow == i
+            isDragLeaving = !isDropTarget && draggableRow == i && draggableId == id
         }
     }) {
         
         // блок пуст и в него перетащили новый блок
         if (isDropTarget && !isDragging) {
             isFullField = true
-            blockViewModel.addBlock(operationToDrop, i)
+            blockViewModel.addBlock(operationToDrop, i, id, isLeftChild)
         }
         
         // пользователь перетащил содержание блока в другое место
-        if (isDragLeaving && !isDragging) {
+        if (isDragLeaving && !isDragging && i != -1) {
             isFullField = false
-            blockViewModel.addBlock(null, i)
+            blockViewModel.addBlock(null, i, id, isLeftChild)
         }
         
         content(isDropTarget, isFullField)

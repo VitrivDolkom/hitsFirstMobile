@@ -8,6 +8,7 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
+import java.util.*
 
 // функция, которая отрисовывает перемещаемый блок
 // получает операцию блока, сам блок и modifier для обёртки блока
@@ -35,8 +36,9 @@ fun DragTarget(
                     state.operationToDrop = operationToDrop
                     state.dragPosition = currentPosition + it
                     state.draggableComposable = content
-                    state.draggableRow = i
                     state.isDragging = true
+                    state.draggableRow = i
+                    state.draggableId = operationToDrop.id
                 }, onDrag = { change, dragAmount ->
                     change.consume()
                     state.dragOffset += dragAmount
@@ -46,12 +48,14 @@ fun DragTarget(
                     state.isDragging = false
                     
                     state.draggableRow = -1
+                    state.draggableId = UUID.randomUUID()
                 }, onDragCancel = {
                     state.dragPosition = Offset.Zero
                     state.dragOffset = Offset.Zero
                     state.isDragging = false
                     
                     state.draggableRow = -1
+                    state.draggableId = UUID.randomUUID()
                 })
         }) { // отображаем блок, который перетаскиваем
         content()
