@@ -46,7 +46,7 @@ fun DropItem(
         }
         
         // пользователь перетащил содержание блока в другое место
-        if (isDragLeaving && !isDragging) {
+        if (isDragLeaving && !isDragging && i != -1) {
             isFullField = false
             blockViewModel.addBlock(null, i, id, isLeftChild)
         }

@@ -41,11 +41,12 @@ class CodeBlockViewModel : ViewModel() {
             _blocks.value[i] = CodeBlock()
             return
         }
-        
+    
         if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
             appendNewChild(_blocks.value[i], block, id, isLeftChild)
         } else {
-            _blocks.value[i] = block
+            // создаю копию блока, чтобы сменить id
+            _blocks.value[i] = CodeBlock(block.leftBlock, block.operation, block.rightBlock, UUID.randomUUID())
         }
         
         if (i == (_blocks.value.size - 1)) {

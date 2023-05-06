@@ -87,13 +87,13 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
             ) {
                 items(1) {
                     if (!block.operation.isSpecialOperation()) {
-                        DropItemLayout(0, block.id, blockViewModel, block.leftBlock, true)
+                        DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
                     } else if (block.operation == CodeBlockOperation.EQUAL) {
                         TextField(value = "", onValueChange = {  })
                     }
     
                     Text(text = block.operation.symbol)
-                    DropItemLayout(0, block.id, blockViewModel, block.rightBlock, false)
+                    DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                 }
             }
         }
@@ -122,13 +122,13 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     if (!block.operation.isSpecialOperation()) {
-                        DropItemLayout(0, block.id, blockViewModel, block.leftBlock, true)
+                        DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
                     } else if (block.operation == CodeBlockOperation.EQUAL) {
                         TextField(value = "", onValueChange = {  })
                     }
     
                     Text(text = block.operation.symbol)
-                    DropItemLayout(0, block.id, blockViewModel, block.rightBlock, false)
+                    DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                 }
             }
         }

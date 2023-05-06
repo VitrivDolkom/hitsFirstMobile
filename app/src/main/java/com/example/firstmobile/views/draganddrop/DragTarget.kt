@@ -38,7 +38,7 @@ fun DragTarget(
                     state.draggableComposable = content
                     state.isDragging = true
                     state.draggableRow = i
-                    state.draggableId = if (i == -1) UUID.randomUUID() else operationToDrop.id
+                    state.draggableId = operationToDrop.id
                 }, onDrag = { change, dragAmount ->
                     change.consume()
                     state.dragOffset += dragAmount
