@@ -7,12 +7,14 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.views.draganddrop.CodeBlock
 import com.example.firstmobile.views.draganddrop.DragTarget
 import com.example.firstmobile.views.draganddrop.DropItem
@@ -37,7 +39,7 @@ fun MainScreen(
                 .height(600.dp)
         ) {
             itemsIndexed(blocks) { i, block ->
-                if (block.operation == "") {
+                if (block.operation == CodeBlockOperation.DEFAULT) {
                     DropItem(
                         i = i,
                         id = block.id,
@@ -57,31 +59,41 @@ fun MainScreen(
                         ) {}
                     }
                 } else {
-                    DragTarget(
-                        i = i, operationToDrop = block, viewModel = blockViewModel
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .height(64.dp)
-                                .border(
-                                    2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
-                                ), contentAlignment = Alignment.Center
-                        ) {
-                            LazyRow(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(horizontal = 8.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-                                items(1) {
-                                    DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
-                                    Text(text = block.operation, modifier = Modifier.padding(horizontal = 8.dp))
-                                    DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
-                                }
-                            }
-                        }
+                    SingleBlock(blockViewModel, block, i)
+                }
+            }
+        }
+    }
+}
+
+@Composable
+fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
+    DragTarget(
+        i = i, operationToDrop = block, viewModel = blockViewModel
+    ) {
+        Box(
+            modifier = Modifier
+                .height(64.dp)
+                .border(
+                    2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                ), contentAlignment = Alignment.Center
+        ) {
+            LazyRow(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                items(1) {
+                    if (!block.operation.isSpecialOperation()) {
+                        DropItemLayout(0, block.id, blockViewModel, block.leftBlock, true)
+                    } else if (block.operation == CodeBlockOperation.EQUAL) {
+                        TextField(value = "", onValueChange = {  })
                     }
+    
+                    Text(text = block.operation.symbol)
+                    DropItemLayout(0, block.id, blockViewModel, block.rightBlock, false)
                 }
             }
         }
@@ -109,9 +121,14 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
-                    DropItemLayout(i, id, blockViewModel, block.leftBlock, true)
-                    Text(text = block.operation)
-                    DropItemLayout(i, id, blockViewModel, block.rightBlock, false)
+                    if (!block.operation.isSpecialOperation()) {
+                        DropItemLayout(0, block.id, blockViewModel, block.leftBlock, true)
+                    } else if (block.operation == CodeBlockOperation.EQUAL) {
+                        TextField(value = "", onValueChange = {  })
+                    }
+    
+                    Text(text = block.operation.symbol)
+                    DropItemLayout(0, block.id, blockViewModel, block.rightBlock, false)
                 }
             }
         }
