@@ -1,5 +1,6 @@
 package com.example.firstmobile.views.draganddrop
 
+import android.util.Log
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.*
@@ -40,9 +41,12 @@ fun DropItem(
     }) {
         
         // блок пуст и в него перетащили новый блок
-        if (isDropTarget && !isDragging) {
+        if (isDropTarget && !isDragging && i != -1) {
             isFullField = true
             blockViewModel.addBlock(operationToDrop, i, id, isLeftChild)
+//
+//            dragInfo.draggableRow = -1
+//            dragInfo.draggableId = UUID.randomUUID()
         }
         
         // пользователь перетащил содержание блока в другое место

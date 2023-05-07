@@ -21,7 +21,25 @@ class CodeBlockViewModel : ViewModel() {
     private var _test = MutableStateFlow(0)
     val test = _test.asStateFlow()
     
-    private fun appendNewChild(currentCodeBlock: CodeBlock?, targetCodeBlock: CodeBlock, id: UUID, isLeftChild: Boolean) {
+    private fun isFirstIdDeeperThanSecond(block: CodeBlock?, id1: UUID, id2: UUID): Boolean {
+        if (block == null) return true
+        if (block.id == id1) return false
+        else if (block.id == id2) return true
+        return isFirstIdDeeperThanSecond(block.leftBlock, id1, id2) && isFirstIdDeeperThanSecond(
+            block.rightBlock,
+            id1,
+            id2
+        )
+    }
+    
+    fun isChildren(i: Int, dragId: UUID?, id: UUID): Boolean {
+        if (dragId == null) return true
+        return isFirstIdDeeperThanSecond(_blocks.value[i], id, dragId)
+    }
+    
+    private fun appendNewChild(
+        currentCodeBlock: CodeBlock?, targetCodeBlock: CodeBlock, id: UUID, isLeftChild: Boolean
+    ) {
         if (currentCodeBlock == null) return
         
         if (currentCodeBlock.id != id) {
@@ -41,11 +59,10 @@ class CodeBlockViewModel : ViewModel() {
             _blocks.value[i] = CodeBlock()
             return
         }
-    
+        
         if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
             appendNewChild(_blocks.value[i], block, id, isLeftChild)
-        } else {
-            // создаю копию блока, чтобы сменить id
+        } else { // создаю копию блока, чтобы сменить id
             _blocks.value[i] = CodeBlock(block.leftBlock, block.operation, block.rightBlock, UUID.randomUUID())
         }
         
@@ -69,7 +86,7 @@ class CodeBlockViewModel : ViewModel() {
     
     private fun parser(): Array<String> {
         val strings = Array(_blocks.value.size) { "n = $it" }
-    
+        
         _blocks.value.forEachIndexed { index, block ->
             strings[index] = parseSingleBlock(block, "")
         }

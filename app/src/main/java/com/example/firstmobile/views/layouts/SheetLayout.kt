@@ -105,11 +105,11 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                 horizontalArrangement = Arrangement.SpaceEvenly,
                                 verticalAlignment = Alignment.CenterVertically
                             ) {
-                                if (!operation.isSpecialOperation()) {
+//                                if (block.operation == CodeBlockOperation.EQUAL) {
+//                                    TextField(value = "", onValueChange = {  })
+//                                } else if (!block.operation.isSpecialOperation()) {
                                     DropItemLayout(-1, block.id, blockViewModel, block.leftBlock, true)
-                                } else if (operation == CodeBlockOperation.EQUAL) {
-                                    TextField(value = "", onValueChange = { newText ->  })
-                                }
+//                                }
                                 
                                 Text(text = block.operation.symbol)
                                 DropItemLayout(-1, block.id, blockViewModel, block.rightBlock, false)

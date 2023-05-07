@@ -30,33 +30,31 @@ fun DragTarget(
             currentPosition = it.localToWindow(Offset.Zero)
         }
         .pointerInput(Unit) { // логика при перемещении блока
-            detectDragGesturesAfterLongPress(
-                onDragStart = {
-                    
-                    state.operationToDrop = operationToDrop
-                    state.dragPosition = currentPosition + it
-                    state.draggableComposable = content
-                    state.isDragging = true
-                    state.draggableRow = i
-                    state.draggableId = operationToDrop.id
-                }, onDrag = { change, dragAmount ->
-                    change.consume()
-                    state.dragOffset += dragAmount
-                }, onDragEnd = {
-                    state.dragPosition = Offset.Zero
-                    state.dragOffset = Offset.Zero
-                    state.isDragging = false
-                    
-                    state.draggableRow = -1
-                    state.draggableId = UUID.randomUUID()
-                }, onDragCancel = {
-                    state.dragPosition = Offset.Zero
-                    state.dragOffset = Offset.Zero
-                    state.isDragging = false
-                    
-                    state.draggableRow = -1
-                    state.draggableId = UUID.randomUUID()
-                })
+            detectDragGesturesAfterLongPress(onDragStart = {
+                state.operationToDrop = operationToDrop
+                state.dragPosition = currentPosition + it
+                state.draggableComposable = content
+                state.isDragging = true
+                state.draggableRow = i
+                state.draggableId = operationToDrop.id
+            }, onDrag = { change, dragAmount ->
+                change.consume()
+                state.dragOffset += dragAmount
+            }, onDragEnd = {
+                state.dragPosition = Offset.Zero
+                state.dragOffset = Offset.Zero
+                state.isDragging = false
+            
+                //                    state.draggableRow = -1
+                //                    state.draggableId = UUID.randomUUID()
+            }, onDragCancel = {
+                state.dragPosition = Offset.Zero
+                state.dragOffset = Offset.Zero
+                state.isDragging = false
+            
+//                                    state.draggableRow = -1
+//                                    state.draggableId = UUID.randomUUID()
+            })
         }) { // отображаем блок, который перетаскиваем
         content()
     }
