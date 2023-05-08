@@ -44,9 +44,6 @@ fun DropItem(
         if (isDropTarget && !isDragging && i != -1) {
             isFullField = true
             blockViewModel.addBlock(operationToDrop, i, id, isLeftChild)
-//
-//            dragInfo.draggableRow = -1
-//            dragInfo.draggableId = UUID.randomUUID()
         }
         
         // пользователь перетащил содержание блока в другое место

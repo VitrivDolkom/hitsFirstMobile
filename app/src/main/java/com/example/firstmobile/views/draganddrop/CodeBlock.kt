@@ -7,5 +7,6 @@ data class CodeBlock(
     var leftBlock: CodeBlock? = null,
     var operation: CodeBlockOperation = CodeBlockOperation.DEFAULT,
     var rightBlock: CodeBlock? = null,
-    val id: UUID = UUID.randomUUID()
+    val id: UUID = UUID.randomUUID(),
+    var input: String = ""
 )

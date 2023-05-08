@@ -2,7 +2,7 @@ package com.example.firstmobile.model
 
 enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     EQUAL("="), ADD("+"), SUBTRACT("-"), MULTIPLY("*"), DIVIDE("/"), PERCENT("%"),
-    LOOP("while"), CONDITION("if"),
+    LOOP("while"), CONDITION("if"), INPUT("input", ""),
     DEFAULT("");
     
     private fun mathOperations(): List<CodeBlockOperation> = listOf(EQUAL, ADD, SUBTRACT, MULTIPLY, DIVIDE, PERCENT)
@@ -11,7 +11,7 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     
     private fun arrayVariables(): List<CodeBlockOperation> = listOf(DEFAULT)
     
-    private fun specialOperations(): List<CodeBlockOperation> = listOf(LOOP, CONDITION)
+    private fun specialOperations(): List<CodeBlockOperation> = listOf(LOOP, CONDITION, INPUT)
     
     fun isSpecialOperation(): Boolean = this in specialOperations()
     

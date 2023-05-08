@@ -45,15 +45,15 @@ fun DragTarget(
                 state.dragOffset = Offset.Zero
                 state.isDragging = false
             
-                //                    state.draggableRow = -1
-                //                    state.draggableId = UUID.randomUUID()
+                state.draggableRow = -1
+                state.draggableId = UUID.randomUUID()
             }, onDragCancel = {
                 state.dragPosition = Offset.Zero
                 state.dragOffset = Offset.Zero
                 state.isDragging = false
             
-//                                    state.draggableRow = -1
-//                                    state.draggableId = UUID.randomUUID()
+                state.draggableRow = -1
+                state.draggableId = UUID.randomUUID()
             })
         }) { // отображаем блок, который перетаскиваем
         content()

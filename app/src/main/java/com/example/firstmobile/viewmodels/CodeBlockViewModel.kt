@@ -21,20 +21,27 @@ class CodeBlockViewModel : ViewModel() {
     private var _test = MutableStateFlow(0)
     val test = _test.asStateFlow()
     
-    private fun isFirstIdDeeperThanSecond(block: CodeBlock?, id1: UUID, id2: UUID): Boolean {
-        if (block == null) return true
-        if (block.id == id1) return false
-        else if (block.id == id2) return true
-        return isFirstIdDeeperThanSecond(block.leftBlock, id1, id2) && isFirstIdDeeperThanSecond(
-            block.rightBlock,
-            id1,
-            id2
-        )
-    }
+    //    private fun isFirstIdDeeperThanSecond(block: CodeBlock?, id1: UUID, id2: UUID): Boolean {
+    //        if (block == null) return true
+    //        if (block.id == id1) return false
+    //        else if (block.id == id2) return true
+    //        return isFirstIdDeeperThanSecond(block.leftBlock, id1, id2) && isFirstIdDeeperThanSecond(
+    //            block.rightBlock,
+    //            id1,
+    //            id2
+    //        )
+    //    }
+    //
+    //    fun isChildren(i: Int, dragId: UUID?, id: UUID): Boolean {
+    //        if (dragId == null) return true
+    //        return isFirstIdDeeperThanSecond(_blocks.value[i], id, dragId)
+    //    }
     
-    fun isChildren(i: Int, dragId: UUID?, id: UUID): Boolean {
-        if (dragId == null) return true
-        return isFirstIdDeeperThanSecond(_blocks.value[i], id, dragId)
+    fun updateInput(i: Int, id: UUID, newText: String, isLeftChild: Boolean) {
+        _test.value += 1
+        
+        val updatedInputBlock = CodeBlock(null, CodeBlockOperation.INPUT, null, id, newText)
+        appendNewChild(_blocks.value[i], updatedInputBlock, id, isLeftChild)
     }
     
     private fun appendNewChild(
@@ -52,12 +59,18 @@ class CodeBlockViewModel : ViewModel() {
         else currentCodeBlock.rightBlock = targetCodeBlock
     }
     
-    fun addBlock(block: CodeBlock?, i: Int, id: UUID, isLeftChild: Boolean) {
+    fun addBlock(parentBlock: CodeBlock?, i: Int, id: UUID, isLeftChild: Boolean) {
         _test.value += 1
         
-        if (block == null) {
+        if (parentBlock == null) {
             _blocks.value[i] = CodeBlock()
             return
+        }
+        
+        
+        var block = parentBlock
+        if (parentBlock.operation == CodeBlockOperation.EQUAL && parentBlock.leftBlock == null) {
+            block = CodeBlock(CodeBlock(null, CodeBlockOperation.INPUT, null), block.operation, block.rightBlock, id)
         }
         
         if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
@@ -77,7 +90,7 @@ class CodeBlockViewModel : ViewModel() {
         
         text = parseSingleBlock(block.leftBlock, text)
         
-        text += "${block.operation.symbol} "
+        text += "${if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol} "
         
         text = parseSingleBlock(block.rightBlock, text)
         

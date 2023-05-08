@@ -98,21 +98,24 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                     2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
                                 ), contentAlignment = Alignment.Center
                         ) {
-                            Row(
-                                modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(4.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.CenterVertically
-                            ) {
-//                                if (block.operation == CodeBlockOperation.EQUAL) {
-//                                    TextField(value = "", onValueChange = {  })
-//                                } else if (!block.operation.isSpecialOperation()) {
-                                    DropItemLayout(-1, block.id, blockViewModel, block.leftBlock, true)
-//                                }
-                                
-                                Text(text = block.operation.symbol)
-                                DropItemLayout(-1, block.id, blockViewModel, block.rightBlock, false)
+                            if (block.operation == CodeBlockOperation.INPUT) {
+                                Text("Ввод", fontSize = 20.sp)
+                            } else {
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .padding(4.dp),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    
+                                    if (!block.operation.isSpecialOperation()) {
+                                        DropItemLayout(-1, block.id, blockViewModel, block.leftBlock, true)
+                                    }
+                                    
+                                    Text(text = block.operation.symbol)
+                                    DropItemLayout(-1, block.id, blockViewModel, block.rightBlock, false)
+                                }
                             }
                         }
                     }
