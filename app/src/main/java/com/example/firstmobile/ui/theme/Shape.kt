@@ -14,3 +14,10 @@ val BottomSheetShape = RoundedCornerShape(
     bottomEnd = 0.dp,
     bottomStart = 0.dp
 )
+
+val BlockShape = RoundedCornerShape(
+    topStart = 30.dp,
+    topEnd = 30.dp,
+    bottomEnd = 30.dp,
+    bottomStart = 30.dp
+)

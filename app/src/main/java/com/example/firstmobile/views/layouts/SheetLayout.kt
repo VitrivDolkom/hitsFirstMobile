@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -20,6 +19,8 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
+import com.example.firstmobile.ui.theme.BlockShape
+import com.example.firstmobile.ui.theme.DarkGreen
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.CodeBlock
@@ -41,7 +42,7 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
                 text = "?", fontSize = 30.sp
             )  // Процент видимости: ${sheetState.progress.fraction}
         }
-        
+
         FloatingActionButton(onClick = {
             openSheet(BottomSheetScreen.Screen1)
         }) {
@@ -49,7 +50,7 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
                 text = "+", fontSize = 30.sp
             )  // Процент видимости: ${sheetState.progress.fraction}
         }
-        
+
         FloatingActionButton(onClick = {
             blockViewModel.execute()
             openSheet(BottomSheetScreen.Screen2)
@@ -63,7 +64,9 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
 
 @Composable
 fun DifferentBottomSheets(
-    blockViewModel: CodeBlockViewModel, currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit
+    blockViewModel: CodeBlockViewModel,
+    currentScreen: BottomSheetScreen,
+    onCloseBottomSheet: () -> Unit
 ) {
     when (currentScreen) {
         BottomSheetScreen.Screen1 -> AvailableBlocks(blockViewModel)
@@ -87,32 +90,48 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
             ) {
                 row.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
-                    
-                    DragTarget(
-                        i = -1, operationToDrop = block, viewModel = blockViewModel
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .height(32.dp)
-                                .border(
-                                    2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
-                                ), contentAlignment = Alignment.Center
+
+                    Box(modifier = Modifier.padding(4.dp)) {
+                        DragTarget(
+                            i = -1, operationToDrop = block, viewModel = blockViewModel
                         ) {
-                            Row(
+                            Box(
                                 modifier = Modifier
-                                    .fillMaxHeight()
-                                    .padding(4.dp),
-                                horizontalArrangement = Arrangement.SpaceEvenly,
-                                verticalAlignment = Alignment.CenterVertically
+                                    .height(32.dp)
+                                    .border(
+                                        2.dp, color = DarkGreen, shape = BlockShape
+                                    )
+                                    .background(color = Color.Green, shape = BlockShape),
+                                contentAlignment = Alignment.Center
                             ) {
-                                if (!operation.isSpecialOperation()) {
-                                    DropItemLayout(-1, block.id, blockViewModel, block.leftBlock, true)
-                                } else if (operation == CodeBlockOperation.EQUAL) {
-                                    TextField(value = "", onValueChange = { newText ->  })
+                                Row(
+                                    modifier = Modifier
+                                        .fillMaxHeight()
+                                        .padding(4.dp),
+                                    horizontalArrangement = Arrangement.SpaceBetween,
+                                    verticalAlignment = Alignment.CenterVertically
+                                ) {
+                                    if (!operation.isSpecialOperation()) {
+                                        DropItemLayout(
+                                            -1,
+                                            block.id,
+                                            blockViewModel,
+                                            block.leftBlock,
+                                            true
+                                        )
+                                    } else if (operation == CodeBlockOperation.EQUAL) {
+                                        TextField(value = "", onValueChange = { newText -> })
+                                    }
+
+                                    Text(text = block.operation.symbol)
+                                    DropItemLayout(
+                                        -1,
+                                        block.id,
+                                        blockViewModel,
+                                        block.rightBlock,
+                                        false
+                                    )
                                 }
-                                
-                                Text(text = block.operation.symbol)
-                                DropItemLayout(-1, block.id, blockViewModel, block.rightBlock, false)
                             }
                         }
                     }
@@ -125,11 +144,11 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
 @Composable
 fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     val output by blockViewModel.output.collectAsState()
-    
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(500.dp)
+            .height(300.dp)
             .background(Color.Black, shape = RectangleShape)
     ) {
         LazyColumn(
@@ -153,8 +172,17 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
 
 @Composable
 fun Instructions() {
-    val instructions = listOf("Инструкция", "В", "С", "Ы")
-    
+    val instructions = listOf(
+        "Инструкция",
+        "В нашей IDE все очень просто, жмете на кнопку со знаком '+', для вас высвечивается меню с блоками, далее зажимаете пальцем на блок и перетаскиваете в окошко на экране, после построения кода достаточно нажать на кнопку со знаком '>' и ваш код запустится. Надеемся это вам помогло.",
+        "",
+        "Авторы:",
+        "Дмитрий Волков",
+        "Алексей Шумков",
+        "Данил Васильев",
+        ""
+    )
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -164,7 +192,11 @@ fun Instructions() {
     ) {
         items(count = 1) {
             instructions.forEach { instruction ->
-                Text(text = instruction, fontSize = 64.sp)
+                if (instruction == "Инструкция" || instruction == "Авторы:") {
+                    Text(text = instruction, fontSize = 32.sp)
+                } else {
+                    Text(text = instruction, fontSize = 25.sp)
+                }
             }
         }
     }
