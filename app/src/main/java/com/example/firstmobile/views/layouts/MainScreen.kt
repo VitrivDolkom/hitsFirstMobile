@@ -49,7 +49,7 @@ fun MainScreen(
                             .fillMaxWidth()
                             .height(64.dp),
                         blockViewModel = blockViewModel
-                    ) { isHovered, _ ->
+                    ) { isHovered, isLeaving ->
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -122,7 +122,7 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                 .padding(horizontal = 8.dp)
                 .background(Color.White),
             blockViewModel = blockViewModel
-        ) { isHovered, _ ->
+        ) { isHovered, isLeaving ->
             Box(
                 modifier = Modifier
                     .height(50.dp)
@@ -147,7 +147,7 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                 .padding(horizontal = 8.dp)
                 .background(Color.White),
             blockViewModel = blockViewModel
-        ) { isHovered, _ ->
+        ) { isHovered, isLeaving ->
             Box(
                 modifier = Modifier
                     .border(

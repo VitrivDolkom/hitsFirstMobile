@@ -108,7 +108,6 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                     horizontalArrangement = Arrangement.SpaceEvenly,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    
                                     if (!block.operation.isSpecialOperation()) {
                                         DropItemLayout(-1, block.id, blockViewModel, block.leftBlock, true)
                                     }
