@@ -1,6 +1,5 @@
 package com.example.firstmobile.views.layouts
 
-import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -14,6 +13,7 @@ import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.BlockShape
 import com.example.firstmobile.ui.theme.DarkGreen
@@ -27,13 +27,14 @@ fun MainScreen(
     blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
     SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
-    
+
     val blocks by blockViewModel.blocks.collectAsState()
     val test by blockViewModel.test.collectAsState()
-    
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
+        Text(text= "$test", fontSize=0.sp)
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -47,9 +48,8 @@ fun MainScreen(
                         isLeftChild = false,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp),
-                        blockViewModel = blockViewModel
-                    ) { isHovered, isLeaving ->
+                            .height(64.dp), blockViewModel = blockViewModel
+                    ) { isHovered, _ ->
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
@@ -70,6 +70,7 @@ fun MainScreen(
 
 @Composable
 fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
+    Box(modifier=Modifier.padding(4.dp)){
     DragTarget(
         i = i, operationToDrop = block, viewModel = blockViewModel
     ) {
@@ -78,7 +79,9 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                 .height(64.dp)
                 .border(
                     2.dp, color = DarkGreen, shape = BlockShape
-                ), contentAlignment = Alignment.Center
+                )
+                .background(color = Color.Green, shape = BlockShape),
+            contentAlignment = Alignment.Center
         ) {
             LazyRow(
                 modifier = Modifier
@@ -88,123 +91,74 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(1) {
-                    
-                    if (block.operation.isSpecialOperation()) {
-                        Box(
-                            modifier = Modifier
-                                .width(0.dp)
-                                .height(0.dp)
-                        ) {
-                            DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
-                        }
-                    } else {
+                    if (!block.operation.isSpecialOperation()) {
                         DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
+                    } else if (block.operation == CodeBlockOperation.EQUAL) {
+                        TextField(value = "", onValueChange = { })
                     }
-                    
-                    
+
                     Text(text = block.operation.symbol)
                     DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                 }
             }
         }
     }
+    }
 }
 
 @Composable
 fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: CodeBlock?, isLeftChild: Boolean) {
-    if (block == null) {
-        DropItem(
-            i = i,
-            id = id,
-            isLeftChild = isLeftChild,
-            modifier = Modifier
-                .height(64.dp)
-                .padding(horizontal = 8.dp)
-                .background(Color.White),
-            blockViewModel = blockViewModel
-        ) { isHovered, isLeaving ->
+    if (block != null) {
+        DragTarget(
+            i = i, operationToDrop = block, viewModel = blockViewModel
+        ) {
             Box(
                 modifier = Modifier
-                    .height(50.dp)
-                    .defaultMinSize(minWidth = 80.dp)
+                    .height(64.dp)
+                    .padding(horizontal = 8.dp)
                     .border(
-                        1.dp, color = if (isHovered) Color.Red else Color.Blue, shape = RoundedCornerShape(15.dp)
-                    )
-            ) {}
+                        2.dp, color = DarkGreen, shape = BlockShape
+                    ).background(color = Color.Green, shape = BlockShape),
+                contentAlignment = Alignment.Center
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxHeight()
+                        .padding(horizontal = 8.dp),
+                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    if (!block.operation.isSpecialOperation()) {
+                        DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
+                    } else if (block.operation == CodeBlockOperation.EQUAL) {
+                        TextField(value = "", onValueChange = {  })
+                    }
+
+                    Text(text = block.operation.symbol)
+                    DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
+                }
+            }
         }
-        
-        
-        return
-    }
-    
-    if (block.operation == CodeBlockOperation.INPUT) {
+    } else {
         DropItem(
             i = i,
             id = id,
             isLeftChild = isLeftChild,
             modifier = Modifier
-                .height(64.dp)
+                .height(48.dp)
                 .padding(horizontal = 8.dp)
                 .background(Color.White, shape = BlockShape),
             blockViewModel = blockViewModel
-        ) { isHovered, isLeaving ->
+        ) { isHovered, _ ->
             Box(
                 modifier = Modifier
+                    .height(48.dp)
+                    .defaultMinSize(minWidth = 80.dp)
                     .border(
                         1.dp, color = if (isHovered) Color.Red else DarkGreen, shape = BlockShape
                     )
-            ) {
-                TextField(modifier = Modifier.width(64.dp), value = block.input, onValueChange = { newText ->
-                    blockViewModel.updateInput(
-                        i, id, newText, isLeftChild
-                    )
-                })
-            }
-        }
-        
-        
-        return
-    }
-    
-    // обычный случай, когда блок есть и он не input
-    DragTarget(
-        i = i, operationToDrop = block, viewModel = blockViewModel
-    ) {
-        Box(
-            modifier = Modifier
-                .height(64.dp)
-                .padding(horizontal = 8.dp)
-                .border(
-                    2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
-                ), contentAlignment = Alignment.Center
-        ) {
-            Row(
-                modifier = Modifier
-                    .fillMaxHeight()
-                    .padding(8.dp),
-                horizontalArrangement = Arrangement.SpaceEvenly,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                if (block.operation == CodeBlockOperation.EQUAL) {
-                    TextField(value = "", onValueChange = { })
-                }
-                
-                if (block.operation.isSpecialOperation()) {
-                    Box(
-                        modifier = Modifier
-                            .width(0.dp)
-                            .height(0.dp)
-                    ) {
-                        DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
-                    }
-                } else {
-                    DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
-                }
-                
-                
-                Text(text = block.operation.symbol)
-                DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
-            }
+                    .background(color=Color.White, shape = BlockShape)
+            ) {}
         }
     }
 }
