@@ -91,10 +91,16 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                 verticalAlignment = Alignment.CenterVertically
             ) {
                 items(1) {
-                    if (!block.operation.isSpecialOperation()) {
+                    if (block.operation.isSpecialOperation()) {
+                        Box(
+                            modifier = Modifier
+                                .width(0.dp)
+                                .height(0.dp)
+                        ) {
+                            DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
+                        }
+                    } else {
                         DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
-                    } else if (block.operation == CodeBlockOperation.EQUAL) {
-                        TextField(value = "", onValueChange = { })
                     }
 
                     Text(text = block.operation.symbol, fontSize=32.sp)
@@ -108,38 +114,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
 
 @Composable
 fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: CodeBlock?, isLeftChild: Boolean) {
-    if (block != null) {
-        DragTarget(
-            i = i, operationToDrop = block, viewModel = blockViewModel
-        ) {
-            Box(
-                modifier = Modifier
-                    .height(64.dp)
-                    .padding(horizontal = 8.dp)
-                    .border(
-                        2.dp, color = DarkGreen, shape = BlockShape
-                    ).background(color = Color.Green, shape = BlockShape),
-                contentAlignment = Alignment.Center
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxHeight()
-                        .padding(horizontal = 8.dp),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    if (!block.operation.isSpecialOperation()) {
-                        DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
-                    } else if (block.operation == CodeBlockOperation.EQUAL) {
-                        TextField(value = "", onValueChange = {  })
-                    }
-
-                    Text(text = block.operation.symbol, fontSize = 32.sp)
-                    DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
-                }
-            }
-        }
-    } else {
+    if (block == null) {
         DropItem(
             i = i,
             id = id,
@@ -147,9 +122,34 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
             modifier = Modifier
                 .height(48.dp)
                 .padding(horizontal = 8.dp)
+                .background(Color.White),
+            blockViewModel = blockViewModel
+        ) { isHovered, isLeaving ->
+            Box(
+                modifier = Modifier
+                    .height(50.dp)
+                    .defaultMinSize(minWidth = 80.dp)
+                    .border(
+                        1.dp, color = if (isHovered) Color.Red else DarkGreen, shape = BlockShape
+                    )
+            ) {}
+        }
+        
+        
+        return
+    }
+    
+    if (block.operation == CodeBlockOperation.INPUT) {
+        DropItem(
+            i = i,
+            id = id,
+            isLeftChild = isLeftChild,
+            modifier = Modifier
+                .height(64.dp)
+                .padding(horizontal = 8.dp)
                 .background(Color.White, shape = BlockShape),
             blockViewModel = blockViewModel
-        ) { isHovered, _ ->
+        ) { isHovered, isLeaving ->
             Box(
                 modifier = Modifier
                     .height(48.dp)
@@ -158,7 +158,59 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                         1.dp, color = if (isHovered) Color.Red else DarkGreen, shape = BlockShape
                     )
                     .background(color=Color.White, shape = BlockShape)
-            ) {}
+            ) {
+                TextField(modifier = Modifier.width(64.dp), value = block.input, onValueChange = { newText ->
+                    blockViewModel.updateInput(
+                        i, id, newText, isLeftChild
+                    )
+                })
+            }
+        }
+        
+        
+        return
+    }
+    
+    // обычный случай, когда блок есть и он не input
+    DragTarget(
+        i = i, operationToDrop = block, viewModel = blockViewModel
+    ) {
+        Box(
+            modifier = Modifier
+                .height(64.dp)
+                .padding(horizontal = 8.dp)
+                .border(
+                    2.dp, color = DarkGreen, shape = BlockShape
+                ).background(color = Color.Green, shape = BlockShape),
+            contentAlignment = Alignment.Center
+        ) {
+            Row(
+                modifier = Modifier
+                    .fillMaxHeight()
+                    .padding(horizontal = 8.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (block.operation == CodeBlockOperation.EQUAL) {
+                    TextField(value = "", onValueChange = { })
+                }
+                
+                if (block.operation.isSpecialOperation()) {
+                    Box(
+                        modifier = Modifier
+                            .width(0.dp)
+                            .height(0.dp)
+                    ) {
+                        DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
+                    }
+                } else {
+                    DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
+                }
+                
+                
+                Text(text = block.operation.symbol, fontSize = 32.sp)
+                DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
+            }
         }
     }
 }

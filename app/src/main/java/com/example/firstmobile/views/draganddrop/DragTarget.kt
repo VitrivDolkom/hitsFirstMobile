@@ -57,7 +57,9 @@ fun DragTarget(
                 state.draggableId = UUID.randomUUID()
             })
         }
-    else modifier) { // отображаем блок, который перетаскиваем
+    else modifier.onGloballyPositioned {
+        currentPosition = it.localToWindow(Offset.Zero)
+    }) { // отображаем блок, который перетаскиваем
         content()
     }
 }
