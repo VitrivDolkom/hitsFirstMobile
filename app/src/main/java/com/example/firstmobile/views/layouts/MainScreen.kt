@@ -97,7 +97,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                         TextField(value = "", onValueChange = { })
                     }
 
-                    Text(text = block.operation.symbol)
+                    Text(text = block.operation.symbol, fontSize=32.sp)
                     DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                 }
             }
@@ -134,7 +134,7 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                         TextField(value = "", onValueChange = {  })
                     }
 
-                    Text(text = block.operation.symbol)
+                    Text(text = block.operation.symbol, fontSize = 32.sp)
                     DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                 }
             }
