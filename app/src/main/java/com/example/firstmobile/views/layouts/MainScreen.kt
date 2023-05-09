@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
@@ -122,7 +123,7 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
             modifier = Modifier
                 .height(48.dp)
                 .padding(horizontal = 8.dp)
-                .background(Color.White),
+                .background(color = Color.White, shape = BlockShape),
             blockViewModel = blockViewModel
         ) { isHovered, isLeaving ->
             Box(
@@ -132,6 +133,7 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                     .border(
                         1.dp, color = if (isHovered) Color.Red else DarkGreen, shape = BlockShape
                     )
+                    .background(color = Color.White, shape = BlockShape)
             ) {}
         }
         
@@ -145,9 +147,9 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
             id = id,
             isLeftChild = isLeftChild,
             modifier = Modifier
-                .height(64.dp)
+                .height(48.dp)
                 .padding(horizontal = 8.dp)
-                .background(Color.White, shape = BlockShape),
+                .background(color = Color.Green, shape = BlockShape),
             blockViewModel = blockViewModel
         ) { isHovered, isLeaving ->
             Box(
@@ -157,9 +159,10 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                     .border(
                         1.dp, color = if (isHovered) Color.Red else DarkGreen, shape = BlockShape
                     )
-                    .background(color=Color.White, shape = BlockShape)
+                    .background(color=Color.White, shape = BlockShape),
+                contentAlignment = Alignment.Center
             ) {
-                TextField(modifier = Modifier.width(64.dp), value = block.input, onValueChange = { newText ->
+                OutlinedTextField(shape = BlockShape, placeholder = {Text("0")}, modifier = Modifier.width(80.dp), value = block.input, onValueChange = { newText ->
                     blockViewModel.updateInput(
                         i, id, newText, isLeftChild
                     )
@@ -191,9 +194,6 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                if (block.operation == CodeBlockOperation.EQUAL) {
-                    TextField(value = "", onValueChange = { })
-                }
                 
                 if (block.operation.isSpecialOperation()) {
                     Box(
