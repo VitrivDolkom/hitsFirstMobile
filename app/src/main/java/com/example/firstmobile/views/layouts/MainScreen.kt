@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
 import androidx.compose.runtime.*
@@ -16,6 +15,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.firstmobile.model.CodeBlockOperation
+import com.example.firstmobile.ui.theme.BlockShape
+import com.example.firstmobile.ui.theme.DarkGreen
 import com.example.firstmobile.views.draganddrop.CodeBlock
 import com.example.firstmobile.views.draganddrop.DragTarget
 import com.example.firstmobile.views.draganddrop.DropItem
@@ -33,7 +34,6 @@ fun MainScreen(
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Text(text = "$test")
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -56,8 +56,8 @@ fun MainScreen(
                                 .border(
                                     1.dp,
                                     color = if (isHovered) Color.Red else Color.Blue,
-                                    shape = RoundedCornerShape(15.dp)
-                                )
+                                    shape = BlockShape
+                                ).background(Color.White, shape = BlockShape)
                         ) {}
                     }
                 } else {
@@ -77,7 +77,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
             modifier = Modifier
                 .height(64.dp)
                 .border(
-                    2.dp, color = Color.Red, shape = RoundedCornerShape(15.dp)
+                    2.dp, color = DarkGreen, shape = BlockShape
                 ), contentAlignment = Alignment.Center
         ) {
             LazyRow(
@@ -145,13 +145,13 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
             modifier = Modifier
                 .height(64.dp)
                 .padding(horizontal = 8.dp)
-                .background(Color.White),
+                .background(Color.White, shape = BlockShape),
             blockViewModel = blockViewModel
         ) { isHovered, isLeaving ->
             Box(
                 modifier = Modifier
                     .border(
-                        1.dp, color = if (isHovered) Color.Red else Color.Blue, shape = RoundedCornerShape(15.dp)
+                        1.dp, color = if (isHovered) Color.Red else DarkGreen, shape = BlockShape
                     )
             ) {
                 TextField(modifier = Modifier.width(64.dp), value = block.input, onValueChange = { newText ->
