@@ -10,7 +10,6 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import java.util.UUID
 
-
 @Composable
 fun DropItem(
     i: Int,
@@ -19,7 +18,8 @@ fun DropItem(
     modifier: Modifier = Modifier,
     blockViewModel: CodeBlockViewModel,
     content: @Composable (BoxScope.(isHovered: Boolean, isFullField: Boolean) -> Unit)
-) { // контэйнер, в который можно перетаскивать блоки
+) {
+    // контэйнер, в который можно перетаскивать блоки
     val dragInfo = LocalDragTargetInfo.current
     
     val isDragging = dragInfo.isDragging
@@ -52,8 +52,6 @@ fun DropItem(
             blockViewModel.addBlock(null, i, id, isLeftChild)
         }
         
-        // здесь можно менять например задний цвет или рамку блока
-        // isDragLeaving - когда чел перетаскивает в другое место можно помечать красным например
         content(isDropTarget, isDragLeaving)
     }
 }

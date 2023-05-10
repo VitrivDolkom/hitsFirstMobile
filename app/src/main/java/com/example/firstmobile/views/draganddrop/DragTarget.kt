@@ -24,19 +24,21 @@ fun DragTarget(
     
     val state = LocalDragTargetInfo.current
     
-    Box(modifier = if (state.draggableRow == -1 || state.draggableId == operationToDrop.id) modifier
+    Box(modifier = modifier
         .onGloballyPositioned {
             currentPosition = it.localToWindow(Offset.Zero)
         }
-        .pointerInput(Unit) { // логика при перемещении блока
+        .pointerInput(Unit) {
+            // логика при перемещении блока
             detectDragGesturesAfterLongPress(onDragStart = {
+                // записываем данные о блоке, который перетаскивает пользователь
             
                 state.operationToDrop = operationToDrop
                 state.dragPosition = currentPosition + it
                 state.draggableComposable = content
                 state.isDragging = true
                 state.draggableRow = i
-                state.draggableId = operationToDrop.id // записываем данные о блоке, который перетаскивает пользователь
+                state.draggableId = operationToDrop.id
             
             }, onDrag = { change, dragAmount ->
                 change.consume()
@@ -56,10 +58,8 @@ fun DragTarget(
                 state.draggableRow = -1
                 state.draggableId = UUID.randomUUID()
             })
-        }
-    else modifier.onGloballyPositioned {
-        currentPosition = it.localToWindow(Offset.Zero)
-    }) { // отображаем блок, который перетаскиваем
+        }) {
+        // отображаем блок, который перетаскиваем
         content()
     }
 }

@@ -42,7 +42,7 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
                 text = "?", fontSize = 30.sp
             )  // Процент видимости: ${sheetState.progress.fraction}
         }
-
+        
         FloatingActionButton(onClick = {
             openSheet(BottomSheetScreen.Screen1)
         }) {
@@ -50,7 +50,7 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
                 text = "+", fontSize = 30.sp
             )  // Процент видимости: ${sheetState.progress.fraction}
         }
-
+        
         FloatingActionButton(onClick = {
             blockViewModel.execute()
             openSheet(BottomSheetScreen.Screen2)
@@ -75,43 +75,47 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
             FlowRow(
                 modifier = Modifier.fillMaxWidth()
             ) {
-                row.forEach { operation ->
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(4.dp), contentAlignment = Alignment.CenterStart
+                ) {
+                    Text(text = row.name)
+                }
+                row.listToShow.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
                     
                     Box(modifier = Modifier.padding(4.dp)) {
                         DragTarget(
                             i = -1, operationToDrop = block, viewModel = blockViewModel
                         ) {
-                            if (block.operation == CodeBlockOperation.INPUT) {
-                                Text("Ввод", fontSize = 20.sp)
-                            } else {
-                                Box(
+                            
+                            Box(
+                                modifier = Modifier
+                                    .height(32.dp)
+                                    .border(
+                                        2.dp, color = DarkGreen, shape = BlockShape
+                                    )
+                                    .background(color = Color.Green, shape = BlockShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(
                                     modifier = Modifier
-                                        .height(32.dp)
-                                        .border(
-                                            2.dp, color = DarkGreen, shape = BlockShape
-                                        )
-                                        .background(color = Color.Green, shape = BlockShape),
-                                    contentAlignment = Alignment.Center
+                                        .fillMaxHeight()
+                                        .padding(4.dp),
+                                    horizontalArrangement = Arrangement.SpaceEvenly,
+                                    verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    Row(
-                                        modifier = Modifier
-                                            .fillMaxHeight()
-                                            .padding(4.dp),
-                                        horizontalArrangement = Arrangement.SpaceEvenly,
-                                        verticalAlignment = Alignment.CenterVertically
-                                    ) {
-                                        if (!block.operation.isSpecialOperation()) {
-                                            DropItemLayout(
-                                                -1, block.id, blockViewModel, block.leftBlock, true
-                                            )
-                                        }
-                                        
-                                        Text(text = block.operation.symbol)
+                                    if (!block.operation.isSpecialOperation()) {
                                         DropItemLayout(
-                                            -1, block.id, blockViewModel, block.rightBlock, false
+                                            -1, block.id, blockViewModel, block.leftBlock, true
                                         )
                                     }
+                                    
+                                    Text(text = block.operation.symbol)
+                                    DropItemLayout(
+                                        -1, block.id, blockViewModel, block.rightBlock, false
+                                    )
                                 }
                             }
                         }
@@ -125,7 +129,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
 @Composable
 fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     val output by blockViewModel.output.collectAsState()
-
+    
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -163,7 +167,7 @@ fun Instructions() {
         "Данил Васильев",
         ""
     )
-
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -185,9 +189,7 @@ fun Instructions() {
 
 @Composable
 fun DifferentBottomSheets(
-    blockViewModel: CodeBlockViewModel,
-    currentScreen: BottomSheetScreen,
-    onCloseBottomSheet: () -> Unit
+    blockViewModel: CodeBlockViewModel, currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit
 ) {
     when (currentScreen) {
         BottomSheetScreen.Screen1 -> AvailableBlocks(blockViewModel)
