@@ -16,6 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
@@ -64,10 +67,13 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
 
 @Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
+    Box(modifier = Modifier.background(Color.White).fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = "_______________", color = Color.Black, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(LocalConfiguration.current.screenHeightDp.dp*3/8),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -82,42 +88,36 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                         DragTarget(
                             i = -1, operationToDrop = block, viewModel = blockViewModel
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .height(32.dp)
-                                    .border(
-                                        2.dp, color = DarkGreen, shape = BlockShape
-                                    )
-                                    .background(color = Color.Green, shape = BlockShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(
+                            if (block.operation == CodeBlockOperation.INPUT) {
+                                Text("Ввод", fontSize = 20.sp)
+                            } else {
+                                Box(
                                     modifier = Modifier
-                                        .fillMaxHeight()
-                                        .padding(4.dp),
-                                    horizontalArrangement = Arrangement.SpaceBetween,
-                                    verticalAlignment = Alignment.CenterVertically
-                                ) {
-                                    if (!operation.isSpecialOperation()) {
-                                        DropItemLayout(
-                                            -1,
-                                            block.id,
-                                            blockViewModel,
-                                            block.leftBlock,
-                                            true
+                                        .height(32.dp)
+                                        .border(
+                                            2.dp, color = DarkGreen, shape = BlockShape
                                         )
-                                    } else if (operation == CodeBlockOperation.EQUAL) {
-                                        TextField(value = "", onValueChange = { newText -> })
-                                    }
+                                        .background(color = Color.Green, shape = BlockShape),
+                                    contentAlignment = Alignment.Center
+                                ) {
+                                    Row(
+                                        modifier = Modifier
+                                            .fillMaxHeight()
+                                            .padding(4.dp),
+                                        horizontalArrangement = Arrangement.SpaceEvenly,
+                                        verticalAlignment = Alignment.CenterVertically
+                                    ) {
+                                        if (!block.operation.isSpecialOperation()) {
+                                            DropItemLayout(
+                                                -1, block.id, blockViewModel, block.leftBlock, true
+                                            )
+                                        }
 
-                                    Text(text = block.operation.symbol)
-                                    DropItemLayout(
-                                        -1,
-                                        block.id,
-                                        blockViewModel,
-                                        block.rightBlock,
-                                        false
-                                    )
+                                        Text(text = block.operation.symbol)
+                                        DropItemLayout(
+                                            -1, block.id, blockViewModel, block.rightBlock, false
+                                        )
+                                    }
                                 }
                             }
                         }
@@ -131,11 +131,13 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
 @Composable
 fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     val output by blockViewModel.output.collectAsState()
-
+    Box(modifier = Modifier.background(Color.Black).fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = "_______________", color = Color.White, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(LocalConfiguration.current.screenHeightDp.dp*3/8)
             .background(Color.Black, shape = RectangleShape)
     ) {
         LazyColumn(
@@ -169,11 +171,13 @@ fun Instructions() {
         "Данил Васильев",
         ""
     )
-
+    Box(modifier = Modifier.background(Color.White).fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = "_______________", color = Color.Black, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(LocalConfiguration.current.screenHeightDp.dp*3/8),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
