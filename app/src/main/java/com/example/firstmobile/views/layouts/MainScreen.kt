@@ -1,5 +1,6 @@
 package com.example.firstmobile.views.layouts
 
+import android.util.Log
 import androidx.compose.foundation.*
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
@@ -49,8 +50,9 @@ fun MainScreen(
                         isLeftChild = false,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp), blockViewModel = blockViewModel
-                    ) { isHovered, _ ->
+                            .height(64.dp),
+                        blockViewModel = blockViewModel
+                    ) { isHovered, isLeaving ->
                         Box(
                             modifier = Modifier
                                 .fillMaxSize()
