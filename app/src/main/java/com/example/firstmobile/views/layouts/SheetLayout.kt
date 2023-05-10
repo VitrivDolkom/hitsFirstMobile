@@ -63,19 +63,6 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
 }
 
 @Composable
-fun DifferentBottomSheets(
-    blockViewModel: CodeBlockViewModel,
-    currentScreen: BottomSheetScreen,
-    onCloseBottomSheet: () -> Unit
-) {
-    when (currentScreen) {
-        BottomSheetScreen.Screen1 -> AvailableBlocks(blockViewModel)
-        BottomSheetScreen.Screen2 -> OutputConsole(blockViewModel)
-        BottomSheetScreen.Screen3 -> Instructions()
-    }
-}
-
-@Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
     LazyColumn(
         modifier = Modifier
@@ -193,6 +180,19 @@ fun Instructions() {
                 }
             }
         }
+    }
+}
+
+@Composable
+fun DifferentBottomSheets(
+    blockViewModel: CodeBlockViewModel,
+    currentScreen: BottomSheetScreen,
+    onCloseBottomSheet: () -> Unit
+) {
+    when (currentScreen) {
+        BottomSheetScreen.Screen1 -> AvailableBlocks(blockViewModel)
+        BottomSheetScreen.Screen2 -> OutputConsole(blockViewModel)
+        BottomSheetScreen.Screen3 -> Instructions()
     }
 }
 

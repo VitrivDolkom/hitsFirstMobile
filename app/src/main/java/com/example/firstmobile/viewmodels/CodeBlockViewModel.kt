@@ -68,7 +68,7 @@ class CodeBlockViewModel : ViewModel() {
         }
         
         
-        var block = parentBlock
+        var block = CodeBlock(parentBlock.leftBlock, parentBlock.operation, parentBlock.rightBlock, UUID.randomUUID(), parentBlock.input)
         if (parentBlock.operation == CodeBlockOperation.EQUAL && parentBlock.leftBlock == null) {
             block = CodeBlock(CodeBlock(null, CodeBlockOperation.INPUT, null), block.operation, block.rightBlock, id)
         }
@@ -76,7 +76,7 @@ class CodeBlockViewModel : ViewModel() {
         if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
             appendNewChild(_blocks.value[i], block, id, isLeftChild)
         } else { // создаю копию блока, чтобы сменить id
-            _blocks.value[i] = CodeBlock(block.leftBlock, block.operation, block.rightBlock, UUID.randomUUID())
+            _blocks.value[i] = block
         }
         
         if (i == (_blocks.value.size - 1)) {
