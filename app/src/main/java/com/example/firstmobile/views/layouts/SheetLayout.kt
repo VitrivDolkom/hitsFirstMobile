@@ -70,25 +70,10 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
 
 @Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
-    Box(
-        modifier = Modifier
-            .background(Color.White)
-            .fillMaxWidth(),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = "_______________",
-            color = Color.Black,
-            textAlign = TextAlign.Center,
-            fontWeight = FontWeight.Bold,
-            fontSize = 20.sp
-        )
-    }
-
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8),
+            .height(300.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -105,15 +90,22 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                 }
                 row.listToShow.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
-                    
+
                     Box(modifier = Modifier.padding(4.dp)) {
                         DragTarget(
                             i = -1, operationToDrop = block, viewModel = blockViewModel
                         ) {
-                            if (block.operation == CodeBlockOperation.INPUT) {
-                                Text("Ввод", fontSize = 20.sp)
-                            } else {
-                                Box(
+
+                            Box(
+                                modifier = Modifier
+                                    .height(32.dp)
+                                    .border(
+                                        2.dp, color = DarkGreen, shape = BlockShape
+                                    )
+                                    .background(color = Color.Green, shape = BlockShape),
+                                contentAlignment = Alignment.Center
+                            ) {
+                                Row(
                                     modifier = Modifier
                                         .fillMaxHeight()
                                         .padding(4.dp),
@@ -125,6 +117,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                             -1, block.id, blockViewModel, block.leftBlock, true
                                         )
                                     }
+
                                     Text(text = block.operation.symbol)
                                     DropItemLayout(
                                         -1, block.id, blockViewModel, block.rightBlock, false
