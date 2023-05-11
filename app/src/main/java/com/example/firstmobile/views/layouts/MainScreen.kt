@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.*
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
 import androidx.compose.material.TextField
@@ -52,8 +53,8 @@ fun MainScreen(
                         isLeftChild = false,
                         modifier = Modifier
                             .fillMaxWidth()
-                            .height(64.dp)
-                            .padding(4.dp),
+                            .padding(4.dp)
+                            .height(64.dp),
                         blockViewModel = blockViewModel
                     ) { isHovered, isLeaving ->
                         Box(
@@ -109,7 +110,54 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                         } else {
                             DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
                         }
+                        
+                        if (block.operation.isMathOperation()) {
+                            DropdownDemo(i, block.id, block.operation.getVariants(), block.operation, blockViewModel)
+                        } else {
+                            Text(text = block.operation.symbol, fontSize = 32.sp)
+                        }
+                        
+                        DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
+                    }
+                }
+            }
+        }
+    }
+}
 
+@Composable
+fun DropdownDemo(
+    i: Int, id: UUID, items: List<CodeBlockOperation>, operation: CodeBlockOperation, viewModel: CodeBlockViewModel
+) {
+    var expanded by remember { mutableStateOf(false) }
+    
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .wrapContentSize(Alignment.Center)
+    ) {
+        Text(
+            text = operation.symbol,
+            modifier = Modifier
+                .fillMaxWidth()
+                .clickable(onClick = { expanded = true })
+                .border(1.dp, color = Color.Black),
+            fontSize = 32.sp
+        )
+        DropdownMenu(
+            expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier.background(
+                Color.DarkGray
+            )
+        ) {
+            items.forEachIndexed { index, operation ->
+                DropdownMenuItem(modifier = Modifier.border(1.dp, color = Color.White), onClick = {
+                    viewModel.changeOperation(i, id, items[index])
+                    expanded = false
+                }) {
+                    if (operation == CodeBlockOperation.INPUT || operation == CodeBlockOperation.DEFAULT) {
+                        // условие чтобы показать картинку мусорки
+                        //Image(painter = , contentDescription = "удаление блока")
+                    } else {
                         Text(text = block.operation.symbol, fontSize = 32.sp)
                         DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                     }
@@ -149,7 +197,6 @@ fun DropItemLayout(
             ) {}
         }
 
-
         return
     }
 
@@ -186,7 +233,6 @@ fun DropItemLayout(
             }
         }
 
-
         return
     }
 
@@ -211,7 +257,6 @@ fun DropItemLayout(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
                 if (block.operation.isSpecialOperation()) {
                     Box(
                         modifier = Modifier
@@ -223,9 +268,13 @@ fun DropItemLayout(
                 } else {
                     DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
                 }
-
-
-                Text(text = block.operation.symbol, fontSize = 32.sp)
+                
+                if (block.operation.isMathOperation()) {
+                    DropdownDemo(i, block.id, block.operation.getVariants(), block.operation, blockViewModel)
+                } else {
+                    Text(text = block.operation.symbol, fontSize = 32.sp)
+                }
+                
                 DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
             }
         }
