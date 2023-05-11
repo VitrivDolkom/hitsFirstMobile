@@ -105,21 +105,15 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                 }
                 row.listToShow.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
-
+                    
                     Box(modifier = Modifier.padding(4.dp)) {
                         DragTarget(
                             i = -1, operationToDrop = block, viewModel = blockViewModel
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .height(32.dp)
-                                    .border(
-                                        2.dp, color = DarkGreen, shape = BlockShape
-                                    )
-                                    .background(color = Color.Green, shape = BlockShape),
-                                contentAlignment = Alignment.Center
-                            ) {
-                                Row(
+                            if (block.operation == CodeBlockOperation.INPUT) {
+                                Text("Ввод", fontSize = 20.sp)
+                            } else {
+                                Box(
                                     modifier = Modifier
                                         .fillMaxHeight()
                                         .padding(4.dp),
