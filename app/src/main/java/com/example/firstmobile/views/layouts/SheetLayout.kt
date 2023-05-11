@@ -45,7 +45,7 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
                 text = "?", fontSize = 30.sp
             )  // Процент видимости: ${sheetState.progress.fraction}
         }
-        
+
         FloatingActionButton(onClick = {
             openSheet(BottomSheetScreen.Screen1)
         }) {
@@ -53,7 +53,7 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
                 text = "+", fontSize = 30.sp
             )  // Процент видимости: ${sheetState.progress.fraction}
         }
-        
+
         FloatingActionButton(onClick = {
             blockViewModel.execute()
             openSheet(BottomSheetScreen.Screen2)
@@ -67,14 +67,25 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
 
 @Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
-    Box(modifier = Modifier.background(Color.White).fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Text(text = "_______________", color = Color.Black, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    Box(
+        modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "_______________",
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
     }
-    
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(LocalConfiguration.current.screenHeightDp.dp*3/8),
+            .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -91,11 +102,11 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                 }
                 row.listToShow.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
-                    
+
                     Box(modifier = Modifier.padding(4.dp)) {
                         DragTarget(
                             i = -1, operationToDrop = block, viewModel = blockViewModel
-                        ) {                           
+                        ) {
                             Box(
                                 modifier = Modifier
                                     .height(32.dp)
@@ -117,7 +128,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                             -1, block.id, blockViewModel, block.leftBlock, true
                                         )
                                     }
-                                    
+
                                     Text(text = block.operation.symbol)
                                     DropItemLayout(
                                         -1, block.id, blockViewModel, block.rightBlock, false
@@ -135,14 +146,25 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
 @Composable
 fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     val output by blockViewModel.output.collectAsState()
-    
-    Box(modifier = Modifier.background(Color.Black).fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Text(text = "_______________", color = Color.White, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+
+    Box(
+        modifier = Modifier
+            .background(Color.Black)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "_______________",
+            color = Color.White,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
     }
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(LocalConfiguration.current.screenHeightDp.dp*3/8)
+            .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8)
             .background(Color.Black, shape = RectangleShape)
     ) {
         LazyColumn(
@@ -177,13 +199,24 @@ fun Instructions() {
         ""
     )
 
-    Box(modifier = Modifier.background(Color.White).fillMaxWidth(), contentAlignment = Alignment.Center) {
-        Text(text = "_______________", color = Color.Black, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    Box(
+        modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "_______________",
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
     }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(LocalConfiguration.current.screenHeightDp.dp*3/8),
+            .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {

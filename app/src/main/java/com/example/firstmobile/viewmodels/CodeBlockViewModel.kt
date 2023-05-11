@@ -59,47 +59,39 @@ class CodeBlockViewModel : ViewModel() {
         _test.value += 1
         appendNewOperation(_blocks.value[i], newOperation, id)
     }
-    
+
     fun addBlock(parentBlock: CodeBlock?, i: Int, id: UUID, isLeftChild: Boolean) {
         _test.value += 1
-        
+
         if (parentBlock == null) {
             _blocks.value[i] = CodeBlock()
             return
         }
-        
-        // по дефолту делаем детей инпутами
+
+// по дефолту делаем детей инпутами
         val newLeftBlock = if (parentBlock.leftBlock == null) {
             CodeBlock(null, CodeBlockOperation.INPUT, null)
         } else parentBlock.leftBlock
         val newRightBlock = if (parentBlock.rightBlock == null) {
             CodeBlock(null, CodeBlockOperation.INPUT, null)
         } else parentBlock.rightBlock
-    
-        // создаю копию блока, чтобы сменить id
+
+// создаю копию блока, чтобы сменить id
         val block = CodeBlock(
             newLeftBlock, parentBlock.operation, newRightBlock, UUID.randomUUID(), parentBlock.input
         )
-        
+
         if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
             appendNewChild(_blocks.value[i], block, id, isLeftChild)
         } else {
-        
-        var block = CodeBlock(parentBlock.leftBlock, parentBlock.operation, parentBlock.rightBlock, UUID.randomUUID(), parentBlock.input)
-        if (parentBlock.operation == CodeBlockOperation.EQUAL && parentBlock.leftBlock == null) {
-            block = CodeBlock(CodeBlock(null, CodeBlockOperation.INPUT, null), block.operation, block.rightBlock, id)
-        }
-        
-        if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
-            appendNewChild(_blocks.value[i], block, id, isLeftChild)
-        } else { // создаю копию блока, чтобы сменить id
             _blocks.value[i] = block
         }
-        
+
         if (i == (_blocks.value.size - 1)) {
             _blocks.value.add(CodeBlock())
         }
     }
+
     
     private fun parseSingleBlock(block: CodeBlock?, _text: String): String {
         var text = _text

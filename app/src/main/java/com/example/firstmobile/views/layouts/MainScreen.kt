@@ -110,13 +110,19 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                         } else {
                             DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
                         }
-                        
+
                         if (block.operation.isMathOperation()) {
-                            DropdownDemo(i, block.id, block.operation.getVariants(), block.operation, blockViewModel)
+                            DropdownDemo(
+                                i,
+                                block.id,
+                                block.operation.getVariants(),
+                                block.operation,
+                                blockViewModel
+                            )
                         } else {
                             Text(text = block.operation.symbol, fontSize = 32.sp)
                         }
-                        
+
                         DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                     }
                 }
@@ -127,10 +133,14 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
 
 @Composable
 fun DropdownDemo(
-    i: Int, id: UUID, items: List<CodeBlockOperation>, operation: CodeBlockOperation, viewModel: CodeBlockViewModel
+    i: Int,
+    id: UUID,
+    items: List<CodeBlockOperation>,
+    operation: CodeBlockOperation,
+    viewModel: CodeBlockViewModel
 ) {
     var expanded by remember { mutableStateOf(false) }
-    
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -145,7 +155,9 @@ fun DropdownDemo(
             fontSize = 32.sp
         )
         DropdownMenu(
-            expanded = expanded, onDismissRequest = { expanded = false }, modifier = Modifier.background(
+            expanded = expanded,
+            onDismissRequest = { expanded = false },
+            modifier = Modifier.background(
                 Color.DarkGray
             )
         ) {
@@ -158,8 +170,7 @@ fun DropdownDemo(
                         // условие чтобы показать картинку мусорки
                         //Image(painter = , contentDescription = "удаление блока")
                     } else {
-                        Text(text = block.operation.symbol, fontSize = 32.sp)
-                        DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
+                        Text(text = operation.symbol, fontSize = 32.sp)
                     }
                 }
             }
@@ -268,13 +279,19 @@ fun DropItemLayout(
                 } else {
                     DropItemLayout(i, block.id, blockViewModel, block.leftBlock, true)
                 }
-                
+
                 if (block.operation.isMathOperation()) {
-                    DropdownDemo(i, block.id, block.operation.getVariants(), block.operation, blockViewModel)
+                    DropdownDemo(
+                        i,
+                        block.id,
+                        block.operation.getVariants(),
+                        block.operation,
+                        blockViewModel
+                    )
                 } else {
                     Text(text = block.operation.symbol, fontSize = 32.sp)
                 }
-                
+
                 DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
             }
         }
