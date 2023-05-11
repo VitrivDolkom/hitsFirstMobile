@@ -7,11 +7,15 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
+import androidx.compose.material.OutlinedTextField
+import androidx.compose.material.Text
+import androidx.compose.material.TextField
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
@@ -27,12 +31,13 @@ fun MainScreen(
     blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
     SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
-    
+
     val blocks by blockViewModel.blocks.collectAsState()
     val test by blockViewModel.test.collectAsState()
-    
+
     Box(
-        modifier = Modifier.fillMaxSize(),
+        modifier = Modifier
+            .fillMaxSize(),
     ) {
         Text(text = "$test", fontSize = 0.sp)
         LazyColumn(
@@ -56,7 +61,9 @@ fun MainScreen(
                             modifier = Modifier
                                 .fillMaxSize()
                                 .border(
-                                    2.dp, color = if (isHovered) Color.Red else Color.Blue, shape = BlockShape
+                                    1.dp,
+                                    color = if (isHovered) Color.Red else Color.Blue,
+                                    shape = BlockShape
                                 )
                                 .background(Color.White, shape = BlockShape)
                         ) {}
@@ -81,7 +88,8 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                     .border(
                         2.dp, color = DarkGreen, shape = BlockShape
                     )
-                    .background(color = Color.Green, shape = BlockShape), contentAlignment = Alignment.Center
+                    .background(color = Color.Green, shape = BlockShape),
+                contentAlignment = Alignment.Center
             ) {
                 LazyRow(
                     modifier = Modifier
@@ -150,7 +158,8 @@ fun DropdownDemo(
                         // условие чтобы показать картинку мусорки
                         //Image(painter = , contentDescription = "удаление блока")
                     } else {
-                        Text(text = operation.symbol, color = Color.White)
+                        Text(text = block.operation.symbol, fontSize = 32.sp)
+                        DropItemLayout(i, block.id, blockViewModel, block.rightBlock, false)
                     }
                 }
             }
@@ -159,7 +168,13 @@ fun DropdownDemo(
 }
 
 @Composable
-fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: CodeBlock?, isLeftChild: Boolean) {
+fun DropItemLayout(
+    i: Int,
+    id: UUID,
+    blockViewModel: CodeBlockViewModel,
+    block: CodeBlock?,
+    isLeftChild: Boolean
+) {
     if (block == null) {
         DropItem(
             i = i,
@@ -181,10 +196,10 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                     .background(color = Color.White, shape = BlockShape)
             ) {}
         }
-        
+
         return
     }
-    
+
     if (block.operation == CodeBlockOperation.INPUT) {
         DropItem(
             i = i,
@@ -203,10 +218,11 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                     .border(
                         1.dp, color = if (isHovered) Color.Red else DarkGreen, shape = BlockShape
                     )
-                    .background(color = Color.White, shape = BlockShape), contentAlignment = Alignment.Center
+                    .background(color = Color.White, shape = BlockShape),
+                contentAlignment = Alignment.Center
             ) {
-                OutlinedTextField(shape = BlockShape,
-                    placeholder = { Text("0") },
+                OutlinedTextField(
+                    shape = BlockShape,
                     modifier = Modifier.width(80.dp),
                     value = block.input,
                     onValueChange = { newText ->
@@ -216,10 +232,10 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                     })
             }
         }
-        
+
         return
     }
-    
+
     // обычный случай, когда блок есть и он не input
     DragTarget(
         i = i, operationToDrop = block, viewModel = blockViewModel
@@ -231,7 +247,8 @@ fun DropItemLayout(i: Int, id: UUID, blockViewModel: CodeBlockViewModel, block: 
                 .border(
                     2.dp, color = DarkGreen, shape = BlockShape
                 )
-                .background(color = Color.Green, shape = BlockShape), contentAlignment = Alignment.Center
+                .background(color = Color.Green, shape = BlockShape),
+            contentAlignment = Alignment.Center
         ) {
             Row(
                 modifier = Modifier

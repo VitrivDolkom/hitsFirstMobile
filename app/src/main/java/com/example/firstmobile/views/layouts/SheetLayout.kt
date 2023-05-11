@@ -16,6 +16,9 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
@@ -64,10 +67,14 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
 
 @Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
+    Box(modifier = Modifier.background(Color.White).fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = "_______________", color = Color.Black, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(LocalConfiguration.current.screenHeightDp.dp*3/8),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -88,8 +95,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                     Box(modifier = Modifier.padding(4.dp)) {
                         DragTarget(
                             i = -1, operationToDrop = block, viewModel = blockViewModel
-                        ) {
-                            
+                        ) {                           
                             Box(
                                 modifier = Modifier
                                     .height(32.dp)
@@ -130,10 +136,13 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
 fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     val output by blockViewModel.output.collectAsState()
     
+    Box(modifier = Modifier.background(Color.Black).fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = "_______________", color = Color.White, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp)
+            .height(LocalConfiguration.current.screenHeightDp.dp*3/8)
             .background(Color.Black, shape = RectangleShape)
     ) {
         LazyColumn(
@@ -167,11 +176,14 @@ fun Instructions() {
         "Данил Васильев",
         ""
     )
-    
+
+    Box(modifier = Modifier.background(Color.White).fillMaxWidth(), contentAlignment = Alignment.Center) {
+        Text(text = "_______________", color = Color.Black, textAlign = TextAlign.Center, fontWeight = FontWeight.Bold, fontSize = 20.sp)
+    }
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(LocalConfiguration.current.screenHeightDp.dp*3/8),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -189,7 +201,9 @@ fun Instructions() {
 
 @Composable
 fun DifferentBottomSheets(
-    blockViewModel: CodeBlockViewModel, currentScreen: BottomSheetScreen, onCloseBottomSheet: () -> Unit
+    blockViewModel: CodeBlockViewModel,
+    currentScreen: BottomSheetScreen,
+    onCloseBottomSheet: () -> Unit
 ) {
     when (currentScreen) {
         BottomSheetScreen.Screen1 -> AvailableBlocks(blockViewModel)
