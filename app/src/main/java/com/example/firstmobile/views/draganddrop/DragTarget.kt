@@ -1,20 +1,12 @@
 package com.example.firstmobile.views.draganddrop
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.padding
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
-import androidx.compose.ui.unit.dp
-import com.example.firstmobile.ui.theme.BlockShape
-import com.example.firstmobile.ui.theme.DarkGreen
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import java.util.*
 
@@ -26,11 +18,11 @@ fun DragTarget(
     i: Int = -1,
     operationToDrop: CodeBlock,
     viewModel: CodeBlockViewModel,
-    content: @Composable ( () -> Unit)
-    ) {
+    content: @Composable (() -> Unit)
+) {
     var currentPosition by remember { mutableStateOf(Offset.Zero) }
     val state = LocalDragTargetInfo.current
-
+    
     Box(modifier = modifier
         .onGloballyPositioned {
             currentPosition = it.localToWindow(Offset.Zero)

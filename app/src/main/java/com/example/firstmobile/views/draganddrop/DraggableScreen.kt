@@ -8,7 +8,6 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.unit.IntSize
 
-
 // экран, на котором можно перетаскивать draggable элементы
 @Composable
 fun DraggableScreen(
@@ -29,7 +28,8 @@ fun DraggableScreen(
                 
                 Box(modifier = Modifier
                     .graphicsLayer { // рисуем перетаскиваемый блок
-                        val offset = state.dragPosition + state.dragOffset // определяем позицию
+                        val offset =
+                            state.dragPosition + state.dragOffset // определяем позицию
                         alpha = if (targetSize == IntSize.Zero) 0f else 1f
                         translationX = offset.x.minus(targetSize.width / 2)
                         translationY = offset.y.minus(targetSize.height / 2)

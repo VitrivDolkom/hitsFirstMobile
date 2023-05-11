@@ -8,7 +8,6 @@ import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.FloatingActionButton
 import androidx.compose.material.Text
-import androidx.compose.material.TextField
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -22,18 +21,16 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.BlockShape
-import com.example.firstmobile.ui.theme.BlueButton
-import com.example.firstmobile.ui.theme.DarkGreen
-import com.example.firstmobile.ui.theme.GreenButton
-import com.example.firstmobile.ui.theme.RedButton
+import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.CodeBlock
 import com.example.firstmobile.views.draganddrop.DragTarget
 
 @Composable
-fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit) {
+fun SheetLayout(
+    blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
+) {
     Row(
         Modifier
             .fillMaxSize()
@@ -45,24 +42,33 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
             openSheet(BottomSheetScreen.Screen3)
         }) {
             Text(
-                text = "?", fontSize = 30.sp, color = Color.White, fontWeight = FontWeight.Bold
+                text = "?",
+                fontSize = 30.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
         }
-
-        FloatingActionButton(backgroundColor = RedButton,onClick = {
+        
+        FloatingActionButton(backgroundColor = RedButton, onClick = {
             openSheet(BottomSheetScreen.Screen1)
         }) {
             Text(
-                text = "+", fontSize = 30.sp, color = Color.White, fontWeight = FontWeight.Bold
+                text = "+",
+                fontSize = 30.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
         }
-
+        
         FloatingActionButton(backgroundColor = GreenButton, onClick = {
             blockViewModel.execute()
             openSheet(BottomSheetScreen.Screen2)
         }) {
             Text(
-                text = ">", fontSize = 30.sp, color = Color.White, fontWeight = FontWeight.Bold
+                text = ">",
+                fontSize = 30.sp,
+                color = Color.White,
+                fontWeight = FontWeight.Bold
             )
         }
     }
@@ -84,26 +90,32 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(4.dp), contentAlignment = Alignment.CenterStart
+                        .padding(4.dp),
+                    contentAlignment = Alignment.CenterStart
                 ) {
                     Text(text = row.name)
                 }
                 row.listToShow.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
-
+                    
                     Box(modifier = Modifier.padding(4.dp)) {
                         DragTarget(
-                            i = -1, operationToDrop = block, viewModel = blockViewModel
+                            i = -1,
+                            operationToDrop = block,
+                            viewModel = blockViewModel
                         ) {
-
+                            
                             Box(
                                 modifier = Modifier
                                     .height(32.dp)
                                     .border(
-                                        2.dp, color = DarkGreen, shape = BlockShape
+                                        2.dp,
+                                        color = DarkGreen,
+                                        shape = BlockShape
                                     )
-                                    .background(color = Color.Green, shape = BlockShape),
-                                contentAlignment = Alignment.Center
+                                    .background(
+                                        color = Color.Green, shape = BlockShape
+                                    ), contentAlignment = Alignment.Center
                             ) {
                                 Row(
                                     modifier = Modifier
@@ -114,13 +126,21 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                 ) {
                                     if (!block.operation.isSpecialOperation()) {
                                         DropItemLayout(
-                                            -1, block.id, blockViewModel, block.leftBlock, true
+                                            -1,
+                                            block.id,
+                                            blockViewModel,
+                                            block.leftBlock,
+                                            true
                                         )
                                     }
-
+                                    
                                     Text(text = block.operation.symbol)
                                     DropItemLayout(
-                                        -1, block.id, blockViewModel, block.rightBlock, false
+                                        -1,
+                                        block.id,
+                                        blockViewModel,
+                                        block.rightBlock,
+                                        false
                                     )
                                 }
                             }
@@ -135,7 +155,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
 @Composable
 fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     val output by blockViewModel.output.collectAsState()
-
+    
     Box(
         modifier = Modifier
             .background(Color.Black)
@@ -164,7 +184,10 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
                     modifier = Modifier.fillMaxWidth()
                 ) {
                     items(1) {
-                        Text(text = "$i", modifier = Modifier.padding(horizontal = 8.dp))
+                        Text(
+                            text = "$i",
+                            modifier = Modifier.padding(horizontal = 8.dp)
+                        )
                         Text(
                             text = str, color = Color.White, fontSize = 15.sp
                         )
@@ -179,6 +202,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
 fun Instructions() {
     val instructions = listOf(
         "Инструкция",
+        "Чтобы полностью очистить экран от блоков, вам необходимо встряхнуть телефон  \uD83D\uDC4B.",
         "В нашей IDE все очень просто, жмете на кнопку со знаком '+', для вас высвечивается меню с блоками, далее зажимаете пальцем на блок и перетаскиваете в окошко на экране, после построения кода достаточно нажать на кнопку со знаком '>' и ваш код запустится. Надеемся это вам помогло.",
         "",
         "Авторы:",
@@ -187,7 +211,7 @@ fun Instructions() {
         "Данил Васильев",
         ""
     )
-
+    
     Box(
         modifier = Modifier
             .background(Color.White)
