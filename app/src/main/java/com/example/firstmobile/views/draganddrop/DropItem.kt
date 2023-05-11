@@ -1,15 +1,17 @@
 package com.example.firstmobile.views.draganddrop
 
 import android.util.Log
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
+import com.example.firstmobile.ui.theme.BlockShape
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import java.util.UUID
-
 
 @Composable
 fun DropItem(
@@ -19,7 +21,8 @@ fun DropItem(
     modifier: Modifier = Modifier,
     blockViewModel: CodeBlockViewModel,
     content: @Composable (BoxScope.(isHovered: Boolean, isFullField: Boolean) -> Unit)
-) { // контэйнер, в который можно перетаскивать блоки
+) {
+    // контэйнер, в который можно перетаскивать блоки
     val dragInfo = LocalDragTargetInfo.current
     
     val isDragging = dragInfo.isDragging
@@ -33,7 +36,8 @@ fun DropItem(
     var isDragLeaving by remember { mutableStateOf(false) }
     var isFullField by remember { mutableStateOf(false) }
     
-    Box(modifier = modifier.onGloballyPositioned {
+    Box(modifier = modifier.background(color= Color.Green, shape = BlockShape)
+        .onGloballyPositioned {
         it.boundsInWindow().let { rect ->
             isDropTarget = rect.contains(dragPosition + dragOffset)
             isDragLeaving = !isDropTarget && draggableRow == i && draggableId == id
@@ -52,8 +56,6 @@ fun DropItem(
             blockViewModel.addBlock(null, i, id, isLeftChild)
         }
         
-        // здесь можно менять например задний цвет или рамку блока
-        // isDragLeaving - когда чел перетаскивает в другое место можно помечать красным например
         content(isDropTarget, isDragLeaving)
     }
 }

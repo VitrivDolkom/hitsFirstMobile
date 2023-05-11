@@ -21,22 +21,6 @@ class CodeBlockViewModel : ViewModel() {
     private var _test = MutableStateFlow(0)
     val test = _test.asStateFlow()
     
-    //    private fun isFirstIdDeeperThanSecond(block: CodeBlock?, id1: UUID, id2: UUID): Boolean {
-    //        if (block == null) return true
-    //        if (block.id == id1) return false
-    //        else if (block.id == id2) return true
-    //        return isFirstIdDeeperThanSecond(block.leftBlock, id1, id2) && isFirstIdDeeperThanSecond(
-    //            block.rightBlock,
-    //            id1,
-    //            id2
-    //        )
-    //    }
-    //
-    //    fun isChildren(i: Int, dragId: UUID?, id: UUID): Boolean {
-    //        if (dragId == null) return true
-    //        return isFirstIdDeeperThanSecond(_blocks.value[i], id, dragId)
-    //    }
-    
     fun updateInput(i: Int, id: UUID, newText: String, isLeftChild: Boolean) {
         _test.value += 1
         
@@ -59,32 +43,57 @@ class CodeBlockViewModel : ViewModel() {
         else currentCodeBlock.rightBlock = targetCodeBlock
     }
     
+    private fun appendNewOperation(currentCodeBlock: CodeBlock?, newOperation: CodeBlockOperation, id: UUID) {
+        if (currentCodeBlock == null) return
+        
+        if (currentCodeBlock.id != id) {
+            appendNewOperation(currentCodeBlock.leftBlock, newOperation, id)
+            appendNewOperation(currentCodeBlock.rightBlock, newOperation, id)
+            return
+        }
+        
+        currentCodeBlock.operation = newOperation
+    }
+    
+    fun changeOperation(i: Int, id: UUID, newOperation: CodeBlockOperation) {
+        _test.value += 1
+        appendNewOperation(_blocks.value[i], newOperation, id)
+    }
+
     fun addBlock(parentBlock: CodeBlock?, i: Int, id: UUID, isLeftChild: Boolean) {
         _test.value += 1
-        
+
         if (parentBlock == null) {
             _blocks.value[i] = CodeBlock()
             return
         }
-        
-        
-        var block = CodeBlock(parentBlock.leftBlock, parentBlock.operation, parentBlock.rightBlock, UUID.randomUUID(), parentBlock.input)
-        if (parentBlock.operation == CodeBlockOperation.EQUAL && parentBlock.leftBlock == null) {
-            block = CodeBlock(CodeBlock(null, CodeBlockOperation.INPUT, null), block.operation, block.rightBlock, id)
-        }
-        
+
+// по дефолту делаем детей инпутами
+        val newLeftBlock = if (parentBlock.leftBlock == null) {
+            CodeBlock(null, CodeBlockOperation.INPUT, null)
+        } else parentBlock.leftBlock
+        val newRightBlock = if (parentBlock.rightBlock == null) {
+            CodeBlock(null, CodeBlockOperation.INPUT, null)
+        } else parentBlock.rightBlock
+
+// создаю копию блока, чтобы сменить id
+        val block = CodeBlock(
+            newLeftBlock, parentBlock.operation, newRightBlock, UUID.randomUUID(), parentBlock.input
+        )
+
         if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
             appendNewChild(_blocks.value[i], block, id, isLeftChild)
-        } else { // создаю копию блока, чтобы сменить id
+        } else {
             _blocks.value[i] = block
         }
-        
+
         if (i == (_blocks.value.size - 1)) {
             _blocks.value.add(CodeBlock())
         }
     }
+
     
-    fun parseSingleBlock(block: CodeBlock?, _text: String): String {
+    private fun parseSingleBlock(block: CodeBlock?, _text: String): String {
         var text = _text
         if (block == null) return text
         
@@ -97,11 +106,12 @@ class CodeBlockViewModel : ViewModel() {
         return text
     }
     
-    private fun parser(): Array<String> {
-        val strings = Array(_blocks.value.size) { "n = $it" }
+    private fun parser(): MutableList<String> {
+        val strings = mutableListOf<String>()
         
-        _blocks.value.forEachIndexed { index, block ->
-            strings[index] = parseSingleBlock(block, "")
+        _blocks.value.forEach { block ->
+            strings.add(parseSingleBlock(block, ""))
+            if (block.operation.isSpecialOperation()) strings.add("begin")
         }
         
         return strings
@@ -113,6 +123,6 @@ class CodeBlockViewModel : ViewModel() {
         // отдаю строки в интерпритатор и получаю output ...
         // val output = Interpreter.someFun(strings)
         
-        _output.value = strings.toMutableList()
+        _output.value = strings
     }
 }

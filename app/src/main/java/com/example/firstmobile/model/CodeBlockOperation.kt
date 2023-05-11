@@ -1,23 +1,35 @@
 package com.example.firstmobile.model
 
+data class CodeBlocksGroup(
+    val name: String, val list: List<CodeBlockOperation>, val listToShow: List<CodeBlockOperation>
+)
+
 enum class CodeBlockOperation(val symbol: String, val value: String = "") {
-    EQUAL("="), ADD("+"), SUBTRACT("-"), MULTIPLY("*"), DIVIDE("/"), PERCENT("%"),
-    LOOP("while"), CONDITION("if"), INPUT("input", ""),
+    EQUAL("="), ARRAY_EQUAL("="), ADD("+"), SUBTRACT("-"), MULTIPLY("*"), DIVIDE("/"), PERCENT("%"), LOOP("while"), CONDITION(
+        "if"
+    ),
+    INPUT(
+        ""
+    ),
     DEFAULT("");
     
-    private fun mathOperations(): List<CodeBlockOperation> = listOf(EQUAL, ADD, SUBTRACT, MULTIPLY, DIVIDE, PERCENT)
+    private fun mathOperations(): List<CodeBlockOperation> = listOf(ADD, SUBTRACT, MULTIPLY, DIVIDE, PERCENT, INPUT)
     
-    private fun variables(): List<CodeBlockOperation> = listOf(DEFAULT)
+    fun isMathOperation(): Boolean = this in mathOperations()
     
-    private fun arrayVariables(): List<CodeBlockOperation> = listOf(DEFAULT)
+    private fun specialOperations(): List<CodeBlockOperation> = listOf(LOOP, CONDITION, DEFAULT)
     
-    private fun specialOperations(): List<CodeBlockOperation> = listOf(LOOP, CONDITION, INPUT)
+    fun isSpecialOperation(): Boolean = this in specialOperations() && this != DEFAULT
     
-    fun isSpecialOperation(): Boolean = this in specialOperations()
+    fun getVariants(): List<CodeBlockOperation> =
+        if (this in mathOperations()) mathOperations() else specialOperations()
     
-    fun isInput(): Boolean = this in variables() || this in arrayVariables()
-    
-    fun blocksList(): List<List<CodeBlockOperation>> {
-        return listOf(variables(), mathOperations(), specialOperations())
+    fun blocksList(): List<CodeBlocksGroup> {
+        return listOf(
+            CodeBlocksGroup("Мат операции", mathOperations(), listOf(ADD)),
+            CodeBlocksGroup("Спец операции", specialOperations(), listOf(LOOP, CONDITION)),
+            CodeBlocksGroup("Переменные", listOf(EQUAL), listOf(EQUAL)),
+            CodeBlocksGroup("Массивы", listOf(ARRAY_EQUAL), listOf(ARRAY_EQUAL))
+        )
     }
 }
