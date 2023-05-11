@@ -14,10 +14,16 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.drawWithContent
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.BlockShape
 import com.example.firstmobile.ui.theme.DarkGreen
@@ -143,34 +149,51 @@ fun DropdownDemo(
 
     Box(
         modifier = Modifier
-            .fillMaxWidth()
-            .wrapContentSize(Alignment.Center)
+            .height(40.dp)
+            .width(40.dp)
+            .border(1.dp, color = Color.Black, shape = BlockShape)
+            .background(Color.White, shape = BlockShape),
+        contentAlignment = Alignment.Center
     ) {
         Text(
             text = operation.symbol,
             modifier = Modifier
-                .fillMaxWidth()
                 .clickable(onClick = { expanded = true })
-                .border(1.dp, color = Color.Black),
-            fontSize = 32.sp
+                .offset(y=(-3).dp),
+            fontSize = 32.sp,
+            textAlign = TextAlign.Center
         )
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
-            modifier = Modifier.background(
-                Color.DarkGray
-            )
+            modifier = Modifier
+                .background(
+                    Color.White
+                )
+                .border(1.dp, color = Color.Black)
+                .width(60.dp),
+            offset =  DpOffset(x = (-8).dp, y = 0.dp)
         ) {
             items.forEachIndexed { index, operation ->
-                DropdownMenuItem(modifier = Modifier.border(1.dp, color = Color.White), onClick = {
+                DropdownMenuItem(modifier = Modifier.fillMaxWidth(), onClick = {
                     viewModel.changeOperation(i, id, items[index])
                     expanded = false
                 }) {
                     if (operation == CodeBlockOperation.INPUT || operation == CodeBlockOperation.DEFAULT) {
-                        // условие чтобы показать картинку мусорки
-                        //Image(painter = , contentDescription = "удаление блока")
+                        Image(
+                            modifier = Modifier
+                                .fillMaxSize(),
+                            painter = painterResource(id = R.drawable.trash),
+                            contentDescription = "удаление блока"
+                        )
                     } else {
-                        Text(text = operation.symbol, fontSize = 32.sp)
+                        Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                text = operation.symbol,
+                                textAlign = TextAlign.Center,
+                                fontSize = 32.sp,
+                            )
+                        }
                     }
                 }
             }

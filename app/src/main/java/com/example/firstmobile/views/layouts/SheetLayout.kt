@@ -23,7 +23,10 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.BlockShape
+import com.example.firstmobile.ui.theme.BlueButton
 import com.example.firstmobile.ui.theme.DarkGreen
+import com.example.firstmobile.ui.theme.GreenButton
+import com.example.firstmobile.ui.theme.RedButton
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.CodeBlock
@@ -38,29 +41,29 @@ fun SheetLayout(blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScree
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {
-        FloatingActionButton(onClick = {
+        FloatingActionButton(backgroundColor = BlueButton, onClick = {
             openSheet(BottomSheetScreen.Screen3)
         }) {
             Text(
-                text = "?", fontSize = 30.sp
-            )  // Процент видимости: ${sheetState.progress.fraction}
+                text = "?", fontSize = 30.sp, color = Color.White, fontWeight = FontWeight.Bold
+            )
         }
 
-        FloatingActionButton(onClick = {
+        FloatingActionButton(backgroundColor = RedButton,onClick = {
             openSheet(BottomSheetScreen.Screen1)
         }) {
             Text(
-                text = "+", fontSize = 30.sp
-            )  // Процент видимости: ${sheetState.progress.fraction}
+                text = "+", fontSize = 30.sp, color = Color.White, fontWeight = FontWeight.Bold
+            )
         }
 
-        FloatingActionButton(onClick = {
+        FloatingActionButton(backgroundColor = GreenButton, onClick = {
             blockViewModel.execute()
             openSheet(BottomSheetScreen.Screen2)
         }) {
             Text(
-                text = ">", fontSize = 30.sp
-            )  // Процент видимости: ${sheetState.progress.fraction}
+                text = ">", fontSize = 30.sp, color = Color.White, fontWeight = FontWeight.Bold
+            )
         }
     }
 }
@@ -128,7 +131,6 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                             -1, block.id, blockViewModel, block.leftBlock, true
                                         )
                                     }
-
                                     Text(text = block.operation.symbol)
                                     DropItemLayout(
                                         -1, block.id, blockViewModel, block.rightBlock, false
