@@ -1,27 +1,21 @@
 package com.example.firstmobile.views.layouts
 
-import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.material.DropdownMenu
-import androidx.compose.material.DropdownMenuItem
 import androidx.compose.material.OutlinedTextField
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.BlockShape
 import com.example.firstmobile.ui.theme.DarkGreen
@@ -137,8 +131,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             )
                         } else {
                             Text(
-                                text = block.operation.symbol,
-                                fontSize = 32.sp
+                                text = block.operation.symbol, fontSize = 32.sp
                             )
                         }
                         
@@ -147,74 +140,9 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             block.id,
                             blockViewModel,
                             block.rightBlock,
-                            false
+                            false,
+                            block.operation == CodeBlockOperation.ARRAY_EQUAL
                         )
-                    }
-                }
-            }
-        }
-    }
-}
-
-@Composable
-fun DropdownDemo(
-    i: Int,
-    id: UUID,
-    items: List<CodeBlockOperation>,
-    operation: CodeBlockOperation,
-    viewModel: CodeBlockViewModel
-) {
-    var expanded by remember { mutableStateOf(false) }
-    
-    Box(
-        modifier = Modifier
-            .height(40.dp)
-            .width(40.dp)
-            .border(1.dp, color = Color.Black, shape = BlockShape)
-            .background(Color.White, shape = BlockShape),
-        contentAlignment = Alignment.Center
-    ) {
-        Text(
-            text = operation.symbol,
-            modifier = Modifier
-                .clickable(onClick = { expanded = true })
-                .offset(y = (-3).dp),
-            fontSize = 32.sp,
-            textAlign = TextAlign.Center
-        )
-        DropdownMenu(
-            expanded = expanded,
-            onDismissRequest = { expanded = false },
-            modifier = Modifier
-                .background(
-                    Color.White
-                )
-                .border(1.dp, color = Color.Black)
-                .width(60.dp),
-            offset = DpOffset(x = (-8).dp, y = 0.dp)
-        ) {
-            items.forEachIndexed { index, operation ->
-                DropdownMenuItem(modifier = Modifier.fillMaxWidth(), onClick = {
-                    viewModel.changeOperation(i, id, items[index])
-                    expanded = false
-                }) {
-                    if (operation == CodeBlockOperation.INPUT || operation == CodeBlockOperation.DEFAULT) {
-                        Image(
-                            modifier = Modifier.fillMaxSize(),
-                            painter = painterResource(id = R.drawable.trash),
-                            contentDescription = "удаление блока"
-                        )
-                    } else {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                text = operation.symbol,
-                                textAlign = TextAlign.Center,
-                                fontSize = 32.sp,
-                            )
-                        }
                     }
                 }
             }
@@ -228,7 +156,8 @@ fun DropItemLayout(
     id: UUID,
     blockViewModel: CodeBlockViewModel,
     block: CodeBlock?,
-    isLeftChild: Boolean
+    isLeftChild: Boolean,
+    isArray: Boolean = false
 ) {
     if (block == null) {
         DropItem(
@@ -258,20 +187,21 @@ fun DropItemLayout(
     }
     
     if (block.operation == CodeBlockOperation.INPUT) {
+        if (isArray) Text(text = "[", fontSize = 32.sp, modifier = Modifier.padding(start = 4.dp))
+        
         DropItem(
             i = i,
             id = id,
             isLeftChild = isLeftChild,
             modifier = Modifier
                 .height(48.dp)
-                .padding(horizontal = 8.dp)
+                .padding(horizontal = if (isArray) 2.dp else 8.dp)
                 .background(color = Color.Green, shape = BlockShape),
             blockViewModel = blockViewModel
         ) { isHovered, _ ->
             Box(
                 modifier = Modifier
                     .height(48.dp)
-                    .defaultMinSize(minWidth = 80.dp)
                     .border(
                         1.dp,
                         color = if (isHovered) Color.Red else DarkGreen,
@@ -281,7 +211,7 @@ fun DropItemLayout(
                 contentAlignment = Alignment.Center
             ) {
                 OutlinedTextField(shape = BlockShape,
-                    modifier = Modifier.width(80.dp),
+                    modifier = Modifier.width(if (isArray) 160.dp else 80.dp),
                     value = block.input,
                     onValueChange = { newText ->
                         blockViewModel.updateInput(
@@ -290,6 +220,8 @@ fun DropItemLayout(
                     })
             }
         }
+        
+        if (isArray) Text(text = "]", fontSize = 32.sp)
         
         return
     }
@@ -322,20 +254,12 @@ fun DropItemLayout(
                             .height(0.dp)
                     ) {
                         DropItemLayout(
-                            i,
-                            block.id,
-                            blockViewModel,
-                            block.leftBlock,
-                            true
+                            i, block.id, blockViewModel, block.leftBlock, true
                         )
                     }
                 } else {
                     DropItemLayout(
-                        i,
-                        block.id,
-                        blockViewModel,
-                        block.leftBlock,
-                        true
+                        i, block.id, blockViewModel, block.leftBlock, true
                     )
                 }
                 
@@ -352,11 +276,7 @@ fun DropItemLayout(
                 }
                 
                 DropItemLayout(
-                    i,
-                    block.id,
-                    blockViewModel,
-                    block.rightBlock,
-                    false
+                    i, block.id, blockViewModel, block.rightBlock, false
                 )
             }
         }

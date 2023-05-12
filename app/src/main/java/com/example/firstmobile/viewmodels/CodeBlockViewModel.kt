@@ -20,11 +20,14 @@ class CodeBlockViewModel : ViewModel() {
     private var _test = MutableStateFlow(0)
     val test = _test.asStateFlow()
     
-    fun updateInput(i: Int, id: UUID, newText: String, isLeftChild: Boolean) {
+    fun updateInput(
+        i: Int, id: UUID, newText: String, isLeftChild: Boolean
+    ) {
         _test.value += 1
         
         val updatedInputBlock =
             CodeBlock(null, CodeBlockOperation.INPUT, null, id, newText)
+        
         appendNewChild(_blocks.value[i], updatedInputBlock, id, isLeftChild)
     }
     
@@ -38,16 +41,10 @@ class CodeBlockViewModel : ViewModel() {
         
         if (currentCodeBlock.id != id) {
             appendNewChild(
-                currentCodeBlock.leftBlock,
-                targetCodeBlock,
-                id,
-                isLeftChild
+                currentCodeBlock.leftBlock, targetCodeBlock, id, isLeftChild
             )
             appendNewChild(
-                currentCodeBlock.rightBlock,
-                targetCodeBlock,
-                id,
-                isLeftChild
+                currentCodeBlock.rightBlock, targetCodeBlock, id, isLeftChild
             )
             return
         }
@@ -57,9 +54,7 @@ class CodeBlockViewModel : ViewModel() {
     }
     
     private fun appendNewOperation(
-        currentCodeBlock: CodeBlock?,
-        newOperation: CodeBlockOperation,
-        id: UUID
+        currentCodeBlock: CodeBlock?, newOperation: CodeBlockOperation, id: UUID
     ) {
         if (currentCodeBlock == null) return
         
@@ -78,10 +73,7 @@ class CodeBlockViewModel : ViewModel() {
     }
     
     fun addBlock(
-        parentBlock: CodeBlock?,
-        i: Int,
-        id: UUID,
-        isLeftChild: Boolean
+        parentBlock: CodeBlock?, i: Int, id: UUID, isLeftChild: Boolean
     ) {
         _test.value += 1
         

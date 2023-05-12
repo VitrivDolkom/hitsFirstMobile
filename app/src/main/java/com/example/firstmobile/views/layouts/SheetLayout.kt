@@ -134,7 +134,10 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                         )
                                     }
                                     
-                                    Text(text = block.operation.symbol)
+                                    var operationText = block.operation.symbol
+                                    if (block.operation == CodeBlockOperation.ARRAY_EQUAL) operationText += " [ ]"
+                                    
+                                    Text(text = operationText)
                                     DropItemLayout(
                                         -1,
                                         block.id,
