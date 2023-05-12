@@ -126,9 +126,16 @@ class CodeBlockViewModel : ViewModel() {
             CodeBlock(null, CodeBlockOperation.INPUT, null)
         } else parentBlock.rightBlock
         
+        // если массив, то добавляем [ ]
         if (parentBlock.operation == CodeBlockOperation.ARRAY_EQUAL) {
             newRightBlock?.leftBrace = Braces.OPEN_SQUARE
             newRightBlock?.rightBrace = Braces.CLOSE_SQUARE
+        }
+        
+        // если специальные операции, добавляем ( )
+        if (parentBlock.operation.isSpecialOperation()) {
+            newRightBlock?.leftBrace = Braces.OPEN_PARENTHESES
+            newRightBlock?.rightBrace = Braces.CLOSE_PARENTHESES
         }
         
         // создаю копию блока, чтобы сменить id
@@ -161,7 +168,7 @@ class CodeBlockViewModel : ViewModel() {
         text = parseSingleBlock(block.leftBlock, text)
         
         val newText =
-            "${block.leftBrace.symbol} ${if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol} ${block.rightBrace.symbol}"
+            "${block.leftBrace.symbol}${if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol}${block.rightBrace.symbol}"
         
         text += newText
         
@@ -175,7 +182,9 @@ class CodeBlockViewModel : ViewModel() {
         
         _blocks.value.forEach { block ->
             strings.add(parseSingleBlock(block, ""))
-            if (block.operation.isSpecialOperation()) strings.add("begin")
+            if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION) strings.add(
+                "begin"
+            )
         }
         
         return strings
@@ -191,7 +200,7 @@ class CodeBlockViewModel : ViewModel() {
         val strings = parser()
         
         // отдаю строки в интерпритатор и получаю output ...
-        // val output = Interpreter.someFun(strings)
+//         val output = Interpreter.someFun(strings)
         
         _output.value = strings
     }

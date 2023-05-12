@@ -87,6 +87,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                     .background(color = Color.Green, shape = BlockShape),
                 contentAlignment = Alignment.Center
             ) {
+                
                 LazyRow(
                     modifier = Modifier
                         .fillMaxHeight()
@@ -95,7 +96,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     items(1) {
-                        if (block.operation.isSpecialOperation()) {
+                        if (block.operation.isSpecialOperation() || block.operation.isEmptyBlock()) {
                             Box(
                                 modifier = Modifier
                                     .width(0.dp)
@@ -133,14 +134,22 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             )
                         }
                         
-                        DropItemLayout(
-                            i,
-                            block.id,
-                            blockViewModel,
-                            block.rightBlock,
-                            false,
-                            block.operation == CodeBlockOperation.ARRAY_EQUAL
-                        )
+                        if (block.operation.isEmptyBlock()) {
+                            Box(
+                                modifier = Modifier
+                                    .width(10.dp)
+                                    .height(10.dp)
+                            ) {}
+                        } else {
+                            DropItemLayout(
+                                i,
+                                block.id,
+                                blockViewModel,
+                                block.rightBlock,
+                                false,
+                                block.operation == CodeBlockOperation.ARRAY_EQUAL
+                            )
+                        }
                     }
                 }
             }

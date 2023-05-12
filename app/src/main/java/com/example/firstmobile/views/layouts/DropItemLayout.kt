@@ -168,10 +168,10 @@ fun DropItemLayout(
                     Text(text = block.operation.symbol, fontSize = 32.sp)
                 }
                 
+                
                 DropItemLayout(
                     i, block.id, blockViewModel, block.rightBlock, false
                 )
-                
             }
         }
     }

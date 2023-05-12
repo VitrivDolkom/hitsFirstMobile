@@ -76,10 +76,27 @@ fun SheetLayout(
 
 @Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
+    
+    Box(
+        modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "_______________",
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
+    }
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .fillMaxHeight(0.375f)
+            .padding(vertical = 16.dp, horizontal = 4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -124,7 +141,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                     horizontalArrangement = Arrangement.SpaceEvenly,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    if (!block.operation.isSpecialOperation()) {
+                                    if (!block.operation.isSpecialOperation() && !block.operation.isEmptyBlock()) {
                                         DropItemLayout(
                                             -1,
                                             block.id,
@@ -173,6 +190,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
             fontSize = 20.sp
         )
     }
+    
     Box(
         modifier = Modifier
             .fillMaxWidth()

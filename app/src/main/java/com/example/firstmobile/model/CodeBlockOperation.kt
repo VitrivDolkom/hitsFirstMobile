@@ -19,7 +19,7 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     BRACES("( )"), MORE(">"), LESS("<"), MORE_EQUAL(">="), LESS_EQUAL("<="), COMPARE_EQUAL(
         "=="
     ),
-    LOGIC_AND("&&"), LOGIC_OR("||"), DEFAULT(
+    LOGIC_AND("&&"), LOGIC_OR("||"), PRINT("print"), BLOCK_END("end"), DEFAULT(
         ""
     );
     
@@ -33,10 +33,14 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
         listOf(LOGIC_AND, LOGIC_OR, BRACES, INPUT)
     
     private fun specialOperations(): List<CodeBlockOperation> =
-        listOf(LOOP, CONDITION, DEFAULT)
+        listOf(LOOP, CONDITION, PRINT, DEFAULT)
+    
+    private fun emptyBlocks(): List<CodeBlockOperation> = listOf(BLOCK_END)
     
     fun isSpecialOperation(): Boolean =
         this in specialOperations() && this != DEFAULT
+    
+    fun isEmptyBlock(): Boolean = this in emptyBlocks()
     
     private fun isMathOperation(): Boolean = this in mathOperations()
     
@@ -44,7 +48,8 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     
     private fun isCompareOperation(): Boolean = this in compareOperations()
     
-    fun isDropDownable(): Boolean = isCompareOperation() || isLogicOperation() || isMathOperation()
+    fun isDropDownable(): Boolean =
+        isCompareOperation() || isLogicOperation() || isMathOperation()
     
     fun getVariants(): List<CodeBlockOperation> {
         if (this in mathOperations()) return mathOperations()
@@ -60,18 +65,17 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
             ),
             CodeBlocksGroup("Мат операции", mathOperations(), listOf(ADD)),
             CodeBlocksGroup(
-                "Логические операции",
-                logicOperations(),
-                listOf(LOGIC_AND)
+                "Логические операции", logicOperations(), listOf(LOGIC_AND)
             ),
             CodeBlocksGroup(
-                "Операции сравнения",
-                compareOperations(),
-                listOf(MORE)
+                "Операции сравнения", compareOperations(), listOf(MORE)
             ),
             CodeBlocksGroup(
-                "Спец операции", specialOperations(), listOf(LOOP, CONDITION)
+                "Спец операции",
+                specialOperations(),
+                listOf(LOOP, CONDITION, PRINT)
             ),
+            CodeBlocksGroup("Блок окончания", emptyBlocks(), emptyBlocks())
         )
     }
 }
