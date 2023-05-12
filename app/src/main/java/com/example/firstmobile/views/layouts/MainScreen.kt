@@ -37,9 +37,7 @@ fun MainScreen(
     ) {
         Text(text = "$test", fontSize = 0.sp)
         LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(600.dp)
+            modifier = Modifier.fillMaxWidth()
         ) {
             itemsIndexed(blocks) { i, block ->
                 if (block.operation == CodeBlockOperation.DEFAULT) {
@@ -68,6 +66,13 @@ fun MainScreen(
                     SingleBlock(blockViewModel, block, i)
                 }
             }
+            
+            items(1) {
+                Box(modifier = Modifier
+                    .fillMaxWidth()
+                    .height(500.dp)) {
+                }
+            }
         }
     }
 }
@@ -87,7 +92,6 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                     .background(color = Color.Green, shape = BlockShape),
                 contentAlignment = Alignment.Center
             ) {
-                
                 LazyRow(
                     modifier = Modifier
                         .fillMaxHeight()
