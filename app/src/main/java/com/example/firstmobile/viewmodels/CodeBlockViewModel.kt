@@ -1,8 +1,9 @@
 package com.example.firstmobile.viewmodels
 
 import androidx.lifecycle.ViewModel
+import com.example.firstmobile.model.Braces
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.views.draganddrop.CodeBlock
+import com.example.firstmobile.model.CodeBlock
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
@@ -21,12 +22,24 @@ class CodeBlockViewModel : ViewModel() {
     val test = _test.asStateFlow()
     
     fun updateInput(
-        i: Int, id: UUID, newText: String, isLeftChild: Boolean
+        i: Int,
+        id: UUID,
+        newText: String,
+        isLeftChild: Boolean,
+        leftBrace: Braces,
+        rightBrace: Braces
     ) {
         _test.value += 1
         
-        val updatedInputBlock =
-            CodeBlock(null, CodeBlockOperation.INPUT, null, id, newText)
+        val updatedInputBlock = CodeBlock(
+            null,
+            CodeBlockOperation.INPUT,
+            null,
+            id,
+            newText,
+            leftBrace,
+            rightBrace
+        )
         
         appendNewChild(_blocks.value[i], updatedInputBlock, id, isLeftChild)
     }
@@ -54,22 +67,45 @@ class CodeBlockViewModel : ViewModel() {
     }
     
     private fun appendNewOperation(
-        currentCodeBlock: CodeBlock?, newOperation: CodeBlockOperation, id: UUID
+        currentCodeBlock: CodeBlock?,
+        newOperation: CodeBlockOperation,
+        id: UUID,
+        withBraces: Boolean = false
     ) {
         if (currentCodeBlock == null) return
         
         if (currentCodeBlock.id != id) {
-            appendNewOperation(currentCodeBlock.leftBlock, newOperation, id)
-            appendNewOperation(currentCodeBlock.rightBlock, newOperation, id)
+            appendNewOperation(
+                currentCodeBlock.leftBlock, newOperation, id, withBraces
+            )
+            appendNewOperation(
+                currentCodeBlock.rightBlock, newOperation, id, withBraces
+            )
+            return
+        }
+        
+        val leftChild = currentCodeBlock.leftBlock
+        val rightChild = currentCodeBlock.rightBlock
+        
+        if (withBraces) {
+            leftChild?.leftBrace =
+                if (leftChild?.leftBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.OPEN_PARENTHESES
+            rightChild?.rightBrace =
+                if (rightChild?.rightBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.CLOSE_PARENTHESES
             return
         }
         
         currentCodeBlock.operation = newOperation
     }
     
-    fun changeOperation(i: Int, id: UUID, newOperation: CodeBlockOperation) {
+    fun changeOperation(
+        i: Int,
+        id: UUID,
+        newOperation: CodeBlockOperation,
+        withBraces: Boolean = false
+    ) {
         _test.value += 1
-        appendNewOperation(_blocks.value[i], newOperation, id)
+        appendNewOperation(_blocks.value[i], newOperation, id, withBraces)
     }
     
     fun addBlock(
@@ -81,22 +117,29 @@ class CodeBlockViewModel : ViewModel() {
             _blocks.value[i] = CodeBlock()
             return
         }
-
-// по дефолту делаем детей инпутами
+        
+        // по дефолту делаем детей инпутами
         val newLeftBlock = if (parentBlock.leftBlock == null) {
             CodeBlock(null, CodeBlockOperation.INPUT, null)
         } else parentBlock.leftBlock
         val newRightBlock = if (parentBlock.rightBlock == null) {
             CodeBlock(null, CodeBlockOperation.INPUT, null)
         } else parentBlock.rightBlock
-
-// создаю копию блока, чтобы сменить id
+        
+        if (parentBlock.operation == CodeBlockOperation.ARRAY_EQUAL) {
+            newRightBlock?.leftBrace = Braces.OPEN_SQUARE
+            newRightBlock?.rightBrace = Braces.CLOSE_SQUARE
+        }
+        
+        // создаю копию блока, чтобы сменить id
         val block = CodeBlock(
             newLeftBlock,
             parentBlock.operation,
             newRightBlock,
             UUID.randomUUID(),
-            parentBlock.input
+            parentBlock.input,
+            parentBlock.leftBrace,
+            parentBlock.rightBrace
         )
         
         if (_blocks.value[i].operation != CodeBlockOperation.DEFAULT) {
@@ -105,6 +148,7 @@ class CodeBlockViewModel : ViewModel() {
             _blocks.value[i] = block
         }
         
+        // добавляю еще один пустой блок
         if (i == (_blocks.value.size - 1)) {
             _blocks.value.add(CodeBlock())
         }
@@ -116,7 +160,10 @@ class CodeBlockViewModel : ViewModel() {
         
         text = parseSingleBlock(block.leftBlock, text)
         
-        text += "${if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol} "
+        val newText =
+            "${block.leftBrace.symbol} ${if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol} ${block.rightBrace.symbol}"
+        
+        text += newText
         
         text = parseSingleBlock(block.rightBlock, text)
         

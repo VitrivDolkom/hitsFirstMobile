@@ -62,7 +62,12 @@ fun DropdownDemo(
         ) {
             items.forEachIndexed { index, operation ->
                 DropdownMenuItem(modifier = Modifier.fillMaxWidth(), onClick = {
-                    viewModel.changeOperation(i, id, items[index])
+                    if (items[index] == CodeBlockOperation.BRACES) {
+                        viewModel.changeOperation(i, id, items[index], true)
+                    } else {
+                        viewModel.changeOperation(i, id, items[index])
+                    }
+                    
                     expanded = false
                 }) {
                     if (operation == CodeBlockOperation.INPUT || operation == CodeBlockOperation.DEFAULT) {

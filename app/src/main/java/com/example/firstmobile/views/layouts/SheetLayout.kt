@@ -24,7 +24,7 @@ import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
-import com.example.firstmobile.views.draganddrop.CodeBlock
+import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.views.draganddrop.DragTarget
 
 @Composable
