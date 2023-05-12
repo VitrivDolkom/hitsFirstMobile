@@ -156,7 +156,7 @@ fun DropItemLayout(
                     )
                 }
                 
-                if (block.operation.isMathOperation()) {
+                if (block.operation.isDropDownable()) {
                     DropdownDemo(
                         i,
                         block.id,

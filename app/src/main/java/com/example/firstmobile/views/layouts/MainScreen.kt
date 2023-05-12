@@ -119,7 +119,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             )
                         }
                         
-                        if (block.operation.isMathOperation()) {
+                        if (block.operation.isDropDownable()) {
                             DropdownDemo(
                                 i,
                                 block.id,

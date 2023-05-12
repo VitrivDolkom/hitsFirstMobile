@@ -46,7 +46,7 @@ fun DropdownDemo(
             modifier = Modifier
                 .clickable(onClick = { expanded = true })
                 .offset(y = (-3).dp),
-            fontSize = 32.sp,
+            fontSize = 22.sp,
             textAlign = TextAlign.Center
         )
         DropdownMenu(
@@ -84,7 +84,7 @@ fun DropdownDemo(
                             Text(
                                 text = operation.symbol,
                                 textAlign = TextAlign.Center,
-                                fontSize = 32.sp,
+                                fontSize = 22.sp,
                             )
                         }
                     }
