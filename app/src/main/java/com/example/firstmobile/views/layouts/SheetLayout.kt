@@ -95,7 +95,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .fillMaxHeight(0.375f)
+            .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8)
             .padding(vertical = 16.dp, horizontal = 4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally

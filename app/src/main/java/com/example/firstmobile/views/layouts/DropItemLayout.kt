@@ -118,6 +118,8 @@ fun DropItemLayout(
         return
     }
     
+    
+    
     // обычный случай, когда блок есть и он не input
     DragTarget(
         i = i, operationToDrop = block, viewModel = blockViewModel
@@ -139,6 +141,16 @@ fun DropItemLayout(
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
+    
+                if (block.leftBrace != Braces.DEFAULT) {
+                    Text(
+                        text = block.leftBrace.symbol,
+                        fontSize = 32.sp,
+                        modifier = Modifier
+                            .padding(start = 2.dp)
+                            .offset(y = (-3).dp)
+                    )
+                }
                 
                 if (block.operation.isSpecialOperation()) {
                     Box(
@@ -171,6 +183,16 @@ fun DropItemLayout(
                 DropItemLayout(
                     i, block.id, blockViewModel, block.rightBlock, false
                 )
+    
+                if (block.rightBrace != Braces.DEFAULT) {
+                    Text(
+                        text = block.rightBrace.symbol,
+                        fontSize = 32.sp,
+                        modifier = Modifier
+                            .padding(end = 2.dp)
+                            .offset(y = (-3).dp)
+                    )
+                }
             }
         }
     }

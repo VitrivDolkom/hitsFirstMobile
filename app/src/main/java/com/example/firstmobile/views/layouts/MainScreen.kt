@@ -13,6 +13,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlockOperation
@@ -37,41 +38,47 @@ fun MainScreen(
     ) {
         Text(text = "$test", fontSize = 0.sp)
         LazyColumn(
-            modifier = Modifier.fillMaxWidth()
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(LocalConfiguration.current.screenHeightDp.dp * 7 / 8)
         ) {
-            itemsIndexed(blocks) { i, block ->
-                if (block.operation == CodeBlockOperation.DEFAULT) {
-                    DropItem(
-                        i = i,
-                        id = block.id,
-                        isLeftChild = false,
+            items(blocks.size + 1) {
+                if (it >= blocks.size) {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(4.dp)
-                            .height(64.dp),
-                        blockViewModel = blockViewModel
-                    ) { isHovered, _ ->
-                        Box(
-                            modifier = Modifier
-                                .fillMaxSize()
-                                .border(
-                                    1.dp,
-                                    color = if (isHovered) Color.Red else Color.Blue,
-                                    shape = BlockShape
-                                )
-                                .background(Color.White, shape = BlockShape)
-                        ) {}
-                    }
+                            .height(LocalConfiguration.current.screenHeightDp.dp * 1 / 2)
+                    ) {}
                 } else {
-                    SingleBlock(blockViewModel, block, i)
+                    val block = blocks[it]
+                    
+                    if (block.operation == CodeBlockOperation.DEFAULT) {
+                        DropItem(
+                            i = it,
+                            id = block.id,
+                            isLeftChild = false,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(4.dp)
+                                .height(64.dp),
+                            blockViewModel = blockViewModel
+                        ) { isHovered, _ ->
+                            Box(
+                                modifier = Modifier
+                                    .fillMaxSize()
+                                    .border(
+                                        1.dp,
+                                        color = if (isHovered) Color.Red else Color.Blue,
+                                        shape = BlockShape
+                                    )
+                                    .background(Color.White, shape = BlockShape)
+                            ) {}
+                        }
+                    } else {
+                        SingleBlock(blockViewModel, block, it)
+                    }
                 }
-            }
-            
-            items(1) {
-                Box(modifier = Modifier
-                    .fillMaxWidth()
-                    .height(500.dp)) {
-                }
+                
             }
         }
     }

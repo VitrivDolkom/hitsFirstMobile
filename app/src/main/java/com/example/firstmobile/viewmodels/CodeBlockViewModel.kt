@@ -61,9 +61,17 @@ class CodeBlockViewModel : ViewModel() {
             )
             return
         }
-        
-        if (isLeftChild) currentCodeBlock.leftBlock = targetCodeBlock
-        else currentCodeBlock.rightBlock = targetCodeBlock
+    
+        if (isLeftChild) {
+            currentCodeBlock.leftBlock = targetCodeBlock
+        } else {
+            if (targetCodeBlock.operation.isSpecialOperation()) {
+                targetCodeBlock.rightBlock?.leftBrace = currentCodeBlock.rightBlock!!.leftBrace
+                targetCodeBlock.rightBlock?.rightBrace = currentCodeBlock.rightBlock!!.rightBrace
+            }
+            
+            currentCodeBlock.rightBlock = targetCodeBlock
+        }
     }
     
     private fun appendNewOperation(
