@@ -4,6 +4,7 @@ import androidx.lifecycle.ViewModel
 import com.example.firstmobile.model.Braces
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.model.CodeBlock
+import com.example.firstmobile.model.Interpreter
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
@@ -180,11 +181,11 @@ class CodeBlockViewModel : ViewModel() {
         val centerText =
             if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol
         
-        text += if (centerText != "") "$centerText " else ""
+        text += if (!block.operation.isSpecialOperation()) "$centerText " else centerText
         
         text = parseSingleBlock(block.rightBlock, text)
         
-        text += if (block.leftBrace != Braces.DEFAULT) "${block.rightBrace.symbol} " else ""
+        text += if (block.rightBrace != Braces.DEFAULT) block.rightBrace.symbol else ""
         
         return text
     }
@@ -193,7 +194,11 @@ class CodeBlockViewModel : ViewModel() {
         val strings = mutableListOf<String>()
         
         _blocks.value.forEach { block ->
-            strings.add(parseSingleBlock(block, ""))
+            val newString = parseSingleBlock(block, "")
+            if (!Regex("\\s*").matches(newString)) {
+                strings.add(newString)
+            }
+            
             if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION) {
                 strings.add("begin")
             }
@@ -211,9 +216,8 @@ class CodeBlockViewModel : ViewModel() {
     fun execute() {
         val strings = parser()
         
-        // отдаю строки в интерпритатор и получаю output ...
-//         val output = Interpreter().executor(strings)
+        val output = Interpreter().executor(strings)
         
-        _output.value = strings
+        _output.value = output
     }
 }

@@ -83,7 +83,7 @@ fun DropItemLayout(
             isLeftChild = isLeftChild,
             modifier = Modifier
                 .height(48.dp)
-                .padding(horizontal = 12.dp, vertical = 2.dp)
+                .padding(horizontal = 12.dp)
                 .background(color = Color.Green, shape = BlockShape),
             blockViewModel = blockViewModel
         ) { isHovered, _ ->

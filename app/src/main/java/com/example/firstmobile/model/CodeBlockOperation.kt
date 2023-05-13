@@ -19,7 +19,7 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     BRACES("( )"), MORE(">"), LESS("<"), MORE_EQUAL(">="), LESS_EQUAL("<="), COMPARE_EQUAL(
         "=="
     ),
-    LOGIC_AND("&&"), LOGIC_OR("||"), PRINT("print"), BLOCK_END("end"), DEFAULT(
+    LOGIC_AND("and"), LOGIC_OR("or"), PRINT("print"), BLOCK_END("end"), DEFAULT(
         ""
     );
     
