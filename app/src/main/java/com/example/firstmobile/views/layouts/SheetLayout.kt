@@ -179,7 +179,8 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     Box(
         modifier = Modifier
             .background(Color.Black)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
