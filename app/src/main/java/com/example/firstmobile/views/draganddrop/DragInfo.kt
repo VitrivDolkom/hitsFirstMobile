@@ -2,6 +2,7 @@ package com.example.firstmobile.views.draganddrop
 
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
+import com.example.firstmobile.model.CodeBlock
 import java.util.UUID
 
 internal val LocalDragTargetInfo = compositionLocalOf { DragTargetInfo() }

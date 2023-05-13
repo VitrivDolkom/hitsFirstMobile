@@ -24,7 +24,7 @@ import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
-import com.example.firstmobile.views.draganddrop.CodeBlock
+import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.views.draganddrop.DragTarget
 
 @Composable
@@ -76,10 +76,27 @@ fun SheetLayout(
 
 @Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
+    
+    Box(
+        modifier = Modifier
+            .background(Color.White)
+            .fillMaxWidth(),
+        contentAlignment = Alignment.Center
+    ) {
+        Text(
+            text = "_______________",
+            color = Color.Black,
+            textAlign = TextAlign.Center,
+            fontWeight = FontWeight.Bold,
+            fontSize = 20.sp
+        )
+    }
+    
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
-            .height(300.dp),
+            .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8)
+            .padding(vertical = 16.dp, horizontal = 4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -124,7 +141,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                     horizontalArrangement = Arrangement.SpaceEvenly,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {
-                                    if (!block.operation.isSpecialOperation()) {
+                                    if (!block.operation.isSpecialOperation() && !block.operation.isEmptyBlock()) {
                                         DropItemLayout(
                                             -1,
                                             block.id,
@@ -134,7 +151,10 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                         )
                                     }
                                     
-                                    Text(text = block.operation.symbol)
+                                    var operationText = block.operation.symbol
+                                    if (block.operation == CodeBlockOperation.ARRAY_EQUAL) operationText += " [ ]"
+                                    
+                                    Text(text = operationText)
                                     DropItemLayout(
                                         -1,
                                         block.id,
@@ -170,6 +190,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
             fontSize = 20.sp
         )
     }
+    
     Box(
         modifier = Modifier
             .fillMaxWidth()

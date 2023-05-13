@@ -7,6 +7,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onGloballyPositioned
+import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import java.util.*
 
