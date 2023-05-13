@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -29,10 +30,10 @@ fun MainScreen(
     blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
     SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
-    
+
     val blocks by blockViewModel.blocks.collectAsState()
     val test by blockViewModel.test.collectAsState()
-    
+
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
@@ -51,7 +52,7 @@ fun MainScreen(
                     ) {}
                 } else {
                     val block = blocks[it]
-                    
+
                     if (block.operation == CodeBlockOperation.DEFAULT) {
                         DropItem(
                             i = it,
@@ -78,7 +79,7 @@ fun MainScreen(
                         SingleBlock(blockViewModel, block, it)
                     }
                 }
-                
+
             }
         }
     }
@@ -130,7 +131,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                                 true
                             )
                         }
-                        
+
                         if (block.operation.isDropDownable()) {
                             DropdownDemo(
                                 i,
@@ -140,11 +141,13 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                                 blockViewModel
                             )
                         } else {
-                            Text(
-                                text = block.operation.symbol, fontSize = 32.sp
-                            )
+                            DisableSelection {
+                                Text(
+                                    text = block.operation.symbol, fontSize = 32.sp
+                                )
+                            }
                         }
-                        
+
                         if (block.operation.isEmptyBlock()) {
                             Box(
                                 modifier = Modifier
