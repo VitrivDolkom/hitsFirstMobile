@@ -61,13 +61,16 @@ class CodeBlockViewModel : ViewModel() {
             )
             return
         }
-    
+        
         if (isLeftChild) {
             currentCodeBlock.leftBlock = targetCodeBlock
         } else {
-            if (targetCodeBlock.operation.isSpecialOperation()) {
-                targetCodeBlock.rightBlock?.leftBrace = currentCodeBlock.rightBlock!!.leftBrace
-                targetCodeBlock.rightBlock?.rightBrace = currentCodeBlock.rightBlock!!.rightBrace
+            // сохраняю скобки родителя
+            if (currentCodeBlock.operation.isSpecialOperation()) {
+                targetCodeBlock.leftBrace =
+                    currentCodeBlock.rightBlock!!.leftBrace
+                targetCodeBlock.rightBrace =
+                    currentCodeBlock.rightBlock!!.rightBrace
             }
             
             currentCodeBlock.rightBlock = targetCodeBlock
@@ -92,14 +95,12 @@ class CodeBlockViewModel : ViewModel() {
             return
         }
         
-        val leftChild = currentCodeBlock.leftBlock
-        val rightChild = currentCodeBlock.rightBlock
-        
+        // toggle скобок операции
         if (withBraces) {
-            leftChild?.leftBrace =
-                if (leftChild?.leftBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.OPEN_PARENTHESES
-            rightChild?.rightBrace =
-                if (rightChild?.rightBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.CLOSE_PARENTHESES
+            currentCodeBlock.leftBrace =
+                if (currentCodeBlock.leftBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.OPEN_PARENTHESES
+            currentCodeBlock.rightBrace =
+                if (currentCodeBlock.rightBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.CLOSE_PARENTHESES
             return
         }
         
@@ -163,7 +164,6 @@ class CodeBlockViewModel : ViewModel() {
             _blocks.value[i] = block
         }
         
-        // добавляю еще один пустой блок
         if (i == (_blocks.value.size - 1)) {
             _blocks.value.add(CodeBlock())
         }
@@ -173,14 +173,18 @@ class CodeBlockViewModel : ViewModel() {
         var text = _text
         if (block == null) return text
         
+        text += if (block.leftBrace != Braces.DEFAULT) "${block.leftBrace.symbol} " else ""
+        
         text = parseSingleBlock(block.leftBlock, text)
         
-        val newText =
-            "${block.leftBrace.symbol}${if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol}${block.rightBrace.symbol}"
+        val centerText =
+            if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol
         
-        text += newText
+        text += if (centerText != "") "$centerText " else ""
         
         text = parseSingleBlock(block.rightBlock, text)
+        
+        text += if (block.leftBrace != Braces.DEFAULT) "${block.rightBrace.symbol} " else ""
         
         return text
     }
@@ -190,9 +194,9 @@ class CodeBlockViewModel : ViewModel() {
         
         _blocks.value.forEach { block ->
             strings.add(parseSingleBlock(block, ""))
-            if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION) strings.add(
-                "begin"
-            )
+            if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION) {
+                strings.add("begin")
+            }
         }
         
         return strings
@@ -208,7 +212,7 @@ class CodeBlockViewModel : ViewModel() {
         val strings = parser()
         
         // отдаю строки в интерпритатор и получаю output ...
-//         val output = Interpreter.someFun(strings)
+//         val output = Interpreter().executor(strings)
         
         _output.value = strings
     }
