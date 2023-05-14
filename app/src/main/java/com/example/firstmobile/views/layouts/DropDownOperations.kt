@@ -84,7 +84,7 @@ fun DropdownDemo(
                             Text(
                                 text = operation.symbol,
                                 textAlign = TextAlign.Center,
-                                fontSize = 22.sp,
+                                fontSize = if (operation.isLogicOperation()) 16.sp else 22.sp,
                             )
                         }
                     }

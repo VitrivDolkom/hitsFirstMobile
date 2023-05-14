@@ -67,7 +67,7 @@ class CodeBlockViewModel : ViewModel() {
             currentCodeBlock.leftBlock = targetCodeBlock
         } else {
             // сохраняю скобки родителя
-            if (currentCodeBlock.operation.isSpecialOperation()) {
+            if (currentCodeBlock.operation == CodeBlockOperation.PRINT) {
                 targetCodeBlock.leftBrace =
                     currentCodeBlock.rightBlock!!.leftBrace
                 targetCodeBlock.rightBrace =
@@ -143,7 +143,7 @@ class CodeBlockViewModel : ViewModel() {
         }
         
         // если специальные операции, добавляем ( )
-        if (parentBlock.operation.isSpecialOperation()) {
+        if (parentBlock.operation == CodeBlockOperation.PRINT) {
             newRightBlock?.leftBrace = Braces.OPEN_PARENTHESES
             newRightBlock?.rightBrace = Braces.CLOSE_PARENTHESES
         }
@@ -181,7 +181,7 @@ class CodeBlockViewModel : ViewModel() {
         val centerText =
             if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol
         
-        text += if (!block.operation.isSpecialOperation()) "$centerText " else centerText
+        text += if (block.operation != CodeBlockOperation.PRINT && centerText != "") "$centerText " else centerText
         
         text = parseSingleBlock(block.rightBlock, text)
         
@@ -200,6 +200,7 @@ class CodeBlockViewModel : ViewModel() {
             }
             
             if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION) {
+                strings[strings.size - 1] += ":"
                 strings.add("begin")
             }
         }

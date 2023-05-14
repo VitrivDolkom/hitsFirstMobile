@@ -44,7 +44,7 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     
     private fun isMathOperation(): Boolean = this in mathOperations()
     
-    private fun isLogicOperation(): Boolean = this in logicOperations()
+    fun isLogicOperation(): Boolean = this in logicOperations()
     
     private fun isCompareOperation(): Boolean = this in compareOperations()
     
