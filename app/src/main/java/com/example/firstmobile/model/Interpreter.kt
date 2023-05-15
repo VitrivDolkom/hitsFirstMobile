@@ -3,6 +3,9 @@ package com.example.firstmobile.model
 import kotlin.math.floor
 import java.util.Stack
 import java.util.Vector
+import kotlin.math.ceil
+import kotlin.math.floor
+import kotlin.math.roundToInt
 import java.util.regex.Pattern
 import kotlin.collections.*
 
@@ -31,8 +34,10 @@ class Interpreter {
     }
     
     fun polandCondition(line: String): Any {
-        val comparators =
-            listOf(">", ">=", "<=", "<", "<=", "==", "!=", "and", "or")
+        //print(line)
+        val comparators = listOf(
+            ">", ">=", "<=", "<", "<=", "==", "!=", "and", "or", "(", ")"
+        )
         var line =
             line.substring(line.indexOf(" ")).replace(" ", "").replace(":", "")
         //print("Это условие $line")
@@ -59,7 +64,7 @@ class Interpreter {
         val newLine = vremen.toList()
         //print("New line $newLine")
         for (el in newLine) {
-            if (el !in comparators) {
+            if (el !in comparators && !"()".contains(el)) {
                 temp.add(CalculateExpression(el).replace(",", "."))
             } else {
                 temp.add(el)
@@ -67,18 +72,28 @@ class Interpreter {
         }
         val st = mutableListOf<String>()
         val postfix = mutableListOf<String>()
-        
         for (el in temp) {
             if (el !in comparators) {
                 postfix.add(el)
             } else {
-                while (st.isNotEmpty() && comparators.indexOf(st.last()) <= comparators.indexOf(
-                        el
-                    )
-                ) {
-                    postfix.add(st.removeAt(st.lastIndex))
+                if (el == "(") {
+                    st.add(el)
+                } else if (el == ")") {
+                    while (st.last() != "(") {
+                        postfix.add(st.removeAt(st.lastIndex))
+                    }
+                    if (st.last() == "(") {
+                        st.removeAt(st.lastIndex)
+                    }
+                } else {
+                    while (st.isNotEmpty() && comparators.indexOf(st.last()) <= comparators.indexOf(
+                            el
+                        )
+                    ) {
+                        postfix.add(st.removeAt(st.lastIndex))
+                    }
+                    st.add(el)
                 }
-                st.add(el)
             }
         }
         while (st.isNotEmpty()) {
@@ -277,14 +292,14 @@ class Interpreter {
         if (matcher.find()) {
             var a = matcher.group()
             if (a in arrays) {
-                return arrays[a]?.first.toString()
+                return (arrays[a]?.first.toString())
             } else if (a in dictionary) {
-                return dictionary[a].toString()
+                return (dictionary[a].toString())
             } else {
-                return CalculateExpression(a)
+                return (CalculateExpression(a))
             }
         }
-        return ""
+        return "Runtime Error"
     }
     
     var dictionary = mutableMapOf<String, Any>()
@@ -314,7 +329,7 @@ class Interpreter {
         var temp: List<String>
         
         var postfix = Vector<String>()
-        val operations: String = "+-÷×,%"
+        val operations: String = "+-/*,%"
         var GlobalResult = ""
         if (ans != "") {
             
@@ -324,7 +339,8 @@ class Interpreter {
             
             for (elem in "+*/%()") {
                 ans = ans.replace(
-                    elem.toString(), " $elem "
+                    elem.toString(),
+                    " $elem "
                 ) // разделяем операции, чтобы потом сплитнуть по ним
                 // знак минус не учитываем, его обработаем отдельно,
                 // чтобы грамотно отделить отрицательные числа от обычного минуса
@@ -333,7 +349,8 @@ class Interpreter {
             for (el in Regex("(?<=\\[)[^\\[\\]]+(?=\\])").findAll(ans)) {
                 if (el.value in dictionary) {
                     ans = ans.replace(
-                        el.value.toString(), dictionary[el.value]!!.toString()
+                        el.value.toString(),
+                        dictionary[el.value]!!.toString()
                     )
                 }
             }
@@ -346,7 +363,8 @@ class Interpreter {
                     return "Runtime Error"
                 }
                 var vall = el.value.substring(
-                    el.value.indexOf('[') + 1, el.value.length - 1
+                    el.value.indexOf('[') + 1,
+                    el.value.length - 1
                 )
                 vall = CalculateExpression(vall).toFloat().toString()
                 
@@ -503,7 +521,7 @@ class Interpreter {
                     if (elem == "-") {
                         res.push((s.toDouble() - f.toDouble()).toString())
                     }
-                    if (elem == "×") {
+                    if (elem == "*") {
                         res.push((f.toDouble() * s.toDouble()).toString())
                     }
                     if (elem == "%") {
@@ -517,7 +535,7 @@ class Interpreter {
                             res.push((s.toDouble() % f.toDouble()).toString())
                         }
                     }
-                    if (elem == "÷") {
+                    if (elem == "/") {
                         if (f == "0" || f == "-0") {
                             GlobalResult = "Error"
                             
@@ -533,6 +551,7 @@ class Interpreter {
                     }
                 }
             }
+            //println(res)
             if (flag) {
                 GlobalResult = res.pop().replace(',', '.')
             }
@@ -565,11 +584,9 @@ class Interpreter {
         //s = readLine()!!
         //code.add(s)
         //}
-    
-        if (code.isNotEmpty() && code[code.size-1] == ""){
+        if (code.isNotEmpty() && code[code.size - 1] == "") {
             code.removeLast()
         }
-    
         var ifs = conditionFinder(code)
         var cycles = cycleFinder(code)
         
