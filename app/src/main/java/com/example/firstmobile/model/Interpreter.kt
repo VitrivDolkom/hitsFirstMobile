@@ -627,7 +627,7 @@ class Interpreter {
                 }
             } else {
                 
-                if (Regex("print\\(.+\\)").matches(current)) {
+                if (Regex("print\\s\\(.+\\)").matches(current)) {
                     //show(current)
                     result.add(show(current))
                 } else if (Regex("[a-zA-Z]+(\\s|)\\=(\\s|)\\[([a-zA-Z0-9\\.,]+(\\s|)\\;(\\s|))*[0-9]+\\]").matches(
