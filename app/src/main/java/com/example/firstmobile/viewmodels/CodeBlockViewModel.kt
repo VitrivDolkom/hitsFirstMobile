@@ -181,7 +181,7 @@ class CodeBlockViewModel : ViewModel() {
         val centerText =
             if (block.operation == CodeBlockOperation.INPUT) block.input else block.operation.symbol
         
-        text += if (block.operation != CodeBlockOperation.PRINT && centerText != "") "$centerText " else centerText
+        text += if (centerText != "") "$centerText " else centerText
         
         text = parseSingleBlock(block.rightBlock, text)
         
@@ -194,8 +194,8 @@ class CodeBlockViewModel : ViewModel() {
         val strings = mutableListOf<String>()
         
         _blocks.value.forEach { block ->
-            val newString = parseSingleBlock(block, "")
-            if (!Regex("\\s*").matches(newString)) {
+            val newString = parseSingleBlock(block, "").trim()
+            if (newString != "") {
                 strings.add(newString)
             }
             
