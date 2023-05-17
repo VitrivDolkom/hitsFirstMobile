@@ -26,7 +26,10 @@ class KtClassTester {
         val res = mutableListOf<Double>()
         mas = mas.replace(";", " ").replace(',', '.').replace("\\s+".toRegex(), " ")
         for (el in mas.split(" ")) {
-            res.add(el.toDouble())
+            if (el != " "){
+                res.add(el.toDouble())
+            }
+
         }
         arrays[key] = Pair(res.map { it.toString() }.toMutableList(), List(res.size) { "$key[$it]" }.toMutableList())
     }
@@ -241,7 +244,7 @@ class KtClassTester {
 
 
     fun show(obj: String): String {
-        val pattern = Pattern.compile("(?<=\\().+(?=\\))")
+        val pattern = Pattern.compile("(?<=\\(\\s).+(?=\\s\\))")
         val matcher = pattern.matcher(obj)
         if (matcher.find()) {
             var a = matcher.group()
@@ -551,7 +554,7 @@ class KtClassTester {
         //println(cycles)
         val result = mutableListOf<String>()
         while (iterator < code.size) {
-            val current = code[iterator]
+            val current = code[iterator].trim()
             //print(current)
             if (ifs.isNotEmpty() && (((iterator >= (ifs[0][0] as List<Int>)[1]) && (cycles.isEmpty() || cycles.isNotEmpty() && (iterator >= (cycles[0][0] as List<Int>)[1]))) || cycles.isNotEmpty() && ((cycles[0][0] as List<Int>)[1] >= (ifs[0][0] as List<Int>)[1]) && iterator==(cycles[0][0] as List<Int>)[1])) {
                 //ifs.removeLast()
@@ -577,10 +580,10 @@ class KtClassTester {
                 }
             } else {
 
-                if (Regex("print\\(.+\\)").matches(current)) {
+                if (Regex("print\\s\\(.+\\)").matches(current)) {
                     //show(current)
                     result.add(show(current))
-                } else if (Regex("[a-zA-Z]+(\\s|)\\=(\\s|)\\[([a-zA-Z0-9\\.,]+(\\s|)\\;(\\s|))*[0-9]+\\]").matches(current)) {
+                } else if (Regex("[a-zA-Z]+(\\s|)\\=(\\s|)\\[(\\s|)([a-zA-Z0-9\\.,]+(\\s|)\\;(\\s|))*[0-9]+(\\s|)\\]").matches(current)) {
                     processArray(current)
                 } else {
 
