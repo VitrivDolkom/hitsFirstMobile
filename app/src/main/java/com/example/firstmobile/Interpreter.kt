@@ -10,7 +10,7 @@ import java.util.regex.Pattern
 import kotlin.math.*
 import kotlin.collections.*
 
-class KtClassTester {
+class Interpreter {
 
 
 
