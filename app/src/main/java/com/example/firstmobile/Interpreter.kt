@@ -26,7 +26,7 @@ class KtClassTester {
         val res = mutableListOf<Double>()
         mas = mas.replace(";", " ").replace(',', '.').replace("\\s+".toRegex(), " ")
         for (el in mas.split(" ")) {
-            if (el != " "){
+            if (el != ""){
                 res.add(el.toDouble())
             }
 
