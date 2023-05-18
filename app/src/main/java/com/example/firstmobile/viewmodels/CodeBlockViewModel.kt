@@ -215,10 +215,8 @@ class CodeBlockViewModel : ViewModel() {
     }
     
     fun execute() {
-//        val strings = parser()
-        val strings = arrayOf("a = [1;2;3;4;5]", "print ( a[0] + a[1] )").toMutableList()
+        val strings = parser()
         
-//        val output = Interpreter().executor(strings)
         val output = Interpreter().executor(strings)
         
         _output.value = output

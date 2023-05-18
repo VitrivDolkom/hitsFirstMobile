@@ -588,7 +588,7 @@ class Interpreter {
             code.removeLast()
         }
         var ifs = conditionFinder(code)
-        var cycles = cycleFinder(code)
+            var cycles = cycleFinder(code)
         
         var iterator = 0
         var nextline = 1
