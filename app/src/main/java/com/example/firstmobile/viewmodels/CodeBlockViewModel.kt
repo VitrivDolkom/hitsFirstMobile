@@ -11,16 +11,14 @@ import java.util.UUID
 
 class CodeBlockViewModel : ViewModel() {
     
-    // блоки, перетащенные пользователем
     private var _blocks = MutableStateFlow(mutableListOf(CodeBlock()))
     val blocks = _blocks.asStateFlow()
     
-    // результат выполненного кода
     private var _output = MutableStateFlow(mutableListOf(""))
     val output = _output.asStateFlow()
     
-    private var _test = MutableStateFlow(0)
-    val test = _test.asStateFlow()
+    private var _changesNum = MutableStateFlow(0)
+    val changesNum = _changesNum.asStateFlow()
     
     fun updateInput(
         i: Int,
@@ -30,7 +28,7 @@ class CodeBlockViewModel : ViewModel() {
         leftBrace: Braces,
         rightBrace: Braces
     ) {
-        _test.value += 1
+        _changesNum.value += 1
         
         val updatedInputBlock = CodeBlock(
             null,
@@ -114,14 +112,14 @@ class CodeBlockViewModel : ViewModel() {
         newOperation: CodeBlockOperation,
         withBraces: Boolean = false
     ) {
-        _test.value += 1
+        _changesNum.value += 1
         appendNewOperation(_blocks.value[i], newOperation, id, withBraces)
     }
     
     fun addBlock(
         parentBlock: CodeBlock?, i: Int, id: UUID, isLeftChild: Boolean
     ) {
-        _test.value += 1
+        _changesNum.value += 1
         
         if (parentBlock == null) {
             _blocks.value[i] = CodeBlock()
@@ -212,7 +210,7 @@ class CodeBlockViewModel : ViewModel() {
     }
     
     fun reset() {
-        _test.value += 1
+        _changesNum.value += 1
         
         _blocks.value = mutableListOf(CodeBlock())
     }

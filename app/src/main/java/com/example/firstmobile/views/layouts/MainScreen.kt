@@ -5,12 +5,9 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.Text
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
-import androidx.compose.runtime.getValue
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -30,14 +27,13 @@ fun MainScreen(
     blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
     SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
-
+    
     val blocks by blockViewModel.blocks.collectAsState()
-    val test by blockViewModel.test.collectAsState()
-
+    val changesNum by blockViewModel.changesNum.collectAsState()
+    
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
-        Text(text = "$test", fontSize = 0.sp)
         LazyColumn(
             modifier = Modifier
                 .fillMaxWidth()
@@ -52,7 +48,7 @@ fun MainScreen(
                     ) {}
                 } else {
                     val block = blocks[it]
-
+                    
                     if (block.operation == CodeBlockOperation.DEFAULT) {
                         DropItem(
                             i = it,
@@ -79,9 +75,9 @@ fun MainScreen(
                         SingleBlock(blockViewModel, block, it)
                     }
                 }
-
             }
         }
+        Text(text = "$changesNum", fontSize = 0.sp)
     }
 }
 
@@ -131,7 +127,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                                 true
                             )
                         }
-
+                        
                         if (block.operation.isDropDownable()) {
                             DropdownDemo(
                                 i,
@@ -143,11 +139,12 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                         } else {
                             DisableSelection {
                                 Text(
-                                    text = block.operation.symbol, fontSize = 32.sp
+                                    text = block.operation.symbol,
+                                    fontSize = 32.sp
                                 )
                             }
                         }
-
+                        
                         if (block.operation.isEmptyBlock()) {
                             Box(
                                 modifier = Modifier
