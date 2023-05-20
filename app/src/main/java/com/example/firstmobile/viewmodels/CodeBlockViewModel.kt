@@ -199,8 +199,11 @@ class CodeBlockViewModel : ViewModel() {
                 strings.add(newString)
             }
             
-            if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION) {
+            if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION || block.operation == CodeBlockOperation.ELSE) {
                 strings[strings.size - 1] += ":"
+            }
+            
+            if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION) {
                 strings.add("begin")
             }
         }

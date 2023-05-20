@@ -13,6 +13,9 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     PERCENT("%"), LOOP("while"), CONDITION(
         "if"
     ),
+    ELSE(
+        "else"
+    ),
     INPUT(
         ""
     ),
@@ -35,7 +38,7 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     private fun specialOperations(): List<CodeBlockOperation> =
         listOf(LOOP, CONDITION, PRINT, DEFAULT)
     
-    private fun emptyBlocks(): List<CodeBlockOperation> = listOf(BLOCK_END)
+    private fun emptyBlocks(): List<CodeBlockOperation> = listOf(BLOCK_END, ELSE)
     
     fun isSpecialOperation(): Boolean =
         this in specialOperations() && this != DEFAULT
@@ -73,9 +76,9 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
             CodeBlocksGroup(
                 "Спец операции",
                 specialOperations(),
-                listOf(LOOP, CONDITION, PRINT)
+                listOf(PRINT, LOOP, CONDITION, ELSE)
             ),
-            CodeBlocksGroup("Блок окончания", emptyBlocks(), emptyBlocks())
+            CodeBlocksGroup("Пустые блоки", emptyBlocks(), emptyBlocks())
         )
     }
 }
