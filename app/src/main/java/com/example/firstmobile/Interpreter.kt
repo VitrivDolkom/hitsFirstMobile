@@ -9,7 +9,7 @@ import kotlin.math.floor
 import kotlin.math.roundToInt
 import java.util.regex.Pattern
 import kotlin.collections.*
-
+data class CodeResult(var result: List<String>, var errorline: Int)
 class Interpreter {
     var arrays = mutableMapOf<String, Pair<MutableList<String>, MutableList<String>>>()
 
@@ -574,7 +574,7 @@ class Interpreter {
         }
         return GlobalResult
     }
-    data class CodeResult(var result: List<String>, var errorline: Int)
+
     fun executor(code: MutableList<String>): CodeResult {
 
 //    print("Введите выражение: ")
