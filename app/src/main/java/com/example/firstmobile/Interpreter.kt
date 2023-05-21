@@ -528,22 +528,23 @@ class Interpreter {
                     }
                     if (elem == "%") {
                         //res.push((s.toDouble()*f.toDouble()/100.0).toString())
-                        if (f == "0" || f == "-0") {
-                            GlobalResult = "Error"
-
-                            flag = false
-                            break
-                        } else {
-                            res.push((s.toDouble() % f.toDouble()).toString())
-                        }
+//                        if (f == "0" || f == "-0") {
+//                            GlobalResult = "Error"
+//
+//                            flag = false
+//                            break
+//                        } else {
+//                            res.push((s.toDouble() % f.toDouble()).toString())
+//                        }
+                        res.push((s.toDouble() % f.toDouble()).toString())
                     }
                     if (elem == "/") {
-                        if (f == "0" || f == "-0") {
-                            GlobalResult = "Error"
-
-                            flag = false
-                            break
-                        }
+//                        if (f == "0" || f == "-0") {
+//                            GlobalResult = "Error"
+//
+//                            flag = false
+//                            break
+//                        }
                         //res.push((s.toDouble() / f.toDouble()).toString())
                         res.push(
                             floor(
