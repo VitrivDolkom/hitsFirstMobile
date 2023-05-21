@@ -1,5 +1,6 @@
 package com.example.firstmobile.model
 
+import java.nio.charset.CoderResult
 import kotlin.math.floor
 import java.util.Stack
 import java.util.Vector
@@ -573,8 +574,8 @@ class Interpreter {
         }
         return GlobalResult
     }
-
-    fun executor(code: MutableList<String>): MutableList<String> {
+    data class CodeResult(var result: List<String>, var errorline: Int)
+    fun executor(code: MutableList<String>): CodeResult {
 
 //    print("Введите выражение: ")
 //    var expr: String = readLine()!!
@@ -599,6 +600,7 @@ class Interpreter {
         //println(ifs)
         //println(cycles)
         val result = mutableListOf<String>()
+
         while (iterator < code.size) {
             try{
                 val current = code[iterator].trim()
@@ -664,12 +666,14 @@ class Interpreter {
                     }
                 }
             } catch (e: Exception) {
-                return mutableListOf("Wrong string: ${iterator + 1}")
+                //return mutableListOf("Wrong string: ${iterator + 1}")
+                return CodeResult(mutableListOf("Runtime Error"), iterator+1)
             }
         }
         //println(dictionary)
         //println(arrays)
 
-        return result
+        //return result
+        return CodeResult(result, -1)
     }
 }
