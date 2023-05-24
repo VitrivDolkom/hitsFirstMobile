@@ -206,7 +206,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
                 ) {
                     items(1) {
-                        val isError = output.errorline != -1
+                        val isError = output.errorline != -1 && i != 0 && i != output.result.size - 1
                         val text = if (isError) "$str: ${output.errorline}" else str
                         
                         Text(

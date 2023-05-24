@@ -4,14 +4,18 @@ import androidx.lifecycle.ViewModel
 import com.example.firstmobile.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
-import java.util.UUID
+import java.text.SimpleDateFormat
+import java.time.LocalDate
+import java.time.LocalDateTime
+import java.util.*
+import kotlin.math.floor
 
 class CodeBlockViewModel : ViewModel() {
     
     private var _blocks = MutableStateFlow(mutableListOf(CodeBlock()))
     val blocks = _blocks.asStateFlow()
     
-    private var _output = MutableStateFlow(CodeResult(emptyList<String>(), -1))
+    private var _output = MutableStateFlow(CodeResult(mutableListOf(), -1))
     val output = _output.asStateFlow()
     
     private var _changesNum = MutableStateFlow(0)
@@ -165,6 +169,18 @@ class CodeBlockViewModel : ViewModel() {
         }
     }
     
+    fun shift(i: Int) {
+        _changesNum.value += 1
+        
+        for (index in 0 until i) {
+            _blocks.value[i] = _blocks.value[i + 1]
+        }
+    
+//        for (index in i until _blocks.value.size) {
+//            _blocks.value[i] = _blocks.value[i + 1]
+//        }
+    }
+    
     private fun parseSingleBlock(block: CodeBlock?, _text: String): String {
         var text = _text
         if (block == null) return text
@@ -190,9 +206,7 @@ class CodeBlockViewModel : ViewModel() {
         
         _blocks.value.forEach { block ->
             val newString = parseSingleBlock(block, "").trim()
-            if (newString != "") {
-                strings.add(newString)
-            }
+            strings.add(newString)
             
             if (block.operation == CodeBlockOperation.LOOP || block.operation == CodeBlockOperation.CONDITION || block.operation == CodeBlockOperation.ELSE) {
                 strings[strings.size - 1] += ":"
@@ -208,14 +222,28 @@ class CodeBlockViewModel : ViewModel() {
     
     fun reset() {
         _changesNum.value += 1
-        
         _blocks.value = mutableListOf(CodeBlock())
+    }
+    
+    private fun getCurrentTime(): String {
+        val time = Calendar.getInstance().time
+        val formatter = SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.US)
+        
+        return formatter.format(time)
     }
     
     fun execute() {
         val strings = parser()
         
+        val begin = System.nanoTime()
         val output = Interpreter().executor(strings)
+        val end = System.nanoTime()
+        
+        val current = getCurrentTime()
+        val executeTime = (end - begin) / 1e6
+        
+        output.result.add(0, "||-- ${current} --||")
+        output.result.add("Execute time - $executeTime ms.")
         
         _output.value = output
     }

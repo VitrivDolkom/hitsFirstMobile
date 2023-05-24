@@ -9,7 +9,8 @@ import kotlin.math.floor
 import kotlin.math.roundToInt
 import java.util.regex.Pattern
 import kotlin.collections.*
-data class CodeResult(var result: List<String>, var errorline: Int)
+data class CodeResult(var result: MutableList<String>, var errorline: Int)
+
 class Interpreter {
     var arrays = mutableMapOf<String, Pair<MutableList<String>, MutableList<String>>>()
 
