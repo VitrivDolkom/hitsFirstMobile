@@ -211,7 +211,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
                             modifier = Modifier.padding(horizontal = 8.dp)
                         )
                         Text(
-                            text = str, color = Color.White, fontSize = 15.sp
+                            text = str, fontFamily = CodeFont, color = Color.White, fontSize = 16.sp
                         )
                     }
                 }
