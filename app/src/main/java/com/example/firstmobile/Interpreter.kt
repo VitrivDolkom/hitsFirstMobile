@@ -9,7 +9,7 @@ import kotlin.math.floor
 import kotlin.math.roundToInt
 import java.util.regex.Pattern
 import kotlin.collections.*
-data class CodeResult(var result: List<String>, var errorline: Int)
+data class CodeResult(var result: MutableList<String>, var errorline: Int)
 class Interpreter {
     var arrays = mutableMapOf<String, Pair<MutableList<String>, MutableList<String>>>()
 
@@ -35,7 +35,7 @@ class Interpreter {
         )
     }
 
-    fun polandCondition(line: String): Any {
+    fun polandCondition(line: String): Any { // Исходя из задуманной логики, может возвращаться разный тип данных
         //print(line)
         val comparators = listOf(
             ">", ">=", "<=", "<", "<=", "==", "!=", "and", "or", "(", ")"
@@ -139,7 +139,7 @@ class Interpreter {
         return res.last()
     }
 
-    fun conditionFinder(code: List<String>): MutableList<List<Any>> {
+    fun conditionFinder(code: List<String>): MutableList<List<Any>> { // Используем Any, из-за сложной структуризации данных о циклах и условиях
         val temp = mutableListOf<String>()
         var flag = 0
         var counter = 0
@@ -222,12 +222,12 @@ class Interpreter {
         return conditions
     }
 
-    fun cycleFinder(code: List<String>): MutableList<List<Any>> {
+    fun cycleFinder(code: List<String>): MutableList<List<Any>> { // Используем Any, аналогично с поиском условий
         val temp = mutableListOf<String>()
         var flag = 0
         var counter = 0
         val cycl = mutableListOf<List<Any>>()
-        val transitionsDictionary = mutableMapOf<Int, Any>()
+        val transitionsDictionary = mutableMapOf<Int, Any>() // Тип значения может меняться (если обычная строка - Int, если while - то list
         var laststartpoint = -1
         val st = mutableListOf<String>()
         for ((index, line) in code.withIndex()) {
@@ -305,7 +305,7 @@ class Interpreter {
         return "Runtime Error"
     }
 
-    var dictionary = mutableMapOf<String, Any>()
+    var dictionary = mutableMapOf<String, Any>() // Используем Any, т.к. по задуманной релизации в паре ключ-значение значение может быть либо Int, либо List
 
     fun CalculateExpression(expression: String): String {
         var expression = expression.replace(" ", "").replace(",",".")
@@ -361,20 +361,14 @@ class Interpreter {
             for (el in Regex("[a-zA-Z]+\\[[^\\]]+\\]").findAll(ans)) {
                 val key = el.value.substring(0, el.value.indexOf('['))
 
-//                if (!arrays.containsKey(key)) {
-//                    println("ooo $key")
-//                    return "Runtime Error"
-//                }
+
                 var vall = el.value.substring(
                     el.value.indexOf('[') + 1,
                     el.value.length - 1
                 )
                 vall = CalculateExpression(vall).toFloat().toString()
 
-//                if (vall.any { it.isLetter() }) {
-//                    println("oooo ${el.value}")
-//                    return "Runtime error"
-//                }
+
                 ans = ans.replace(
                     el.value.toString(),
                     arrays[key]!!.first[vall.toDouble().toInt()].toString()
@@ -387,18 +381,11 @@ class Interpreter {
             }
 
 
-//            if (ans.any { it.isLetter() }) { // а вдруг после замены существующих переменных остались несуществующие?...
-//                //print("Runtime Error")
-//                //System.exit(0)
-//                return "Runtime Error" // Тогда такой код нельзя выполнить
-//            }
-
 
             temp = ans.split(' ')
-            //print(temp) // Тут по сути нужно заменить переменные их численными значениями (если переенные есть после знака равенства)
-            // замена выше ...
 
-            //print(temp)
+
+
             for (element in temp) { // работаем с минусами
                 if (element.length >= 3) {
                     if (element[0] == '-') {
@@ -425,43 +412,7 @@ class Interpreter {
                     }
                 }
             }
-            //println(spltd.toString())
 
-//        for (value in spltd){
-//            var tmp: String = value
-//            var new: String = ""
-//            if (tmp.contains('%')){
-//                for (ind in 0..tmp.length-2){
-//                    if (tmp[ind] != '%'){
-//                        new += tmp[ind]
-//                    }
-//                    else{
-//                        if (tmp[ind+1] == '%'){
-//                            new += "%1"
-//                        }
-//                        else{
-//                            new += "%"
-//                        }
-//                    }
-//                }
-//                if (tmp[tmp.length-1] == '%'){
-//                    new += "%1"
-//                }
-//                else{
-//                    new += tmp[tmp.length-1]
-//                }
-//                for (x in new.replace("%", " % ").split(' ')) {
-//                    if (x != " " && x != "") {
-//                        savedversion.add(x)
-//                    }
-//                }
-//            }
-//            else{
-//                savedversion.add(tmp)
-//            }
-//        }
-            //spltd = savedversion
-            //println(spltd.toString())
             var st = Stack<String>()
 
             val spltd = spltd.filter { it.isNotEmpty() }
@@ -528,25 +479,11 @@ class Interpreter {
                         res.push((f.toDouble() * s.toDouble()).toString())
                     }
                     if (elem == "%") {
-                        //res.push((s.toDouble()*f.toDouble()/100.0).toString())
-//                        if (f == "0" || f == "-0") {
-//                            GlobalResult = "Error"
-//
-//                            flag = false
-//                            break
-//                        } else {
-//                            res.push((s.toDouble() % f.toDouble()).toString())
-//                        }
+
                         res.push((s.toDouble() % f.toDouble()).toString())
                     }
                     if (elem == "/") {
-//                        if (f == "0" || f == "-0") {
-//                            GlobalResult = "Error"
 //
-//                            flag = false
-//                            break
-//                        }
-                        //res.push((s.toDouble() / f.toDouble()).toString())
                         res.push(
                             floor(
                                 s.toDouble().div(f.toDouble())
@@ -577,17 +514,7 @@ class Interpreter {
 
     fun executor(code: MutableList<String>): CodeResult {
 
-//    print("Введите выражение: ")
-//    var expr: String = readLine()!!
-//    //CheckExpression(expr)
-//    print(CalculateExpression(expr))c
-        //val code = mutableListOf<String>()
-        //var s = readLine()!!
-        //code.add(s)
-        //while (s != "") {
-        //s = readLine()!!
-        //code.add(s)
-        //}
+
         if (code.isNotEmpty() && code[code.size - 1] == "") {
             code.removeLast()
         }
@@ -596,9 +523,7 @@ class Interpreter {
 
         var iterator = 0
         var nextline = 1
-        //code.removeLast()
-        //println(ifs)
-        //println(cycles)
+
         val result = mutableListOf<String>()
 
         while (iterator < code.size) {
@@ -606,11 +531,11 @@ class Interpreter {
                 val current = code[iterator].trim()
                 //print(current)
                 if (ifs.isNotEmpty() && (((iterator >= (ifs[0][0] as List<Int>)[1]) && (cycles.isEmpty() || cycles.isNotEmpty() && (iterator >= (cycles[0][0] as List<Int>)[1]))) || cycles.isNotEmpty() && ((cycles[0][0] as List<Int>)[1] >= (ifs[0][0] as List<Int>)[1]) && iterator == (cycles[0][0] as List<Int>)[1])) {
-                    //ifs.removeLast()
+
                     ifs.removeAt(0)
                 }
                 if (cycles.isNotEmpty() && ((iterator >= (cycles[0][0] as List<Int>)[1]) || cycles.size >= 2 && (cycles[1][0] as List<Int>)[0] == iterator)) {
-                    //cycles.removeLast()
+
                     cycles.removeAt(0)
                 }
                 if (ifs.isNotEmpty() && "if" in current) {
@@ -633,7 +558,7 @@ class Interpreter {
                     }
                 } else {
                     if (Regex("print\\s\\(.+\\)").matches(current)) {
-                        //show(current)
+
                         result.add(show(current))
                     } else if (Regex("[a-zA-Z]+(\\s|)\\=(\\s|)\\[(\\s|)([a-zA-Z0-9\\.,]+(\\s|)\\;(\\s|))*[0-9]+(\\s|)\\]").matches(
                             current
@@ -647,7 +572,7 @@ class Interpreter {
                         ) {
                             CalculateExpression(current)
                         }
-                        //CalculateExpression(current)
+
                     }
                     if (ifs.isNotEmpty() && (ifs[0][1] as Map<Any, Any>).containsKey(
                             iterator
@@ -666,14 +591,13 @@ class Interpreter {
                     }
                 }
             } catch (e: Exception) {
-                //return mutableListOf("Wrong string: ${iterator + 1}")
+
                 return CodeResult(mutableListOf("Runtime Error"), iterator+1)
             }
         }
-        //println(dictionary)
-        //println(arrays)
 
-        //return result
+
+
         return CodeResult(result, -1)
     }
 }
