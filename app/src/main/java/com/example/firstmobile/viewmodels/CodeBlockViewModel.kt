@@ -1,10 +1,7 @@
 package com.example.firstmobile.viewmodels
 
 import androidx.lifecycle.ViewModel
-import com.example.firstmobile.model.Braces
-import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.model.CodeBlock
-import com.example.firstmobile.model.Interpreter
+import com.example.firstmobile.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.util.UUID
@@ -14,7 +11,7 @@ class CodeBlockViewModel : ViewModel() {
     private var _blocks = MutableStateFlow(mutableListOf(CodeBlock()))
     val blocks = _blocks.asStateFlow()
     
-    private var _output = MutableStateFlow(mutableListOf(""))
+    private var _output = MutableStateFlow(CodeResult(emptyList<String>(), -1))
     val output = _output.asStateFlow()
     
     private var _changesNum = MutableStateFlow(0)
