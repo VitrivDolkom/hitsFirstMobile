@@ -203,14 +203,14 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
         ) {
             itemsIndexed(output.result) { i, str ->
                 LazyRow(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
                 ) {
                     items(1) {
                         val isError = output.errorline != -1
                         val text = if (isError) "$str: ${output.errorline}" else str
                         
                         Text(
-                            text = text, color = if (isError) Color.Red else Color.White, fontSize = 15.sp
+                            text = text, fontFamily = CodeFont, color = if (isError) Color.Red else Color.White, fontSize = 15.sp
                         )
                     }
                 }
