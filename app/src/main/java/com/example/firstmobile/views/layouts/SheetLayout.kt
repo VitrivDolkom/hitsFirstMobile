@@ -48,7 +48,7 @@ fun SheetLayout(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         FloatingActionButton(backgroundColor = RedButton, onClick = {
             openSheet(BottomSheetScreen.Screen1)
         }) {
@@ -59,7 +59,7 @@ fun SheetLayout(
                 fontWeight = FontWeight.Bold
             )
         }
-        
+
         FloatingActionButton(backgroundColor = GreenButton, onClick = {
             blockViewModel.execute()
             openSheet(BottomSheetScreen.Screen2)
@@ -76,7 +76,7 @@ fun SheetLayout(
 
 @Composable
 fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
-    
+
     Box(
         modifier = Modifier
             .background(Color.White)
@@ -91,7 +91,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
             fontSize = 20.sp
         )
     }
-    
+
     LazyColumn(
         modifier = Modifier
             .fillMaxWidth()
@@ -110,18 +110,18 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                         .padding(4.dp),
                     contentAlignment = Alignment.CenterStart
                 ) {
-                    Text(text = row.name)
+                    Text(text = "▸ " + row.name, fontSize = 16.sp)
                 }
                 row.listToShow.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
-                    
+
                     Box(modifier = Modifier.padding(4.dp)) {
                         DragTarget(
                             i = -1,
                             operationToDrop = block,
                             viewModel = blockViewModel
                         ) {
-                            
+
                             Box(
                                 modifier = Modifier
                                     .height(32.dp)
@@ -150,10 +150,10 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                             true
                                         )
                                     }
-                                    
+
                                     var operationText = block.operation.symbol
                                     if (block.operation == CodeBlockOperation.ARRAY_EQUAL) operationText += " [ ]"
-                                    
+
                                     Text(text = operationText)
                                     DropItemLayout(
                                         -1,
@@ -175,7 +175,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
 @Composable
 fun OutputConsole(blockViewModel: CodeBlockViewModel) {
     val output by blockViewModel.output.collectAsState()
-    
+
     Box(
         modifier = Modifier
             .background(Color.Black)
@@ -191,7 +191,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
             fontSize = 20.sp
         )
     }
-    
+
     Box(
         modifier = Modifier
             .fillMaxWidth()
@@ -203,14 +203,20 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
         ) {
             itemsIndexed(output.result) { i, str ->
                 LazyRow(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 8.dp)
                 ) {
                     items(1) {
-                        val isError = output.errorline != -1 && i != 0 && i != output.result.size - 1
+                        val isError =
+                            output.errorline != -1 && i != 0 && i != output.result.size - 1
                         val text = if (isError) "$str: ${output.errorline}" else str
-                        
+
                         Text(
-                            text = text, fontFamily = CodeFont, color = if (isError) Color.Red else Color.White, fontSize = 15.sp
+                            text = text,
+                            fontFamily = CodeFont,
+                            color = if (isError) Color.Red else Color.White,
+                            fontSize = 15.sp
                         )
                     }
                 }
@@ -222,32 +228,26 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
 @Composable
 fun Instructions() {
     val instructions = listOf(
-        "Инструкция",
-        "Чтобы ваш блок массива работал корректно, вводите числа через разделитель ';'. Пример: a = [1;2;3]",
-        "",
-        "Для смены знака у мат/лог/сравн операций достаточно нажать на сам знак и выскочит меню со сменой",
-        "",
-        "Когда вы используете условные операторы, в конце нужно обязательно ставить блок end",
-        "",
-        "Чтобы полностью очистить экран от блоков, вам необходимо встряхнуть телефон  \uD83D\uDC4B.",
-        "",
-        "Для того, чтобы удалить блок, достаточно просто его выкинуть, если же блок вложен в другой, нажмите на его операцию и нажмите на мусорку",
-        "",
-        "Чтобы поставить блок, откройте меню по нажатию кнопки со знаком '+' и перетащите нужный вам блок",
-        "",
-        "Для запуска программы достаточно нажать кнопку со знаком '>', там же вы и получите результат выполнения",
-        "",
+        "Инструкция:",
+        "▸ Чтобы ваш блок массива работал корректно, вводите числа через разделитель ';'. Пример: a = [1;2;3]",
+        "▸ Для добавления скобок или смены знака у мат/лог/сравн операций достаточно нажать на сам знак и выскочит меню со всеми возможными знаками",
+        "▸ Когда вы используете условные операторы, в конце нужно обязательно ставить блок end",
+        "▸ Чтобы полностью очистить экран от блоков, вам необходимо встряхнуть телефон  \uD83D\uDC4B.",
+        "▸ Для того, чтобы удалить блок, достаточно просто его выкинуть, если же блок вложен в другой, нажмите на его операцию и нажмите на мусорку",
+        "▸ Чтобы поставить блок, откройте меню по нажатию кнопки со знаком '+' и перетащите нужный вам блок",
+        "▸ Для запуска программы достаточно нажать кнопку со знаком '>', там же вы и получите результат выполнения",
         "Авторы:",
-        "Дмитрий Волков",
-        "Алексей Шумков",
-        "Данил Васильев",
+        "☆ Дмитрий Волков",
+        "☆ Алексей Шумков",
+        "☆ Данил Васильев",
         ""
     )
-    
+
     Box(
         modifier = Modifier
             .background(Color.White)
-            .fillMaxWidth(),
+            .fillMaxWidth()
+            .padding(bottom = 8.dp),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -267,10 +267,14 @@ fun Instructions() {
     ) {
         items(count = 1) {
             instructions.forEach { instruction ->
-                if (instruction == "Инструкция" || instruction == "Авторы:") {
-                    Text(text = instruction, fontSize = 32.sp)
+                if (instruction == "Инструкция:" || instruction == "Авторы:") {
+                    Text(text = instruction, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 } else {
-                    Text(text = instruction, fontSize = 25.sp)
+                    Text(
+                        modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp),
+                        text = instruction,
+                        fontSize = 16.sp
+                    )
                 }
             }
         }
