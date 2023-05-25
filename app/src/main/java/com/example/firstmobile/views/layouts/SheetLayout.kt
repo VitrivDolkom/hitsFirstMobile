@@ -201,17 +201,16 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
         ) {
-            itemsIndexed(output) { i, str ->
+            itemsIndexed(output.result) { i, str ->
                 LazyRow(
-                    modifier = Modifier.fillMaxWidth()
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 8.dp)
                 ) {
                     items(1) {
+                        val isError = output.errorline != -1 && i != 0 && i != output.result.size - 1
+                        val text = if (isError) "$str: ${output.errorline}" else str
+                        
                         Text(
-                            text = "$i",
-                            modifier = Modifier.padding(horizontal = 8.dp)
-                        )
-                        Text(
-                            text = str, color = Color.White, fontSize = 15.sp
+                            text = text, fontFamily = CodeFont, color = if (isError) Color.Red else Color.White, fontSize = 15.sp
                         )
                     }
                 }

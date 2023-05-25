@@ -48,10 +48,14 @@ fun DropItem(
         }) {
         
         // блок пуст и в него перетащили новый блок
-        if (isDropTarget && !isDragging && i != -1) {
+        if (isDropTarget && !isDragging && i != -1 && !isFullField) {
             isFullField = true
             blockViewModel.addBlock(operationToDrop, i, id, isLeftChild)
         }
+//
+//        if (isDropTarget && !isDragging && i != -1 && isFullField) {
+//            blockViewModel.shift(i)
+//        }
         
         // пользователь перетащил содержание блока в другое место
         if (isDragLeaving && !isDragging && i != -1) {
