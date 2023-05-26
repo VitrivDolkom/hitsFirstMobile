@@ -1,25 +1,23 @@
 package com.example.firstmobile.views.layouts.bottomsheet
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.BlockShape
-import com.example.firstmobile.ui.theme.DarkGreen
+import com.example.firstmobile.ui.theme.TextColor
+import com.example.firstmobile.ui.theme.roundBorder
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.DragTarget
@@ -35,6 +33,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8)
+            .background(color = MaterialTheme.colors.background)
             .padding(vertical = 16.dp, horizontal = 4.dp),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
@@ -51,7 +50,8 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                 ) {
                     Text(
                         text = stringResource(id = R.string.marker) + blockNames[i],
-                        fontSize = 16.sp
+                        style = MaterialTheme.typography.body1,
+                        color = MaterialTheme.colors.secondary
                     )
                 }
                 
@@ -68,13 +68,9 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                             Box(
                                 modifier = Modifier
                                     .height(32.dp)
-                                    .border(
-                                        2.dp,
-                                        color = DarkGreen,
-                                        shape = BlockShape
-                                    )
-                                    .background(
-                                        color = Color.Green, shape = BlockShape
+                                    .roundBorder(
+                                        backColor = MaterialTheme.colors.primary,
+                                        borderColor = MaterialTheme.colors.surface
                                     ), contentAlignment = Alignment.Center
                             ) {
                                 Row(
@@ -97,7 +93,12 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                     var operationText = block.operation.symbol
                                     if (block.operation == CodeBlockOperation.ARRAY_EQUAL) operationText += " [ ]"
                                     
-                                    Text(text = operationText)
+                                    Text(
+                                        text = operationText,
+                                        style = MaterialTheme.typography.body1,
+                                        color = TextColor
+                                    )
+                                    
                                     DropItemLayout(
                                         -1,
                                         block.id,

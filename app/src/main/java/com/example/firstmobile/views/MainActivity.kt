@@ -4,6 +4,7 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.material.*
+import com.example.firstmobile.ui.theme.InterpreterTheme
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.layouts.MainLayout
 import com.example.firstmobile.views.layouts.ShakeDetector
@@ -15,8 +16,10 @@ class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {
-            ShakeDetector(blockViewModel)
-            MainLayout(blockViewModel)
+            InterpreterTheme {
+                ShakeDetector(blockViewModel)
+                MainLayout(blockViewModel)
+            }
         }
     }
 }

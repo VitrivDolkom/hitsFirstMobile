@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -16,6 +17,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.ui.theme.CodeFont
+import com.example.firstmobile.ui.theme.MainBackground
+import com.example.firstmobile.ui.theme.TextColor
+import com.example.firstmobile.ui.theme.roundBackground
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 
 @Composable
@@ -28,7 +32,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
         modifier = Modifier
             .fillMaxWidth()
             .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8)
-            .background(Color.Black, shape = RectangleShape)
+            .background(color = TextColor)
     ) {
         LazyColumn(
             modifier = Modifier.fillMaxSize(),
@@ -47,9 +51,8 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
                         
                         Text(
                             text = text,
-                            fontFamily = CodeFont,
-                            color = if (isError) Color.Red else Color.White,
-                            fontSize = 15.sp
+                            style = MaterialTheme.typography.body2,
+                            color = if (isError) MaterialTheme.colors.error else MainBackground,
                         )
                     }
                 }

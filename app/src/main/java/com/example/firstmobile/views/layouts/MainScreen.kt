@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
@@ -18,8 +19,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.BlockShape
-import com.example.firstmobile.ui.theme.DarkGreen
+import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.DragTarget
 import com.example.firstmobile.views.draganddrop.DropItem
@@ -67,12 +67,10 @@ fun MainScreen(
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .border(
-                                        1.dp,
-                                        color = if (isHovered) Color.Red else Color.Blue,
-                                        shape = BlockShape
+                                    .roundThickBorder(
+                                        backColor = MaterialTheme.colors.background,
+                                        borderColor = if (isHovered) MaterialTheme.colors.error else MaterialTheme.colors.primaryVariant
                                     )
-                                    .background(Color.White, shape = BlockShape)
                             ) {}
                         }
                     } else {
@@ -94,11 +92,10 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
             Box(
                 modifier = Modifier
                     .height(64.dp)
-                    .border(
-                        2.dp, color = DarkGreen, shape = BlockShape
-                    )
-                    .background(color = Color.Green, shape = BlockShape),
-                contentAlignment = Alignment.Center
+                    .roundBorder(
+                        backColor = MaterialTheme.colors.primary,
+                        borderColor = MaterialTheme.colors.surface
+                    ), contentAlignment = Alignment.Center
             ) {
                 LazyRow(
                     modifier = Modifier
@@ -144,7 +141,8 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             DisableSelection {
                                 Text(
                                     text = block.operation.symbol,
-                                    fontSize = 32.sp
+                                    style = MaterialTheme.typography.h3,
+                                    color = TextColor
                                 )
                             }
                         }

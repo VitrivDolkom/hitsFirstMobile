@@ -1,16 +1,15 @@
 package com.example.firstmobile.views.draganddrop
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxScope
+import androidx.compose.material.MaterialTheme
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
-import com.example.firstmobile.ui.theme.BlockShape
+import com.example.firstmobile.ui.theme.roundBackground
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
-import java.util.*
+import java.util.UUID
 
 @Composable
 fun DropItem(
@@ -21,7 +20,6 @@ fun DropItem(
     blockViewModel: CodeBlockViewModel,
     content: @Composable (BoxScope.(isHovered: Boolean, isFullField: Boolean) -> Unit)
 ) {
-    // контэйнер, в который можно перетаскивать блоки
     val dragInfo = LocalDragTargetInfo.current
     
     val isDragging = dragInfo.isDragging
@@ -36,7 +34,7 @@ fun DropItem(
     var isFullField by remember { mutableStateOf(false) }
     
     Box(modifier = modifier
-        .background(color = Color.Green, shape = BlockShape)
+        .roundBackground(MaterialTheme.colors.primary)
         .onGloballyPositioned {
             it
                 .boundsInWindow()
@@ -46,18 +44,11 @@ fun DropItem(
                         !isDropTarget && draggableRow == i && draggableId == id
                 }
         }) {
-        
-        // блок пуст и в него перетащили новый блок
         if (isDropTarget && !isDragging && i != -1 && !isFullField) {
             isFullField = true
             blockViewModel.addBlock(operationToDrop, i, id, isLeftChild)
         }
-//
-//        if (isDropTarget && !isDragging && i != -1 && isFullField) {
-//            blockViewModel.shift(i)
-//        }
         
-        // пользователь перетащил содержание блока в другое место
         if (isDragLeaving && !isDragging && i != -1) {
             isFullField = false
             blockViewModel.addBlock(null, i, id, isLeftChild)

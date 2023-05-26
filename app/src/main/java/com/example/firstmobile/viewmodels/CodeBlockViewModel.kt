@@ -95,8 +95,7 @@ class CodeBlockViewModel : ViewModel() {
             return
         }
         
-        // toggle скобок операции
-        if (withBraces) {
+        if (withBraces && newOperation != CodeBlockOperation.INPUT && newOperation != CodeBlockOperation.DEFAULT) {
             currentCodeBlock.leftBrace =
                 if (currentCodeBlock.leftBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.OPEN_PARENTHESES
             currentCodeBlock.rightBrace =
@@ -175,7 +174,7 @@ class CodeBlockViewModel : ViewModel() {
         for (index in 0 until i) {
             _blocks.value[i] = _blocks.value[i + 1]
         }
-    
+
 //        for (index in i until _blocks.value.size) {
 //            _blocks.value[i] = _blocks.value[i + 1]
 //        }

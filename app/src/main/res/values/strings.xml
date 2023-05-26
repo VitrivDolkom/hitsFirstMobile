@@ -57,4 +57,6 @@
     <string name="close_parentheses">)</string>
     <string name="open_square">[</string>
     <string name="close_square">]</string>
+
+    <string name="remove_description">Удаление блока</string>
 </resources>
