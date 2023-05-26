@@ -19,7 +19,7 @@ fun ShakeDetector(blockViewModel: CodeBlockViewModel) {
         val accelerometerSensor =
             sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         val sensorEventListener = object : SensorEventListener {
-            private val SHAKE_THRESHOLD = 15f
+            private val SHAKE_THRESHOLD = 14f
             private var lastAcceleration = 0f
             private var lastUpdate = 0L
             
