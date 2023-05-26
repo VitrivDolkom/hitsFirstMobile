@@ -16,10 +16,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringArrayResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.utils.flowlayouts.FlowRow
@@ -42,7 +45,7 @@ fun SheetLayout(
             openSheet(BottomSheetScreen.Screen3)
         }) {
             Text(
-                text = "?",
+                text = stringResource(id = R.string.question),
                 fontSize = 30.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
@@ -53,7 +56,7 @@ fun SheetLayout(
             openSheet(BottomSheetScreen.Screen1)
         }) {
             Text(
-                text = "+",
+                text = stringResource(id = R.string.blocks),
                 fontSize = 30.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
@@ -65,7 +68,7 @@ fun SheetLayout(
             openSheet(BottomSheetScreen.Screen2)
         }) {
             Text(
-                text = ">",
+                text = stringResource(id = R.string.run),
                 fontSize = 30.sp,
                 color = Color.White,
                 fontWeight = FontWeight.Bold
@@ -84,7 +87,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "_______________",
+            text = stringResource(id = R.string.bang),
             color = Color.Black,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -227,22 +230,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
 
 @Composable
 fun Instructions() {
-    val instructions = listOf(
-        "Инструкция:",
-        "▸ Будьте осторожны, нельзя свапать или сдвигать блоки, если вы так сделаете, они удалятся",
-        "▸ Чтобы ваш блок массива работал корректно, вводите числа через разделитель ';'. Пример: a = [1;2;3]",
-        "▸ Для добавления скобок или смены знака у мат/лог/сравн операций достаточно нажать на сам знак и выскочит меню со всеми возможными знаками",
-        "▸ Когда вы используете условные операторы, в конце нужно обязательно ставить блок end",
-        "▸ Чтобы полностью очистить экран от блоков, вам необходимо встряхнуть телефон  \uD83D\uDC4B.",
-        "▸ Для того, чтобы удалить блок, достаточно просто его выкинуть, если же блок вложен в другой, нажмите на его операцию и нажмите на мусорку",
-        "▸ Чтобы поставить блок, откройте меню по нажатию кнопки со знаком '+' и перетащите нужный вам блок",
-        "▸ Для запуска программы достаточно нажать кнопку со знаком '>', там же вы и получите результат выполнения",
-        "Авторы:",
-        "☆ Дмитрий Волков",
-        "☆ Алексей Шумков",
-        "☆ Данил Васильев",
-        ""
-    )
+    val instructions = stringArrayResource(id = R.array.instructions)
 
     Box(
         modifier = Modifier
@@ -252,7 +240,7 @@ fun Instructions() {
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = "_______________",
+            text = stringResource(id = R.string.bang),
             color = Color.Black,
             textAlign = TextAlign.Center,
             fontWeight = FontWeight.Bold,
@@ -268,7 +256,10 @@ fun Instructions() {
     ) {
         items(count = 1) {
             instructions.forEach { instruction ->
-                if (instruction == "Инструкция:" || instruction == "Авторы:") {
+                if (instruction == stringResource(id = R.string.instruction) || instruction == stringResource(
+                        R.string.author
+                    )
+                ) {
                     Text(text = instruction, fontSize = 20.sp, fontWeight = FontWeight.Bold)
                 } else {
                     Text(
