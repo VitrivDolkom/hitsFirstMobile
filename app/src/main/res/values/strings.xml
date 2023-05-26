@@ -59,4 +59,6 @@
     <string name="close_square">]</string>
 
     <string name="remove_description">Удаление блока</string>
+    <string name="weak_shake_text">Трясите сильнее, чтобы отчистить</string>
+    <string name="strong_shake_text">Можно трясти не так сильно</string>
 </resources>

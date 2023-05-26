@@ -1,17 +1,20 @@
 package com.example.firstmobile.views.layouts
 
+import android.content.Context
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.ui.platform.LocalContext
+import com.example.firstmobile.R
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import kotlin.math.sqrt
 
 @Composable
-fun ShakeDetector(blockViewModel: CodeBlockViewModel) {
+fun ShakeDetector(context: Context, blockViewModel: CodeBlockViewModel) {
     val sensorManager =
         LocalContext.current.getSystemService(SensorManager::class.java)
     
@@ -20,6 +23,8 @@ fun ShakeDetector(blockViewModel: CodeBlockViewModel) {
             sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         val sensorEventListener = object : SensorEventListener {
             private val SHAKE_THRESHOLD = 14f
+            private val WEAK_SHAKE_THRESHOLD = 8f
+            private val STRONG_SHAKE_THRESHOLD = 35f
             private var lastAcceleration = 0f
             private var lastUpdate = 0L
             
@@ -37,12 +42,19 @@ fun ShakeDetector(blockViewModel: CodeBlockViewModel) {
                     
                     if (timeDifference > 500) {
                         val deltaAcceleration = acceleration - lastAcceleration
-                        lastAcceleration = acceleration
-                        lastUpdate = currentTime
+                        
+                        if (deltaAcceleration > STRONG_SHAKE_THRESHOLD) {
+                            Toast.makeText(context, R.string.strong_shake_text, Toast.LENGTH_SHORT).show()
+                        }
                         
                         if (deltaAcceleration > SHAKE_THRESHOLD) {
                             blockViewModel.reset()
+                        } else if (deltaAcceleration > WEAK_SHAKE_THRESHOLD && lastAcceleration != 0f) {
+                            Toast.makeText(context, R.string.weak_shake_text, Toast.LENGTH_SHORT).show()
                         }
+                        
+                        lastAcceleration = acceleration
+                        lastUpdate = currentTime
                     }
                 }
             }
