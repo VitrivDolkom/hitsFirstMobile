@@ -1,30 +1,16 @@
 package com.example.firstmobile.model
 
 data class CodeBlocksGroup(
-    val name: String,
-    val list: List<CodeBlockOperation>,
-    val listToShow: List<CodeBlockOperation>
+    val list: List<CodeBlockOperation>, val listToShow: List<CodeBlockOperation>
 )
 
-enum class CodeBlockOperation(val symbol: String, val value: String = "") {
-    EQUAL("="), ARRAY_EQUAL("="), ADD("+"), SUBTRACT("-"), MULTIPLY("*"), DIVIDE(
-        "/"
-    ),
-    PERCENT("%"), LOOP("while"), CONDITION(
-        "if"
-    ),
-    ELSE(
-        "else"
-    ),
-    INPUT(
-        ""
-    ),
-    BRACES("( )"), MORE(">"), LESS("<"), MORE_EQUAL(">="), LESS_EQUAL("<="), COMPARE_EQUAL(
-        "=="
-    ),
-    LOGIC_AND("and"), LOGIC_OR("or"), PRINT("print"), BLOCK_END("end"), DEFAULT(
-        ""
-    );
+enum class CodeBlockOperation(val symbol: String) {
+    EQUAL("="), ARRAY_EQUAL("="), ADD("+"), SUBTRACT("-"), MULTIPLY("*"),
+    DIVIDE("/"), PERCENT("%"), LOOP("while"), CONDITION("if"),
+    ELSE("else"), INPUT(""), BRACES("( )"),
+    MORE(">"), LESS("<"), MORE_EQUAL(">="), LESS_EQUAL("<="), COMPARE_EQUAL("=="),
+    LOGIC_AND("and"), LOGIC_OR("or"), PRINT("print"), BLOCK_END("end"),
+    DEFAULT("");
     
     private fun mathOperations(): List<CodeBlockOperation> =
         listOf(ADD, SUBTRACT, MULTIPLY, DIVIDE, PERCENT, BRACES, INPUT)
@@ -38,7 +24,8 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     private fun specialOperations(): List<CodeBlockOperation> =
         listOf(LOOP, CONDITION, PRINT, DEFAULT)
     
-    private fun emptyBlocks(): List<CodeBlockOperation> = listOf(BLOCK_END, ELSE)
+    private fun emptyBlocks(): List<CodeBlockOperation> =
+        listOf(BLOCK_END, ELSE)
     
     fun isSpecialOperation(): Boolean =
         this in specialOperations() && this != DEFAULT
@@ -51,7 +38,7 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     
     private fun isCompareOperation(): Boolean = this in compareOperations()
     
-    fun isDropDownable(): Boolean =
+    fun isDropDown(): Boolean =
         isCompareOperation() || isLogicOperation() || isMathOperation()
     
     fun getVariants(): List<CodeBlockOperation> {
@@ -62,23 +49,15 @@ enum class CodeBlockOperation(val symbol: String, val value: String = "") {
     
     fun blocksList(): List<CodeBlocksGroup> {
         return listOf(
-            CodeBlocksGroup("Переменные", listOf(EQUAL), listOf(EQUAL)),
-            CodeBlocksGroup(
-                "Массивы", listOf(ARRAY_EQUAL), listOf(ARRAY_EQUAL)
-            ),
-            CodeBlocksGroup("Мат операции", mathOperations(), listOf(ADD)),
-            CodeBlocksGroup(
-                "Логические операции", logicOperations(), listOf(LOGIC_AND)
-            ),
-            CodeBlocksGroup(
-                "Операции сравнения", compareOperations(), listOf(MORE)
-            ),
-            CodeBlocksGroup(
-                "Спец операции",
-                specialOperations(),
-                listOf(PRINT, LOOP, CONDITION, ELSE)
-            ),
-            CodeBlocksGroup("Пустые блоки", emptyBlocks(), emptyBlocks())
+            CodeBlocksGroup(listOf(EQUAL), listOf(EQUAL)), CodeBlocksGroup(
+                listOf(ARRAY_EQUAL), listOf(ARRAY_EQUAL)
+            ), CodeBlocksGroup(mathOperations(), listOf(ADD)), CodeBlocksGroup(
+                logicOperations(), listOf(LOGIC_AND)
+            ), CodeBlocksGroup(
+                compareOperations(), listOf(MORE)
+            ), CodeBlocksGroup(
+                specialOperations(), listOf(PRINT, LOOP, CONDITION)
+            ), CodeBlocksGroup(emptyBlocks(), emptyBlocks())
         )
     }
 }

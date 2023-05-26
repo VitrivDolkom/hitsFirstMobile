@@ -15,5 +15,6 @@ data class CodeBlock(
 enum class Braces(val symbol: String) {
     OPEN_PARENTHESES("("), OPEN_SQUARE("["), CLOSE_PARENTHESES(")"), CLOSE_SQUARE(
         "]"
-    ), DEFAULT("");
+    ),
+    DEFAULT("");
 }

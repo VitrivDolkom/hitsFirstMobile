@@ -12,6 +12,8 @@ import androidx.compose.ui.unit.dp
 import com.example.firstmobile.ui.theme.BottomSheetShape
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.DraggableScreen
+import com.example.firstmobile.views.layouts.bottomsheet.BottomSheetScreen
+import com.example.firstmobile.views.layouts.bottomsheet.DifferentBottomSheets
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
@@ -46,9 +48,7 @@ fun MainLayout(blockViewModel: CodeBlockViewModel) {
             sheetContent = {
                 currentBottomSheet?.let { currentSheet ->
                     DifferentBottomSheets(
-                        blockViewModel,
-                        currentSheet,
-                        closeSheet
+                        blockViewModel, currentSheet, closeSheet
                     )
                 }
             }) { paddingValues ->

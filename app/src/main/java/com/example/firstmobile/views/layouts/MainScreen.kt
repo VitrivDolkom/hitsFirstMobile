@@ -7,29 +7,33 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.selection.DisableSelection
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.BlockShape
 import com.example.firstmobile.ui.theme.DarkGreen
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
-import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.views.draganddrop.DragTarget
 import com.example.firstmobile.views.draganddrop.DropItem
+import com.example.firstmobile.views.layouts.bottomsheet.BottomSheetScreen
+import com.example.firstmobile.views.layouts.bottomsheet.SheetLayout
 
 @Composable
 fun MainScreen(
     blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
-    SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
-    
     val blocks by blockViewModel.blocks.collectAsState()
     val changesNum by blockViewModel.changesNum.collectAsState()
+    
+    SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
     
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -128,7 +132,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             )
                         }
                         
-                        if (block.operation.isDropDownable()) {
+                        if (block.operation.isDropDown()) {
                             DropdownDemo(
                                 i,
                                 block.id,
