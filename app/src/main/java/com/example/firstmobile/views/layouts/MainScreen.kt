@@ -1,7 +1,5 @@
 package com.example.firstmobile.views.layouts
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
@@ -13,7 +11,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -60,14 +57,14 @@ fun MainScreen(
                             isLeftChild = false,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(4.dp)
-                                .height(64.dp),
+                                .padding(SmallPadding)
+                                .height(BigHeight),
                             blockViewModel = blockViewModel
                         ) { isHovered, _ ->
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .roundThickBorder(
+                                    .roundThinBorder(
                                         backColor = MaterialTheme.colors.background,
                                         borderColor = if (isHovered) MaterialTheme.colors.error else MaterialTheme.colors.primaryVariant
                                     )
@@ -85,13 +82,13 @@ fun MainScreen(
 
 @Composable
 fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
-    Box(modifier = Modifier.padding(4.dp)) {
+    Box(modifier = Modifier.padding(SmallPadding)) {
         DragTarget(
             i = i, operationToDrop = block, viewModel = blockViewModel
         ) {
             Box(
                 modifier = Modifier
-                    .height(64.dp)
+                    .height(BigHeight)
                     .roundBorder(
                         backColor = MaterialTheme.colors.primary,
                         borderColor = MaterialTheme.colors.surface
@@ -100,7 +97,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = NormalPadding),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -149,9 +146,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                         
                         if (block.operation.isEmptyBlock()) {
                             Box(
-                                modifier = Modifier
-                                    .width(10.dp)
-                                    .height(10.dp)
+                                modifier = Modifier.size(EmptySize)
                             ) {}
                         } else {
                             DropItemLayout(

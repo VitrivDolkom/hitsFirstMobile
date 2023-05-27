@@ -17,6 +17,7 @@ import androidx.compose.ui.res.stringArrayResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.example.firstmobile.R
+import com.example.firstmobile.ui.theme.NormalPadding
 
 @Composable
 fun Instructions() {
@@ -44,9 +45,7 @@ fun Instructions() {
                 )
             } else {
                 Text(
-                    modifier = Modifier.padding(
-                        horizontal = 8.dp, vertical = 8.dp
-                    ),
+                    modifier = Modifier.padding(NormalPadding),
                     text = str,
                     style = MaterialTheme.typography.body1,
                     color = MaterialTheme.colors.secondary

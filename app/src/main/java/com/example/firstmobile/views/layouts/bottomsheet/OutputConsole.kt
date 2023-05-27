@@ -16,10 +16,7 @@ import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.firstmobile.ui.theme.CodeFont
-import com.example.firstmobile.ui.theme.MainBackground
-import com.example.firstmobile.ui.theme.TextColor
-import com.example.firstmobile.ui.theme.roundBackground
+import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 
 @Composable
@@ -41,7 +38,7 @@ fun OutputConsole(blockViewModel: CodeBlockViewModel) {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
+                        .padding(horizontal = NormalPadding)
                 ) {
                     items(1) {
                         val isError =

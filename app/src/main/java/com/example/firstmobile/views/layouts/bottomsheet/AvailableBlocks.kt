@@ -16,8 +16,7 @@ import androidx.compose.ui.unit.dp
 import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.TextColor
-import com.example.firstmobile.ui.theme.roundBorder
+import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.utils.flowlayouts.FlowRow
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.DragTarget
@@ -34,7 +33,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
             .fillMaxWidth()
             .height(LocalConfiguration.current.screenHeightDp.dp * 3 / 8)
             .background(color = MaterialTheme.colors.background)
-            .padding(vertical = 16.dp, horizontal = 4.dp),
+            .padding(vertical = BigPadding, horizontal = SmallPadding),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -45,7 +44,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(4.dp),
+                        .padding(SmallPadding),
                     contentAlignment = Alignment.CenterStart
                 ) {
                     Text(
@@ -58,7 +57,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                 row.listToShow.forEach { operation ->
                     val block = CodeBlock(null, operation, null)
                     
-                    Box(modifier = Modifier.padding(4.dp)) {
+                    Box(modifier = Modifier.padding(SmallPadding)) {
                         DragTarget(
                             i = -1,
                             operationToDrop = block,
@@ -67,7 +66,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                             
                             Box(
                                 modifier = Modifier
-                                    .height(32.dp)
+                                    .height(NormalHeight)
                                     .roundBorder(
                                         backColor = MaterialTheme.colors.primary,
                                         borderColor = MaterialTheme.colors.surface
@@ -76,7 +75,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                                 Row(
                                     modifier = Modifier
                                         .fillMaxHeight()
-                                        .padding(4.dp),
+                                        .padding(SmallPadding),
                                     horizontalArrangement = Arrangement.SpaceEvenly,
                                     verticalAlignment = Alignment.CenterVertically
                                 ) {

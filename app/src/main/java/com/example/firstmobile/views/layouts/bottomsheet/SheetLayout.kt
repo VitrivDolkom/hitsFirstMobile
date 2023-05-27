@@ -16,6 +16,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.firstmobile.R
+import com.example.firstmobile.ui.theme.BigPadding
 import com.example.firstmobile.ui.theme.BlueButton
 import com.example.firstmobile.ui.theme.GreenButton
 import com.example.firstmobile.ui.theme.RedButton
@@ -28,7 +29,7 @@ fun SheetLayout(
     Row(
         Modifier
             .fillMaxSize()
-            .padding(16.dp),
+            .padding(BigPadding),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.Bottom
     ) {

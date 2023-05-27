@@ -12,19 +12,15 @@ import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.BlockShape
-import com.example.firstmobile.ui.theme.roundBackground
-import com.example.firstmobile.ui.theme.roundBorder
-import com.example.firstmobile.ui.theme.roundThickBorder
+import com.example.firstmobile.ui.theme.MiddleSize
+import com.example.firstmobile.ui.theme.NormalWidth
+import com.example.firstmobile.ui.theme.roundThinBorder
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import java.util.*
 
@@ -40,8 +36,8 @@ fun DropdownDemo(
     
     Box(
         modifier = Modifier
-            .size(40.dp)
-            .roundThickBorder(
+            .size(MiddleSize)
+            .roundThinBorder(
                 backColor = MaterialTheme.colors.background,
                 borderColor = MaterialTheme.colors.primary
             ), contentAlignment = Alignment.Center
@@ -59,7 +55,7 @@ fun DropdownDemo(
             modifier = Modifier
                 .background(color = MaterialTheme.colors.background)
                 .border(1.dp, color = MaterialTheme.colors.secondary)
-                .width(60.dp),
+                .width(NormalWidth),
             offset = DpOffset(x = (-8).dp, y = 0.dp)
         ) {
             items.forEachIndexed { index, operation ->

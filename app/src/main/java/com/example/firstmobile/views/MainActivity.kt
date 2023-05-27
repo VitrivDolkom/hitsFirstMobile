@@ -3,11 +3,10 @@ package com.example.firstmobile.views
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.material.*
+import androidx.compose.material.ExperimentalMaterialApi
 import com.example.firstmobile.ui.theme.InterpreterTheme
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.layouts.MainLayout
-import com.example.firstmobile.views.layouts.ShakeDetector
 
 @ExperimentalMaterialApi
 class MainActivity : ComponentActivity() {
@@ -17,7 +16,6 @@ class MainActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         setContent {
             InterpreterTheme {
-                
                 MainLayout(blockViewModel)
             }
         }

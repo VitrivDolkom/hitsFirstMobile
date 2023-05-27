@@ -6,7 +6,6 @@ import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
 import com.example.firstmobile.model.Braces
@@ -23,7 +22,7 @@ fun BlockPartText(str: String) {
     Text(
         text = str,
         modifier = Modifier
-            .padding(end = 2.dp)
+            .padding(end = MicroPadding)
             .offset(y = (-3).dp),
         style = MaterialTheme.typography.h3,
         color = TextColor
@@ -45,8 +44,8 @@ fun DropItemLayout(
             id = id,
             isLeftChild = isLeftChild,
             modifier = Modifier
-                .height(48.dp)
-                .padding(horizontal = 8.dp)
+                .height(MiddleHeight)
+                .padding(horizontal = NormalPadding)
                 .roundBackground(MaterialTheme.colors.background),
             blockViewModel = blockViewModel
         ) { isHovered, _ ->
@@ -54,7 +53,7 @@ fun DropItemLayout(
                 modifier = Modifier
                     .height(50.dp)
                     .defaultMinSize(minWidth = 80.dp)
-                    .roundThickBorder(
+                    .roundThinBorder(
                         backColor = MaterialTheme.colors.background,
                         borderColor = if (isHovered) MaterialTheme.colors.error else MaterialTheme.colors.surface
                     )
@@ -74,15 +73,15 @@ fun DropItemLayout(
             id = id,
             isLeftChild = isLeftChild,
             modifier = Modifier
-                .height(48.dp)
-                .padding(horizontal = 12.dp)
+                .height(MiddleHeight)
+                .padding(horizontal = MiddlePadding)
                 .roundBackground(MaterialTheme.colors.primary),
             blockViewModel = blockViewModel
         ) { isHovered, _ ->
             Box(
                 modifier = Modifier
-                    .height(48.dp)
-                    .roundThickBorder(
+                    .height(MiddleHeight)
+                    .roundThinBorder(
                         backColor = MaterialTheme.colors.background,
                         borderColor = if (isHovered) MaterialTheme.colors.error else MaterialTheme.colors.surface
                     ), contentAlignment = Alignment.Center
@@ -91,7 +90,7 @@ fun DropItemLayout(
                     OutlinedTextField(
                         textStyle = TextStyle(color = MaterialTheme.colors.secondary),
                         shape = BlockShape,
-                        modifier = Modifier.width(if (isArray) 160.dp else 80.dp),
+                        modifier = Modifier.width(if (isArray) BigInputWidth else InputWidth),
                         value = block.input,
                         onValueChange = { newText ->
                             blockViewModel.updateInput(
@@ -124,8 +123,8 @@ fun DropItemLayout(
     ) {
         Box(
             modifier = Modifier
-                .height(64.dp)
-                .padding(horizontal = 8.dp)
+                .height(BigHeight)
+                .padding(horizontal = NormalPadding)
                 .roundBorder(
                     backColor = MaterialTheme.colors.primary,
                     borderColor = MaterialTheme.colors.surface
@@ -134,7 +133,7 @@ fun DropItemLayout(
             Row(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = NormalPadding),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
