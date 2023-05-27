@@ -59,9 +59,7 @@ fun AvailableBlocks(blockViewModel: CodeBlockViewModel) {
                     
                     Box(modifier = Modifier.padding(SmallPadding)) {
                         DragTarget(
-                            i = -1,
-                            operationToDrop = block,
-                            viewModel = blockViewModel
+                            i = -1, operationToDrop = block
                         ) {
                             
                             Box(

@@ -3,7 +3,9 @@ package com.example.firstmobile.views.layouts
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.Composable
@@ -35,12 +37,13 @@ fun MainScreen(
     Box(
         modifier = Modifier.fillMaxSize(),
     ) {
-        LazyColumn(
+        Column(
             modifier = Modifier
                 .fillMaxWidth()
                 .height(LocalConfiguration.current.screenHeightDp.dp * 7 / 8)
+                .verticalScroll(rememberScrollState())
         ) {
-            items(blocks.size + 1) {
+            for(it in 0..blocks.size) {
                 if (it >= blocks.size) {
                     Box(
                         modifier = Modifier
@@ -84,7 +87,7 @@ fun MainScreen(
 fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
     Box(modifier = Modifier.padding(SmallPadding)) {
         DragTarget(
-            i = i, operationToDrop = block, viewModel = blockViewModel
+            i = i, operationToDrop = block
         ) {
             Box(
                 modifier = Modifier

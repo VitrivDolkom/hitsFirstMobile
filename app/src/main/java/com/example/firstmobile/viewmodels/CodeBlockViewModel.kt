@@ -5,10 +5,7 @@ import com.example.firstmobile.model.*
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import java.text.SimpleDateFormat
-import java.time.LocalDate
-import java.time.LocalDateTime
 import java.util.*
-import kotlin.math.floor
 
 class CodeBlockViewModel : ViewModel() {
     
@@ -65,7 +62,7 @@ class CodeBlockViewModel : ViewModel() {
         if (isLeftChild) {
             currentCodeBlock.leftBlock = targetCodeBlock
         } else {
-            // сохраняю скобки родителя
+            
             if (currentCodeBlock.operation == CodeBlockOperation.PRINT) {
                 targetCodeBlock.leftBrace =
                     currentCodeBlock.rightBlock!!.leftBrace
@@ -81,7 +78,7 @@ class CodeBlockViewModel : ViewModel() {
         currentCodeBlock: CodeBlock?,
         newOperation: CodeBlockOperation,
         id: UUID,
-        withBraces: Boolean = false
+        withBraces: Boolean = false,
     ) {
         if (currentCodeBlock == null) return
         
@@ -95,7 +92,7 @@ class CodeBlockViewModel : ViewModel() {
             return
         }
         
-        if (withBraces && newOperation != CodeBlockOperation.INPUT && newOperation != CodeBlockOperation.DEFAULT) {
+        if (withBraces) {
             currentCodeBlock.leftBrace =
                 if (currentCodeBlock.leftBrace != Braces.DEFAULT) Braces.DEFAULT else Braces.OPEN_PARENTHESES
             currentCodeBlock.rightBrace =
@@ -126,7 +123,6 @@ class CodeBlockViewModel : ViewModel() {
             return
         }
         
-        // по дефолту делаем детей инпутами
         val newLeftBlock = if (parentBlock.leftBlock == null) {
             CodeBlock(null, CodeBlockOperation.INPUT, null)
         } else parentBlock.leftBlock
@@ -134,19 +130,16 @@ class CodeBlockViewModel : ViewModel() {
             CodeBlock(null, CodeBlockOperation.INPUT, null)
         } else parentBlock.rightBlock
         
-        // если массив, то добавляем [ ]
         if (parentBlock.operation == CodeBlockOperation.ARRAY_EQUAL) {
             newRightBlock?.leftBrace = Braces.OPEN_SQUARE
             newRightBlock?.rightBrace = Braces.CLOSE_SQUARE
         }
         
-        // если специальные операции, добавляем ( )
         if (parentBlock.operation == CodeBlockOperation.PRINT) {
             newRightBlock?.leftBrace = Braces.OPEN_PARENTHESES
             newRightBlock?.rightBrace = Braces.CLOSE_PARENTHESES
         }
         
-        // создаю копию блока, чтобы сменить id
         val block = CodeBlock(
             newLeftBlock,
             parentBlock.operation,
@@ -166,18 +159,6 @@ class CodeBlockViewModel : ViewModel() {
         if (i == (_blocks.value.size - 1)) {
             _blocks.value.add(CodeBlock())
         }
-    }
-    
-    fun shift(i: Int) {
-        _changesNum.value += 1
-        
-        for (index in 0 until i) {
-            _blocks.value[i] = _blocks.value[i + 1]
-        }
-
-//        for (index in i until _blocks.value.size) {
-//            _blocks.value[i] = _blocks.value[i + 1]
-//        }
     }
     
     private fun parseSingleBlock(block: CodeBlock?, _text: String): String {
@@ -241,7 +222,7 @@ class CodeBlockViewModel : ViewModel() {
         val current = getCurrentTime()
         val executeTime = (end - begin) / 1e6
         
-        output.result.add(0, "||-- ${current} --||")
+        output.result.add(0, "||-- $current --||")
         output.result.add("Execute time - $executeTime ms.")
         
         _output.value = output

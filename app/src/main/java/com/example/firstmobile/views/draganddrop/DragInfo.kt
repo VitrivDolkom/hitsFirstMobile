@@ -3,11 +3,10 @@ package com.example.firstmobile.views.draganddrop
 import androidx.compose.runtime.*
 import androidx.compose.ui.geometry.Offset
 import com.example.firstmobile.model.CodeBlock
-import java.util.UUID
+import java.util.*
 
 internal val LocalDragTargetInfo = compositionLocalOf { DragTargetInfo() }
 
-// класс с информацией о блоке, который перетаскивают
 internal class DragTargetInfo {
     var isDragging by mutableStateOf(false)
     var dragPosition by mutableStateOf(Offset.Zero)

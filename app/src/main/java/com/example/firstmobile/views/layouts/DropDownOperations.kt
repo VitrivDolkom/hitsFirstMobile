@@ -20,6 +20,7 @@ import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlockOperation
 import com.example.firstmobile.ui.theme.MiddleSize
 import com.example.firstmobile.ui.theme.NormalWidth
+import com.example.firstmobile.ui.theme.ThinBorder
 import com.example.firstmobile.ui.theme.roundThinBorder
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import java.util.*
@@ -54,7 +55,7 @@ fun DropdownDemo(
             onDismissRequest = { expanded = false },
             modifier = Modifier
                 .background(color = MaterialTheme.colors.background)
-                .border(1.dp, color = MaterialTheme.colors.secondary)
+                .border(ThinBorder, color = MaterialTheme.colors.secondary)
                 .width(NormalWidth),
             offset = DpOffset(x = (-8).dp, y = 0.dp)
         ) {

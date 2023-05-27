@@ -45,7 +45,11 @@ fun ShakeDetector(context: Context, blockViewModel: CodeBlockViewModel) {
                         if (deltaAcceleration > SHAKE_THRESHOLD) {
                             blockViewModel.reset()
                         } else if (deltaAcceleration > WEAK_SHAKE_THRESHOLD && lastAcceleration != 0f) {
-                            Toast.makeText(context, R.string.weak_shake_text, Toast.LENGTH_SHORT).show()
+                            Toast.makeText(
+                                context,
+                                R.string.weak_shake_text,
+                                Toast.LENGTH_SHORT
+                            ).show()
                         }
                         
                         lastAcceleration = acceleration

@@ -9,7 +9,7 @@ import androidx.compose.ui.layout.boundsInWindow
 import androidx.compose.ui.layout.onGloballyPositioned
 import com.example.firstmobile.ui.theme.roundBackground
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
-import java.util.UUID
+import java.util.*
 
 @Composable
 fun DropItem(

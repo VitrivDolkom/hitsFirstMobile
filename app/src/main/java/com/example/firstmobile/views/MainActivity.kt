@@ -12,6 +12,7 @@ import com.example.firstmobile.views.layouts.MainLayout
 class MainActivity : ComponentActivity() {
     
     private val blockViewModel = CodeBlockViewModel()
+    
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContent {

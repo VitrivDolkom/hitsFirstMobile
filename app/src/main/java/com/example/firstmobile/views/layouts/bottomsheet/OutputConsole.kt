@@ -11,12 +11,11 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import com.example.firstmobile.ui.theme.*
+import com.example.firstmobile.ui.theme.MainBackground
+import com.example.firstmobile.ui.theme.NormalPadding
+import com.example.firstmobile.ui.theme.TextColor
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 
 @Composable

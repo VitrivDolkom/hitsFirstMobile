@@ -19,7 +19,8 @@ import com.example.firstmobile.ui.theme.TextColor
 @Composable
 fun TopBang(isLight: Boolean = true) {
     val boxColor = if (isLight) MaterialTheme.colors.background else TextColor
-    val bangColor = if (isLight) MaterialTheme.colors.secondary else MainBackground
+    val bangColor =
+        if (isLight) MaterialTheme.colors.secondary else MainBackground
     
     Box(
         modifier = Modifier

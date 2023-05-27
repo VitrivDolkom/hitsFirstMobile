@@ -18,3 +18,9 @@ enum class Braces(val symbol: String) {
     ),
     DEFAULT("");
 }
+
+enum class ExtraSymbols(val symbol: String) {
+    DOUBLE_PARENTHESES("()"), DOT("."), COMMA(","), ZERO("0"), ONE("1"), TRUE("true"), FALSE(
+        "false"
+    )
+}

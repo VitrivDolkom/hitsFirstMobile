@@ -7,16 +7,16 @@ data class CodeBlocksGroup(
 enum class CodeBlockOperation(val symbol: String) {
     EQUAL("="), ARRAY_EQUAL("="), ADD("+"), SUBTRACT("-"), MULTIPLY("*"),
     DIVIDE("/"), PERCENT("%"), LOOP("while"), CONDITION("if"),
-    ELSE("else"), INPUT(""), BRACES("( )"),
+    ELSE("else"), INPUT(""), BRACES("( )"), NOT_EQUAL("!="),
     MORE(">"), LESS("<"), MORE_EQUAL(">="), LESS_EQUAL("<="), COMPARE_EQUAL("=="),
     LOGIC_AND("and"), LOGIC_OR("or"), PRINT("print"), BLOCK_END("end"),
-    DEFAULT("");
+    DEFAULT(""), BEGIN("begin");
     
     private fun mathOperations(): List<CodeBlockOperation> =
         listOf(ADD, SUBTRACT, MULTIPLY, DIVIDE, PERCENT, BRACES, INPUT)
     
     private fun compareOperations(): List<CodeBlockOperation> =
-        listOf(COMPARE_EQUAL, MORE, LESS, MORE_EQUAL, LESS_EQUAL, BRACES, INPUT)
+        listOf(COMPARE_EQUAL, NOT_EQUAL, MORE, LESS, MORE_EQUAL, LESS_EQUAL, BRACES, INPUT)
     
     private fun logicOperations(): List<CodeBlockOperation> =
         listOf(LOGIC_AND, LOGIC_OR, BRACES, INPUT)
