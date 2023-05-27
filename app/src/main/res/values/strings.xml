@@ -1,3 +1,64 @@
 <resources>
     <string name="app_name">First Mobile</string>
+
+    <string name="instruction">Инструкция:</string>
+    <string name="author">Авторы:</string>
+    <string-array name="instructions">
+        <item>Инструкция:</item>
+        <item>▸ Будьте осторожны, нельзя свапать или сдвигать блоки, если вы так сделаете, они удалятся</item>
+        <item>▸ Чтобы ваш блок массива работал корректно, вводите числа через разделитель \';\'. Пример: a = [1;2;3]</item>
+        <item>▸ Для добавления скобок или смены знака у мат/лог/сравн операций достаточно нажать на сам знак и выскочит меню со всеми возможными знаками</item>
+        <item>▸ Когда вы используете условные операторы, в конце нужно обязательно ставить блок end</item>
+        <item>▸ Чтобы полностью очистить экран от блоков, вам необходимо встряхнуть телефон  👋</item>
+        <item>▸ Для того, чтобы удалить блок, достаточно просто его выкинуть, если же блок вложен в другой, нажмите на его операцию и нажмите на мусорку</item>
+        <item>▸ Чтобы поставить блок, откройте меню по нажатию кнопки со знаком \'+\' и перетащите нужный вам блок</item>
+        <item>▸ Для запуска программы достаточно нажать кнопку со знаком \'>\', там же вы и получите результат выполнения</item>
+        <item>Авторы:</item>
+        <item>☆ Дмитрий Волков</item>
+        <item>☆ Алексей Шумков</item>
+        <item>☆ Данил Васильев</item>
+    </string-array>
+
+    <string-array name="block_names">
+        <item>Переменные</item>
+        <item>Массивы</item>
+        <item>Мат операции</item>
+        <item>Логические операции</item>
+        <item>Операции сравнения</item>
+        <item>Остальные операции</item>
+        <item>Пустые блоки</item>
+    </string-array>
+
+    <string name="bang">_______________</string>
+    <string name="question">"?"</string>
+    <string name="blocks">+</string>
+    <string name="run">></string>
+    <string name="marker">▸&#160;</string>
+
+    <string name="divide">/</string>
+    <string name="add">+</string>
+    <string name="subtract">-</string>
+    <string name="percent">%</string>
+    <string name="multiply">×</string>
+    <string name="equal">=</string>
+    <string name="array_equal">=</string>
+    <string name="loop">while</string>
+    <string name="condition">if</string>
+    <string name="otherwise">else</string>
+    <string name="more">></string>
+    <string name="more_equal">>=</string>
+    <string name="compare_equal">==</string>
+    <string name="logic_and">and</string>
+    <string name="logic_or">or</string>
+    <string name="print">print</string>
+    <string name="end">end</string>
+
+    <string name="open_parentheses">(</string>
+    <string name="close_parentheses">)</string>
+    <string name="open_square">[</string>
+    <string name="close_square">]</string>
+
+    <string name="remove_description">Удаление блока</string>
+    <string name="weak_shake_text">Трясите сильнее, чтобы отчистить</string>
+    <string name="strong_shake_text">Можно трясти не так сильно</string>
 </resources>

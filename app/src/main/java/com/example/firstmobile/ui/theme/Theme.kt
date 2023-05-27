@@ -7,24 +7,26 @@ import androidx.compose.material.lightColors
 import androidx.compose.runtime.Composable
 
 private val DarkColorPalette = darkColors(
-    primary = Purple200, primaryVariant = Purple700, secondary = Teal200
+    primary = DarkBlockBackground,
+    secondary = MainBackground,
+    background = TextColor,
+    error = HoverRed,
+    surface = DarkGreen
 )
 
 private val LightColorPalette = lightColors(
-    primary = Purple500, primaryVariant = Purple700, secondary = Teal200
-    
-    /* Other default colors to override
-    background = Color.White,
-    surface = Color.White,
-    onPrimary = Color.White,
-    onSecondary = Color.Black,
-    onBackground = Color.Black,
-    onSurface = Color.Black,
-    */
+    primary = BlockBackground,
+    secondary = TextColor,
+    background = MainBackground,
+    surface = DarkGreen,
+    error = HoverRed,
+    primaryVariant = BorderBlue
 )
 
 @Composable
-fun FirstMobileTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit) {
+fun InterpreterTheme(
+    darkTheme: Boolean = isSystemInDarkTheme(), content: @Composable () -> Unit
+) {
     val colors = if (darkTheme) {
         DarkColorPalette
     } else {
@@ -32,6 +34,9 @@ fun FirstMobileTheme(darkTheme: Boolean = isSystemInDarkTheme(), content: @Compo
     }
     
     MaterialTheme(
-        colors = colors, typography = Typography, shapes = Shapes, content = content
+        colors = colors,
+        typography = Typography,
+        shapes = Shapes,
+        content = content
     )
 }
