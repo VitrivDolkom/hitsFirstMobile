@@ -7,19 +7,20 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.DropdownMenu
 import androidx.compose.material.DropdownMenuItem
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpOffset
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.firstmobile.R
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.BlockShape
+import com.example.firstmobile.ui.theme.MiddleSize
+import com.example.firstmobile.ui.theme.NormalWidth
+import com.example.firstmobile.ui.theme.roundThinBorder
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import java.util.*
 
@@ -35,29 +36,26 @@ fun DropdownDemo(
     
     Box(
         modifier = Modifier
-            .height(40.dp)
-            .width(40.dp)
-            .border(1.dp, color = Color.Black, shape = BlockShape)
-            .background(Color.White, shape = BlockShape),
-        contentAlignment = Alignment.Center
+            .size(MiddleSize)
+            .roundThinBorder(
+                backColor = MaterialTheme.colors.background,
+                borderColor = MaterialTheme.colors.primary
+            ), contentAlignment = Alignment.Center
     ) {
         Text(
             text = operation.symbol,
             modifier = Modifier
-                .clickable(onClick = { expanded = true })
-                .offset(y = (-3).dp),
-            fontSize = 22.sp,
-            textAlign = TextAlign.Center
+                .offset(y = (-3).dp)
+                .clickable(onClick = { expanded = true }),
+            style = MaterialTheme.typography.subtitle2
         )
         DropdownMenu(
             expanded = expanded,
             onDismissRequest = { expanded = false },
             modifier = Modifier
-                .background(
-                    Color.White
-                )
-                .border(1.dp, color = Color.Black)
-                .width(60.dp),
+                .background(color = MaterialTheme.colors.background)
+                .border(1.dp, color = MaterialTheme.colors.secondary)
+                .width(NormalWidth),
             offset = DpOffset(x = (-8).dp, y = 0.dp)
         ) {
             items.forEachIndexed { index, operation ->
@@ -74,7 +72,7 @@ fun DropdownDemo(
                         Image(
                             modifier = Modifier.fillMaxSize(),
                             painter = painterResource(id = R.drawable.trash),
-                            contentDescription = "удаление блока"
+                            contentDescription = stringResource(id = R.string.remove_description)
                         )
                     } else {
                         Box(
@@ -83,8 +81,7 @@ fun DropdownDemo(
                         ) {
                             Text(
                                 text = operation.symbol,
-                                textAlign = TextAlign.Center,
-                                fontSize = if (operation.isLogicOperation()) 16.sp else 22.sp,
+                                style = if (operation.isLogicOperation()) MaterialTheme.typography.subtitle1 else MaterialTheme.typography.subtitle2
                             )
                         }
                     }

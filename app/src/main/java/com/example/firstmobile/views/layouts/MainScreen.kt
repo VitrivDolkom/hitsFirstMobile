@@ -1,35 +1,36 @@
 package com.example.firstmobile.views.layouts
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.text.selection.DisableSelection
+import androidx.compose.material.MaterialTheme
 import androidx.compose.material.Text
-import androidx.compose.runtime.*
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.BlockShape
-import com.example.firstmobile.ui.theme.DarkGreen
-import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.model.CodeBlock
+import com.example.firstmobile.model.CodeBlockOperation
+import com.example.firstmobile.ui.theme.*
+import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.DragTarget
 import com.example.firstmobile.views.draganddrop.DropItem
+import com.example.firstmobile.views.layouts.bottomsheet.BottomSheetScreen
+import com.example.firstmobile.views.layouts.bottomsheet.SheetLayout
 
 @Composable
 fun MainScreen(
     blockViewModel: CodeBlockViewModel, openSheet: (BottomSheetScreen) -> Unit
 ) {
-    SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
-    
     val blocks by blockViewModel.blocks.collectAsState()
     val changesNum by blockViewModel.changesNum.collectAsState()
+    
+    SheetLayout(blockViewModel = blockViewModel, openSheet = openSheet)
     
     Box(
         modifier = Modifier.fillMaxSize(),
@@ -56,19 +57,17 @@ fun MainScreen(
                             isLeftChild = false,
                             modifier = Modifier
                                 .fillMaxWidth()
-                                .padding(4.dp)
-                                .height(64.dp),
+                                .padding(SmallPadding)
+                                .height(BigHeight),
                             blockViewModel = blockViewModel
                         ) { isHovered, _ ->
                             Box(
                                 modifier = Modifier
                                     .fillMaxSize()
-                                    .border(
-                                        1.dp,
-                                        color = if (isHovered) Color.Red else Color.Blue,
-                                        shape = BlockShape
+                                    .roundThinBorder(
+                                        backColor = MaterialTheme.colors.background,
+                                        borderColor = if (isHovered) MaterialTheme.colors.error else MaterialTheme.colors.primaryVariant
                                     )
-                                    .background(Color.White, shape = BlockShape)
                             ) {}
                         }
                     } else {
@@ -83,23 +82,22 @@ fun MainScreen(
 
 @Composable
 fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
-    Box(modifier = Modifier.padding(4.dp)) {
+    Box(modifier = Modifier.padding(SmallPadding)) {
         DragTarget(
             i = i, operationToDrop = block, viewModel = blockViewModel
         ) {
             Box(
                 modifier = Modifier
-                    .height(64.dp)
-                    .border(
-                        2.dp, color = DarkGreen, shape = BlockShape
-                    )
-                    .background(color = Color.Green, shape = BlockShape),
-                contentAlignment = Alignment.Center
+                    .height(BigHeight)
+                    .roundBorder(
+                        backColor = MaterialTheme.colors.primary,
+                        borderColor = MaterialTheme.colors.surface
+                    ), contentAlignment = Alignment.Center
             ) {
                 LazyRow(
                     modifier = Modifier
                         .fillMaxHeight()
-                        .padding(horizontal = 8.dp),
+                        .padding(horizontal = NormalPadding),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -128,7 +126,7 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             )
                         }
                         
-                        if (block.operation.isDropDownable()) {
+                        if (block.operation.isDropDown()) {
                             DropdownDemo(
                                 i,
                                 block.id,
@@ -140,16 +138,15 @@ fun SingleBlock(blockViewModel: CodeBlockViewModel, block: CodeBlock, i: Int) {
                             DisableSelection {
                                 Text(
                                     text = block.operation.symbol,
-                                    fontSize = 32.sp
+                                    style = MaterialTheme.typography.h3,
+                                    color = TextColor
                                 )
                             }
                         }
                         
                         if (block.operation.isEmptyBlock()) {
                             Box(
-                                modifier = Modifier
-                                    .width(10.dp)
-                                    .height(10.dp)
+                                modifier = Modifier.size(EmptySize)
                             ) {}
                         } else {
                             DropItemLayout(

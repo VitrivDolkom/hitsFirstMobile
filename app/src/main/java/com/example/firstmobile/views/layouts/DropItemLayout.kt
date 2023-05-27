@@ -1,34 +1,33 @@
 package com.example.firstmobile.views.layouts
 
-import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.defaultMinSize
-import androidx.compose.foundation.layout.fillMaxHeight
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.text.selection.DisableSelection
-import androidx.compose.material.OutlinedTextField
-import androidx.compose.material.Text
+import androidx.compose.material.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.firstmobile.model.Braces
 import com.example.firstmobile.model.CodeBlock
 import com.example.firstmobile.model.CodeBlockOperation
-import com.example.firstmobile.ui.theme.BlockShape
-import com.example.firstmobile.ui.theme.DarkGreen
+import com.example.firstmobile.ui.theme.*
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.DragTarget
 import com.example.firstmobile.views.draganddrop.DropItem
-import java.util.UUID
+import java.util.*
+
+@Composable
+fun BlockPartText(str: String) {
+    Text(
+        text = str,
+        modifier = Modifier
+            .padding(end = MicroPadding)
+            .offset(y = (-3).dp),
+        style = MaterialTheme.typography.h3,
+        color = TextColor
+    )
+}
 
 @Composable
 fun DropItemLayout(
@@ -45,62 +44,53 @@ fun DropItemLayout(
             id = id,
             isLeftChild = isLeftChild,
             modifier = Modifier
-                .height(48.dp)
-                .padding(horizontal = 8.dp)
-                .background(color = Color.White, shape = BlockShape),
+                .height(MiddleHeight)
+                .padding(horizontal = NormalPadding)
+                .roundBackground(MaterialTheme.colors.background),
             blockViewModel = blockViewModel
         ) { isHovered, _ ->
             Box(
                 modifier = Modifier
                     .height(50.dp)
                     .defaultMinSize(minWidth = 80.dp)
-                    .border(
-                        1.dp,
-                        color = if (isHovered) Color.Red else DarkGreen,
-                        shape = BlockShape
+                    .roundThinBorder(
+                        backColor = MaterialTheme.colors.background,
+                        borderColor = if (isHovered) MaterialTheme.colors.error else MaterialTheme.colors.surface
                     )
-                    .background(color = Color.White, shape = BlockShape)
             ) {}
         }
-
+        
         return
     }
-
+    
     if (block.operation == CodeBlockOperation.INPUT) {
         if (block.leftBrace != Braces.DEFAULT) {
-            Text(
-                text = block.leftBrace.symbol,
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .padding(start = 2.dp)
-                    .offset(y = (-3).dp)
-            )
+            BlockPartText(str = block.leftBrace.symbol)
         }
-
+        
         DropItem(
             i = i,
             id = id,
             isLeftChild = isLeftChild,
             modifier = Modifier
-                .height(48.dp)
-                .padding(horizontal = 12.dp)
-                .background(color = Color.Green, shape = BlockShape),
+                .height(MiddleHeight)
+                .padding(horizontal = MiddlePadding)
+                .roundBackground(MaterialTheme.colors.primary),
             blockViewModel = blockViewModel
         ) { isHovered, _ ->
             Box(
                 modifier = Modifier
-                    .height(48.dp)
-                    .border(
-                        1.dp,
-                        color = if (isHovered) Color.Red else DarkGreen,
-                        shape = BlockShape
-                    )
-                    .background(color = Color.White, shape = BlockShape),
-                contentAlignment = Alignment.Center
+                    .height(MiddleHeight)
+                    .roundThinBorder(
+                        backColor = MaterialTheme.colors.background,
+                        borderColor = if (isHovered) MaterialTheme.colors.error else MaterialTheme.colors.surface
+                    ), contentAlignment = Alignment.Center
             ) {
                 DisableSelection {
-                    OutlinedTextField(shape = BlockShape,
-                        modifier = Modifier.width(if (isArray) 160.dp else 80.dp),
+                    OutlinedTextField(
+                        textStyle = TextStyle(color = MaterialTheme.colors.secondary),
+                        shape = BlockShape,
+                        modifier = Modifier.width(if (isArray) BigInputWidth else InputWidth),
                         value = block.input,
                         onValueChange = { newText ->
                             blockViewModel.updateInput(
@@ -111,57 +101,47 @@ fun DropItemLayout(
                                 block.leftBrace,
                                 block.rightBrace
                             )
-                        })
+                        },
+                        colors = TextFieldDefaults.textFieldColors(
+                            backgroundColor = MaterialTheme.colors.background,
+                            cursorColor = MaterialTheme.colors.secondary
+                        ),
+                    )
                 }
             }
         }
-
+        
         if (block.rightBrace != Braces.DEFAULT) {
-            Text(
-                text = block.rightBrace.symbol,
-                fontSize = 32.sp,
-                modifier = Modifier
-                    .padding(end = 2.dp)
-                    .offset(y = (-3).dp)
-            )
+            BlockPartText(str = block.rightBrace.symbol)
         }
-
+        
         return
     }
-
-
-    // обычный случай, когда блок есть и он не input
+    
     DragTarget(
         i = i, operationToDrop = block, viewModel = blockViewModel
     ) {
         Box(
             modifier = Modifier
-                .height(64.dp)
-                .padding(horizontal = 8.dp)
-                .border(
-                    2.dp, color = DarkGreen, shape = BlockShape
-                )
-                .background(color = Color.Green, shape = BlockShape),
-            contentAlignment = Alignment.Center
+                .height(BigHeight)
+                .padding(horizontal = NormalPadding)
+                .roundBorder(
+                    backColor = MaterialTheme.colors.primary,
+                    borderColor = MaterialTheme.colors.surface
+                ), contentAlignment = Alignment.Center
         ) {
             Row(
                 modifier = Modifier
                     .fillMaxHeight()
-                    .padding(horizontal = 8.dp),
+                    .padding(horizontal = NormalPadding),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-
+                
                 if (block.leftBrace != Braces.DEFAULT) {
-                    Text(
-                        text = block.leftBrace.symbol,
-                        fontSize = 32.sp,
-                        modifier = Modifier
-                            .padding(start = 2.dp)
-                            .offset(y = (-3).dp)
-                    )
+                    BlockPartText(str = block.leftBrace.symbol)
                 }
-
+                
                 if (block.operation.isSpecialOperation()) {
                     Box(
                         modifier = Modifier
@@ -177,8 +157,8 @@ fun DropItemLayout(
                         i, block.id, blockViewModel, block.leftBlock, true
                     )
                 }
-
-                if (block.operation.isDropDownable()) {
+                
+                if (block.operation.isDropDown()) {
                     DropdownDemo(
                         i,
                         block.id,
@@ -187,21 +167,19 @@ fun DropItemLayout(
                         blockViewModel
                     )
                 } else {
-                    Text(text = block.operation.symbol, fontSize = 32.sp)
+                    Text(
+                        text = block.operation.symbol,
+                        style = MaterialTheme.typography.h3,
+                        color = TextColor
+                    )
                 }
-
+                
                 DropItemLayout(
                     i, block.id, blockViewModel, block.rightBlock, false
                 )
-
+                
                 if (block.rightBrace != Braces.DEFAULT) {
-                    Text(
-                        text = block.rightBrace.symbol,
-                        fontSize = 32.sp,
-                        modifier = Modifier
-                            .padding(end = 2.dp)
-                            .offset(y = (-3).dp)
-                    )
+                    BlockPartText(str = block.rightBrace.symbol)
                 }
             }
         }

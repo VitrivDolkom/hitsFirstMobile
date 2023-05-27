@@ -8,15 +8,19 @@ import androidx.compose.material.ExperimentalMaterialApi
 import androidx.compose.material.rememberBottomSheetScaffoldState
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.example.firstmobile.ui.theme.BottomSheetShape
 import com.example.firstmobile.viewmodels.CodeBlockViewModel
 import com.example.firstmobile.views.draganddrop.DraggableScreen
+import com.example.firstmobile.views.layouts.bottomsheet.BottomSheetScreen
+import com.example.firstmobile.views.layouts.bottomsheet.DifferentBottomSheets
 import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalMaterialApi::class)
 @Composable
 fun MainLayout(blockViewModel: CodeBlockViewModel) {
+    val context = LocalContext.current
     val scope = rememberCoroutineScope()
     val scaffoldState = rememberBottomSheetScaffoldState()
     
@@ -37,6 +41,8 @@ fun MainLayout(blockViewModel: CodeBlockViewModel) {
         }
     }
     
+    ShakeDetector(context, blockViewModel)
+    
     DraggableScreen(
         modifier = Modifier.fillMaxSize()
     ) {
@@ -46,9 +52,7 @@ fun MainLayout(blockViewModel: CodeBlockViewModel) {
             sheetContent = {
                 currentBottomSheet?.let { currentSheet ->
                     DifferentBottomSheets(
-                        blockViewModel,
-                        currentSheet,
-                        closeSheet
+                        blockViewModel, currentSheet, closeSheet
                     )
                 }
             }) { paddingValues ->
