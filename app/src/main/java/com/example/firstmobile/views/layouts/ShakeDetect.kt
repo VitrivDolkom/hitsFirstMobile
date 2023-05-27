@@ -22,9 +22,8 @@ fun ShakeDetector(context: Context, blockViewModel: CodeBlockViewModel) {
         val accelerometerSensor =
             sensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER)
         val sensorEventListener = object : SensorEventListener {
-            private val SHAKE_THRESHOLD = 14f
+            private val SHAKE_THRESHOLD = 12f
             private val WEAK_SHAKE_THRESHOLD = 8f
-            private val STRONG_SHAKE_THRESHOLD = 35f
             private var lastAcceleration = 0f
             private var lastUpdate = 0L
             
@@ -40,12 +39,8 @@ fun ShakeDetector(context: Context, blockViewModel: CodeBlockViewModel) {
                     val currentTime = System.currentTimeMillis()
                     val timeDifference = currentTime - lastUpdate
                     
-                    if (timeDifference > 500) {
+                    if (timeDifference > 350) {
                         val deltaAcceleration = acceleration - lastAcceleration
-                        
-                        if (deltaAcceleration > STRONG_SHAKE_THRESHOLD) {
-                            Toast.makeText(context, R.string.strong_shake_text, Toast.LENGTH_SHORT).show()
-                        }
                         
                         if (deltaAcceleration > SHAKE_THRESHOLD) {
                             blockViewModel.reset()
